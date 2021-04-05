@@ -1,9 +1,10 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import { ROOT_PREFIX } from 'src/app.controller';
 import { AuthInfo } from './auth-info.interface';
 import { AuthService } from './auth.service';
 import { ObtainTokenDto } from './dto/obtain-token.dto';
 
-export const PREFIX = 'auth';
+export const PREFIX = `${ROOT_PREFIX}/auth`;
 
 @Controller(PREFIX)
 export class AuthController {

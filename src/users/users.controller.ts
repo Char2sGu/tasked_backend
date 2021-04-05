@@ -12,6 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ROOT_PREFIX } from 'src/app.controller';
 import { Paginated } from 'src/paginated.interface';
 import { TransformedInterceptor } from 'src/transformed.interceptor';
 import { JwtAuthGuard } from '../auth/jwt.guard';
@@ -21,7 +22,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
-export const PREFIX = 'users';
+export const PREFIX = `${ROOT_PREFIX}/users`;
 
 @UseInterceptors(new TransformedInterceptor(User, 2))
 @Controller(PREFIX)
