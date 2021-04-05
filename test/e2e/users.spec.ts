@@ -2,6 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { compare } from 'bcryptjs';
 import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStragegy } from 'src/auth/jwt.strategy';
@@ -152,6 +153,22 @@ describe(UsersController.name, () => {
         .send(dto)
         .expect(400);
     });
+
+    it('should update and return the target and a 200', async () => {
+      const dto: UpdateUserDto = { username: 'updated', password: 'updated' };
+      await request(httpServer)
+        .patch(`/${PREFIX}/${users[0].username}/`)
+        .auth(token, { type: 'bearer' })
+        .send(dto)
+        .expect(200)
+        .expect(async ({ body }: { body: User }) => {
+          expect(body.username).toBe(dto.username);
+          expect(body.password).toBeUndefined();
+          const entity = await repository.findOne({ id: body.id });
+          const compareResult = await compare(dto.password, entity.password);
+          expect(compareResult).toBe(true);
+        });
+    });
   });
 
   describe(`/${PREFIX}/:username/ (DELETE)`, () => {
@@ -164,7 +181,7 @@ describe(UsersController.name, () => {
         .delete(`/${PREFIX}/${users[0].username}/`)
         .auth(token, { type: 'bearer' })
         .expect(204);
-      expect(
+      await expect(
         repository.findOne({ username: users[0].username }),
       ).resolves.toBeUndefined();
     });
