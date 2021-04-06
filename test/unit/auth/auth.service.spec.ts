@@ -5,7 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { genUsers } from '../users/gen-users';
+import { genUsers } from 'test/gen-data';
 
 describe(AuthService.name, () => {
   const COUNT = 1;

@@ -7,7 +7,7 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
-import { genUsers } from './gen-users';
+import { genUsers } from 'test/gen-data';
 
 describe(UsersService.name, () => {
   const COUNT = 3;

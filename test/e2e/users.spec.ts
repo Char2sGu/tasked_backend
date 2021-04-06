@@ -15,7 +15,7 @@ import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
 import * as request from 'supertest';
-import { genUsers } from 'test/unit/users/gen-users';
+import { genUsers } from 'test/gen-data';
 import { getConnection, Repository } from 'typeorm';
 
 describe(UsersController.name, () => {
