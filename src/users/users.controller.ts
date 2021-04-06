@@ -6,6 +6,7 @@ import {
   HttpCode,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -17,7 +18,6 @@ import { Paginated } from 'src/paginated.interface';
 import { TransformedInterceptor } from 'src/transformed.interceptor';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ListUsersDto } from './dto/list-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -37,7 +37,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findMany(
-    @Query() { after, limit }: ListUsersDto,
+    @Query('after', ParseIntPipe) after: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ): Promise<Paginated<User>> {
     return {
       count: await this.usersService.count(),
