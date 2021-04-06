@@ -7,7 +7,7 @@ import {
 import { plainToClass } from 'class-transformer';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralEntity } from './general.entity';
+import { GenericEntity } from './generic.entity';
 
 @Injectable()
 export class TransformedInterceptor implements NestInterceptor {
@@ -27,7 +27,7 @@ export class TransformedInterceptor implements NestInterceptor {
     );
   }
 
-  mapEntities(value: unknown, callback: (entity: GeneralEntity) => unknown) {
+  mapEntities(value: unknown, callback: (entity: GenericEntity) => unknown) {
     type DataObj = unknown[] | Record<string, unknown>;
 
     function isDataObj(v: unknown): v is DataObj {
@@ -42,7 +42,7 @@ export class TransformedInterceptor implements NestInterceptor {
       if (curDepth > this.maxDepth) return value;
 
       if (!isDataObj(value))
-        return value instanceof GeneralEntity ? callback(value) : value;
+        return value instanceof GenericEntity ? callback(value) : value;
 
       Object.entries(value).forEach(([k, v]) => {
         value[k] = search(v, curDepth + 1);

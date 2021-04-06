@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { GeneralEntity } from 'src/general.entity';
+import { GenericEntity } from 'src/generic.entity';
 import { Column, CreateDateColumn, Entity } from 'typeorm';
 import { Gender } from '../gender.enum';
 
@@ -14,7 +14,7 @@ declare global {
 }
 
 @Entity()
-export class User extends GeneralEntity {
+export class User extends GenericEntity {
   @Column()
   username: string;
 

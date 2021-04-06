@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { GeneralEntity } from 'src/general.entity';
+import { GenericEntity } from 'src/generic.entity';
 import { TransformedInterceptor } from 'src/transformed.interceptor';
 
 describe('TransformedInterceptor', () => {
@@ -8,8 +8,8 @@ describe('TransformedInterceptor', () => {
     notExposed: number;
   }
 
-  const entity = Object.create(GeneralEntity.prototype);
-  const interceptor = new TransformedInterceptor(TestEntity, 2);
+  const entity = Object.create(GenericEntity.prototype);
+  const interceptor = new TransformedInterceptor(2);
 
   it('should be defined', () => {
     expect(interceptor).toBeDefined();

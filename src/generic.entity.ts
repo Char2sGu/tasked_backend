@@ -1,6 +1,6 @@
 import { PrimaryGeneratedColumn } from 'typeorm';
 
-export class GeneralEntity {
+export abstract class GenericEntity {
   @PrimaryGeneratedColumn()
   id: number;
 }
