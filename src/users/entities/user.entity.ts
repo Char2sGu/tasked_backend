@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { GenericEntity } from 'src/generic.entity';
-import { Column, CreateDateColumn, Entity } from 'typeorm';
+import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
 import { Gender } from '../gender.enum';
 
 type UserAlias = User;
@@ -27,4 +27,7 @@ export class User extends GenericEntity {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
