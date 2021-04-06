@@ -24,7 +24,7 @@ import { UsersService } from './users.service';
 
 export const PREFIX = `${ROOT_PREFIX}/users`;
 
-@UseInterceptors(new TransformedInterceptor(User, 2))
+@UseInterceptors(new TransformedInterceptor(2))
 @Controller(PREFIX)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

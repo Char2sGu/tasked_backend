@@ -3,12 +3,12 @@ import { GenericEntity } from 'src/generic.entity';
 import { TransformedInterceptor } from 'src/transformed.interceptor';
 
 describe('TransformedInterceptor', () => {
-  class TestEntity {
+  class TestEntity extends GenericEntity {
     @Expose() exposed: number;
     notExposed: number;
   }
 
-  const entity = Object.create(GenericEntity.prototype);
+  const entity = Object.create(TestEntity.prototype);
   const interceptor = new TransformedInterceptor(2);
 
   it('should be defined', () => {

@@ -4,27 +4,21 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
+import { classToClass } from 'class-transformer';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GenericEntity } from './generic.entity';
 
 @Injectable()
 export class TransformedInterceptor implements NestInterceptor {
-  constructor(
-    readonly entityClass: { new (...args: any[]): any },
-    readonly maxDepth = 0,
-  ) {}
+  constructor(readonly maxDepth = 0) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle().pipe(
-      map((ret) => {
-        const result = this.mapEntities(ret, (entity) =>
-          plainToClass(this.entityClass, entity),
-        );
-        return result;
-      }),
-    );
+    return next
+      .handle()
+      .pipe(
+        map((ret) => this.mapEntities(ret, (entity) => classToClass(entity))),
+      );
   }
 
   mapEntities(value: unknown, callback: (entity: GenericEntity) => unknown) {
