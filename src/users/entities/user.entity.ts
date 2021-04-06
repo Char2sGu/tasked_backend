@@ -15,7 +15,7 @@ declare global {
 
 @Entity()
 export class User extends GenericEntity {
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Exclude()
