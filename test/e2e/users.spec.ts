@@ -15,7 +15,7 @@ import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
 import * as request from 'supertest';
-import { genUsers } from 'test/gen-data';
+import { insertUsers } from 'test/insert-data';
 import { getConnection, Repository } from 'typeorm';
 
 describe(UsersController.name, () => {
@@ -45,7 +45,7 @@ describe(UsersController.name, () => {
     await app.init();
     httpServer = app.getHttpServer();
 
-    users = await genUsers(repository, COUNT, UsersController.name);
+    users = await insertUsers(repository, COUNT, UsersController.name);
     token = await moduleFixture
       .get(AuthService)
       .obtainJwt(users[0].username, 'password1');

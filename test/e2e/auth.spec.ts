@@ -8,7 +8,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { User } from 'src/users/entities/user.entity';
 import * as request from 'supertest';
-import { genUsers } from 'test/gen-data';
+import { insertUsers } from 'test/insert-data';
 import { getConnection, Repository } from 'typeorm';
 
 describe(AuthController.name, () => {
@@ -23,7 +23,7 @@ describe(AuthController.name, () => {
 
     app = moduleFixture.createNestApplication();
     repository = moduleFixture.get(getRepositoryToken(User));
-    await genUsers(repository, 2, AuthController.name);
+    await insertUsers(repository, 2, AuthController.name);
     await app.init();
     httpServer = app.getHttpServer();
   });

@@ -7,7 +7,7 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
-import { genUsers } from 'test/gen-data';
+import { insertUsers } from 'test/insert-data';
 
 describe(UsersService.name, () => {
   const COUNT = 3;
@@ -24,7 +24,7 @@ describe(UsersService.name, () => {
 
     service = module.get<UsersService>(UsersService);
     repository = module.get(getRepositoryToken(User));
-    users = await genUsers(repository, COUNT, UsersService.name);
+    users = await insertUsers(repository, COUNT, UsersService.name);
   });
 
   it('should be defined', () => {

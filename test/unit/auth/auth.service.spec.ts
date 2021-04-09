@@ -5,7 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { genUsers } from 'test/gen-data';
+import { insertUsers } from 'test/insert-data';
 
 describe(AuthService.name, () => {
   const COUNT = 1;
@@ -22,7 +22,7 @@ describe(AuthService.name, () => {
 
     service = module.get<AuthService>(AuthService);
     repository = module.get(getRepositoryToken(User));
-    await genUsers(repository, COUNT, AuthService.name);
+    await insertUsers(repository, COUNT, AuthService.name);
   });
 
   it('should be defined', () => {

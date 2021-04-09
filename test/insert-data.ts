@@ -7,7 +7,7 @@ const cachePools: {
   users: {},
 };
 
-export async function genUsers(
+export async function insertUsers(
   repository: Repository<User>,
   count: number,
   cacheToken?: string,
