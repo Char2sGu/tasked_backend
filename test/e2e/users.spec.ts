@@ -45,7 +45,7 @@ describe(UsersController.name, () => {
     await app.init();
     httpServer = app.getHttpServer();
 
-    users = await genUsers(repository, COUNT);
+    users = await genUsers(repository, COUNT, UsersController.name);
     token = await moduleFixture
       .get(AuthService)
       .obtainJwt(users[0].username, 'password1');

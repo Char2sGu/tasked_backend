@@ -24,7 +24,7 @@ describe(UsersService.name, () => {
 
     service = module.get<UsersService>(UsersService);
     repository = module.get(getRepositoryToken(User));
-    users = await genUsers(repository, COUNT);
+    users = await genUsers(repository, COUNT, UsersService.name);
   });
 
   it('should be defined', () => {

@@ -22,7 +22,7 @@ describe(AuthService.name, () => {
 
     service = module.get<AuthService>(AuthService);
     repository = module.get(getRepositoryToken(User));
-    await genUsers(repository, COUNT);
+    await genUsers(repository, COUNT, AuthService.name);
   });
 
   it('should be defined', () => {

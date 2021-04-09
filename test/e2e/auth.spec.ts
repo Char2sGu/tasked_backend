@@ -23,7 +23,7 @@ describe(AuthController.name, () => {
 
     app = moduleFixture.createNestApplication();
     repository = moduleFixture.get(getRepositoryToken(User));
-    await genUsers(repository, 2);
+    await genUsers(repository, 2, AuthController.name);
     await app.init();
     httpServer = app.getHttpServer();
   });
