@@ -1,6 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { config } from 'dotenv';
+import { AppModule } from './app.module';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -18,10 +18,6 @@ export function useGlobalComponents(app: INestApplication) {
 }
 
 async function bootstrap() {
-  config();
-
-  const { AppModule } = await import('./app.module');
-
   const app = await NestFactory.create(AppModule);
   useGlobalComponents(app);
   await app.listen(3000);
