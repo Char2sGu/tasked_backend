@@ -1,6 +1,14 @@
+import { hash } from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import { GenericEntity } from 'src/generic.entity';
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  CreateDateColumn,
+  Entity,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Gender } from '../gender.enum';
 
 type UserAlias = User;
@@ -30,4 +38,12 @@ export class User extends GenericEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    const HASHED_LENGTH = 60;
+    if (this.password.length == HASHED_LENGTH) return;
+    this.password = await hash(this.password, 10);
+  }
 }
