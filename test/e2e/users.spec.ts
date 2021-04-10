@@ -13,7 +13,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
-import * as request from 'supertest';
+import request from 'supertest';
 import { insertUsers } from 'test/insert-data';
 import { getConnection, Repository } from 'typeorm';
 import { GetManyDefaultResponse } from '@nestjsx/crud';

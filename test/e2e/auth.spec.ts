@@ -7,7 +7,7 @@ import { AuthController, PREFIX } from 'src/auth/auth.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { User } from 'src/users/entities/user.entity';
-import * as request from 'supertest';
+import request from 'supertest';
 import { insertUsers } from 'test/insert-data';
 import { getConnection, Repository } from 'typeorm';
 
