@@ -87,7 +87,7 @@ describe(UsersController.name, () => {
         Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT),
       ],
       [0, Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT) + 1],
-    ])('should return $i entities when `page` is %i', async (count, page) => {
+    ])('should return %i entities when `page` is %i', async (count, page) => {
       await request(httpServer)
         .get(`/${PREFIX}/?page=${page}`)
         .auth(token, { type: 'bearer' })

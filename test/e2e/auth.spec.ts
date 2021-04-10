@@ -45,7 +45,7 @@ describe(AuthController.name, () => {
         .expect(201)
         .expect(({ body }: { body: AuthInfo }) => {
           expect(body.token).toBeDefined();
-          expect(body.expiresAt).toBeDefined();
+          expect(isNaN(new Date(body.expiresAt).getTime())).toBe(false);
         });
     });
 

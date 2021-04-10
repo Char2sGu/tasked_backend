@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { UsersService } from '../users/users.service';
+import ms from 'ms';
 
 @Injectable()
 export class AuthService {
@@ -17,8 +18,6 @@ export class AuthService {
   }
 
   getExpirationDate(from = new Date()) {
-    return new Date(
-      from.getTime() + 1000 * 60 * 60 * Number(process.env.TOKEN_EXPIRY),
-    );
+    return new Date(from.getTime() + ms(process.env.TOKEN_EXPIRY));
   }
 }

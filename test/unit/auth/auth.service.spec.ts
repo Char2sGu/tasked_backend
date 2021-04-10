@@ -40,4 +40,12 @@ describe(AuthService.name, () => {
       expect(token).toBeUndefined();
     });
   });
+
+  describe(`#${AuthService.prototype.getExpirationDate.name}()`, () => {
+    it('should return a valid `Date`', () => {
+      const date = service.getExpirationDate();
+      expect(date.constructor).toBe(Date);
+      expect(isNaN(date.getTime())).toBe(false);
+    });
+  });
 });
