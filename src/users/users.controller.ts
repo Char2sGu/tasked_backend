@@ -1,7 +1,7 @@
-import { Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, HttpCode } from '@nestjs/common';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { ROOT_PREFIX } from 'src/app.controller';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { SkipAuth } from 'src/auth/skip-auth.decorator';
 import { PAGINATION_DEFAULT_LIMIT, PAGINATION_MAX_LIMIT } from 'src/config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,8 +9,6 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 export const PREFIX = `${ROOT_PREFIX}/users`;
-
-const decorators = [UseGuards(JwtAuthGuard)];
 
 @Crud({
   model: { type: User },
@@ -36,16 +34,12 @@ const decorators = [UseGuards(JwtAuthGuard)];
       'updateOneBase',
       'deleteOneBase',
     ],
-    getOneBase: { decorators },
-    getManyBase: { decorators },
+    createOneBase: { decorators: [SkipAuth()] },
     updateOneBase: {
-      decorators,
       allowParamsOverride: true, // allow the request to update `username`
       returnShallow: true, // return the updated entity directly instead of retrieving from the db again, 404 will be caused if set to `false`
     },
-    deleteOneBase: {
-      decorators: [...decorators, HttpCode(204)],
-    },
+    deleteOneBase: { decorators: [HttpCode(204)] },
   },
 })
 @Controller(PREFIX)
