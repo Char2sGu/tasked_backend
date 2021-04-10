@@ -7,7 +7,6 @@ import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStragegy } from 'src/auth/jwt.strategy';
 import { useGlobalComponents } from 'src/main';
-import { Paginated } from 'src/paginated.interface';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -17,9 +16,13 @@ import { UsersModule } from 'src/users/users.module';
 import * as request from 'supertest';
 import { insertUsers } from 'test/insert-data';
 import { getConnection, Repository } from 'typeorm';
+import { GetManyDefaultResponse } from '@nestjsx/crud';
+import { PAGINATION_DEFAULT_LIMIT, PAGINATION_MAX_LIMIT } from 'src/config';
+
+type Resp = { body: GetManyDefaultResponse<User> };
 
 describe(UsersController.name, () => {
-  const COUNT = 3;
+  const COUNT = PAGINATION_MAX_LIMIT + 10;
 
   let repository: Repository<User>;
   let users: User[] = [];
@@ -62,19 +65,52 @@ describe(UsersController.name, () => {
     });
 
     it.each([
-      [() => '', 0, COUNT],
-      [() => '', 1, 1],
-      [() => users[0].id, 0, COUNT - 1],
-      [() => users[0].id, 1, 1],
-    ])(
-      'should return a list of specified entities with 200 when authed',
-      async (after, limit, count) => {
+      [PAGINATION_DEFAULT_LIMIT, 0],
+      [PAGINATION_MAX_LIMIT - 10, PAGINATION_MAX_LIMIT - 10],
+      [PAGINATION_MAX_LIMIT, PAGINATION_MAX_LIMIT + 5],
+    ])('should return %i entities when `limit` is %i', async (count, limit) => {
+      await request(httpServer)
+        .get(`/${PREFIX}/?limit=${limit}`)
+        .auth(token, { type: 'bearer' })
+        .expect(200)
+        .expect(({ body }: Resp) => {
+          expect(body.count).toBe(count);
+        });
+    });
+
+    it.each([
+      [PAGINATION_DEFAULT_LIMIT, -1],
+      [PAGINATION_DEFAULT_LIMIT, 0],
+      [PAGINATION_DEFAULT_LIMIT, 1],
+      [
+        COUNT % PAGINATION_DEFAULT_LIMIT || PAGINATION_DEFAULT_LIMIT,
+        Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT),
+      ],
+      [0, Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT) + 1],
+    ])('should return $i entities when `page` is %i', async (count, page) => {
+      await request(httpServer)
+        .get(`/${PREFIX}/?page=${page}`)
+        .auth(token, { type: 'bearer' })
+        .expect(200)
+        .expect(({ body }: Resp) => {
+          expect(body.count).toBe(count);
+          expect(body.page).toBe(page || 1);
+          expect(body.total).toBe(COUNT);
+          expect(body.pageCount).toBe(
+            Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT),
+          );
+        });
+    });
+
+    it.each([[1, COUNT - 1]])(
+      'should return %i entities when `offset` is %i',
+      async (count, offset) => {
         await request(httpServer)
-          .get(`/${PREFIX}/?after=${after()}&limit=${limit}`)
+          .get(`/${PREFIX}/?offset=${offset}`)
           .auth(token, { type: 'bearer' })
           .expect(200)
-          .expect(({ body }: { body: Paginated<User> }) => {
-            expect(body.results.length).toBe(count);
+          .expect(({ body }: Resp) => {
+            expect(body.count).toBe(count);
           });
       },
     );

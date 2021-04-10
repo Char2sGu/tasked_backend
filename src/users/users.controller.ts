@@ -1,22 +1,8 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  NotFoundException,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { Crud, CrudController } from '@nestjsx/crud';
 import { ROOT_PREFIX } from 'src/app.controller';
-import { Paginated } from 'src/paginated.interface';
-import { TransformedInterceptor } from 'src/transformed.interceptor';
-import { JwtAuthGuard } from '../auth/jwt.guard';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { PAGINATION_DEFAULT_LIMIT, PAGINATION_MAX_LIMIT } from 'src/config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -24,53 +10,45 @@ import { UsersService } from './users.service';
 
 export const PREFIX = `${ROOT_PREFIX}/users`;
 
-@UseInterceptors(new TransformedInterceptor(2))
+const decorators = [UseGuards(JwtAuthGuard)];
+
+@Crud({
+  model: { type: User },
+  dto: { create: CreateUserDto, update: UpdateUserDto, replace: UpdateUserDto },
+  query: {
+    alwaysPaginate: true,
+    limit: PAGINATION_DEFAULT_LIMIT,
+    maxLimit: PAGINATION_MAX_LIMIT,
+    filter: undefined, // disable filtering temporary
+  },
+  params: {
+    username: {
+      field: 'username',
+      type: 'string',
+      primary: true,
+    },
+  },
+  routes: {
+    only: [
+      'createOneBase',
+      'getOneBase',
+      'getManyBase',
+      'updateOneBase',
+      'deleteOneBase',
+    ],
+    getOneBase: { decorators },
+    getManyBase: { decorators },
+    updateOneBase: {
+      decorators,
+      allowParamsOverride: true, // allow the request to update `username`
+      returnShallow: true, // return the updated entity directly instead of retrieving from the db again, 404 will be caused if set to `false`
+    },
+    deleteOneBase: {
+      decorators: [...decorators, HttpCode(204)],
+    },
+  },
+})
 @Controller(PREFIX)
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async findMany(
-    @Query('after', ParseIntPipe) after: number,
-    @Query('limit', ParseIntPipe) limit: number,
-  ): Promise<Paginated<User>> {
-    return {
-      count: await this.usersService.count(),
-      results: await this.usersService.findMany(after, limit),
-    };
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get(':username')
-  async findOne(@Param('username') username: string) {
-    const entity = await this.usersService.findOne(username);
-    if (!entity) throw new NotFoundException();
-    return entity;
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch(':username')
-  async update(
-    @Param('username') username: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    const entity = await this.usersService.update(username, updateUserDto);
-    if (!entity) throw new NotFoundException();
-    return entity;
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @HttpCode(204)
-  @Delete(':username')
-  async remove(@Param('username') username: string) {
-    const entity = await this.usersService.remove(username);
-    if (!entity) throw new NotFoundException();
-    return entity;
-  }
+export class UsersController implements CrudController<User> {
+  constructor(readonly service: UsersService) {}
 }

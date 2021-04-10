@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async obtainJwt(username: string, password: string) {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOne({ username });
     if (user && (await compare(password, user.password)))
       return await this.jwtService.signAsync({ username });
   }
