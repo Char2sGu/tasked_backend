@@ -14,7 +14,7 @@ import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
 import request from 'supertest';
-import { insertUsers } from 'test/insert-data';
+import { insertUsers } from 'test/utils/insert-data';
 import { getConnection, Repository } from 'typeorm';
 import { GetManyDefaultResponse } from '@nestjsx/crud';
 import { PAGINATION_DEFAULT_LIMIT, PAGINATION_MAX_LIMIT } from 'src/config';
