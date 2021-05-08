@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import ms from 'ms';
+import { TOKEN_VALIDITY_PERIOD } from 'src/constants';
 import { EntityNotFoundError } from 'typeorm';
 import { UsersService } from '../users/users.service';
 
@@ -24,6 +25,6 @@ export class AuthService {
   }
 
   getExpirationDate(from = new Date()) {
-    return new Date(from.getTime() + ms(process.env.TOKEN_EXPIRY));
+    return new Date(from.getTime() + ms(TOKEN_VALIDITY_PERIOD));
   }
 }

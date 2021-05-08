@@ -8,7 +8,6 @@ declare global {
     interface ProcessEnv {
       DB_PATH: string;
       SECRET_KEY: string;
-      TOKEN_EXPIRY: string;
     }
   }
 }
