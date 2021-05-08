@@ -5,8 +5,9 @@ import { AuthInfo } from 'src/auth/auth-info.interface';
 import { AuthController, PREFIX } from 'src/auth/auth.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
+import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
-import supertest from 'supertest';
+import supertest, { Response } from 'supertest';
 import {
   getRepositories,
   insertUsers,
@@ -16,6 +17,7 @@ import {
 import { getConnection, Repository } from 'typeorm';
 
 const url = urlBuilder(`/${PREFIX}`);
+
 describe(url(''), () => {
   let app: INestApplication;
   let requester: supertest.SuperTest<supertest.Test>;
@@ -37,28 +39,47 @@ describe(url(''), () => {
     await app.close();
   });
 
-  describe('/ (POST)', () => {
-    it('should return a token when passed correct data', async () => {
+  describe('/ (POST) Right Data', () => {
+    let response: Response;
+    let body: AuthInfo;
+
+    beforeEach(async () => {
       const data: ObtainTokenDto = {
         username: 'username1',
         password: 'password1',
       };
-      await requester
-        .post(url('/'))
-        .send(data)
-        .expect(201)
-        .expect(({ body }: { body: AuthInfo }) => {
-          expect(body.token).toBeDefined();
-          expect(isNaN(new Date(body.expiresAt).getTime())).toBe(false);
-        });
+      response = await requester.post(url('/')).send(data);
+      body = response.body;
     });
 
-    it('should return a 401 when passed wrong data', async () => {
+    it('should return 201', () => {
+      expect(response.status).toBe(201);
+    });
+
+    it('should return a token in the body', () => {
+      expect(body.token).toBeDefined();
+      expect(body.token).toHaveLength(TOKEN_LENGTH);
+    });
+
+    it('should return the expiry date', () => {
+      expect(body.expiresAt).toBeDefined();
+      expect(new Date(body.expiresAt)).not.toBeNaN();
+    });
+  });
+
+  describe('/ (POST) Wrong Data', () => {
+    let response: Response;
+
+    beforeEach(async () => {
       const data: ObtainTokenDto = {
         username: 'username1',
         password: 'wrong',
       };
-      await requester.post(url('/')).send(data).expect(401);
+      response = await requester.post(url('/')).send(data);
+    });
+
+    it('should return 401', () => {
+      expect(response.status).toBe(401);
     });
   });
 });

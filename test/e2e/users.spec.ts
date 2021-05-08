@@ -1,11 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { compare } from 'bcryptjs';
 import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStragegy } from 'src/auth/jwt.strategy';
-import { PAGINATION_MAX_LIMIT } from 'src/constants';
+import { PAGINATION_DEFAULT_LIMIT, PAGINATION_MAX_LIMIT } from 'src/constants';
 import { ListResponse } from 'src/list-response.interface';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
@@ -13,7 +12,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
-import supertest from 'supertest';
+import supertest, { Response } from 'supertest';
 import {
   getRepositories,
   insertUsers,
@@ -22,11 +21,27 @@ import {
 } from 'test/utils';
 import { getConnection, Repository } from 'typeorm';
 
-type Resp = { body: ListResponse<User> };
 const COUNT = PAGINATION_MAX_LIMIT + 10;
 const url = urlBuilder(`/${PREFIX}`);
 
 describe(url(''), () => {
+  function assertSerializedEntity(entity: User) {
+    expect(entity.id).toBeDefined();
+    expect(entity.username).toBeDefined();
+    expect(entity.password).toBeUndefined();
+    expect(entity.gender).toBeDefined();
+    expect(entity.createdAt).toBeDefined();
+    expect(entity.updatedAt).toBeDefined();
+  }
+
+  async function assertUpdatedEntity(
+    body: User,
+    data: UpdateUserDto | CreateUserDto,
+  ) {
+    if (data.username) expect(body.username).toBe(data.username);
+    if (data.gender) expect(body.gender).toBe(data.gender);
+  }
+
   let app: INestApplication;
   let requester: supertest.SuperTest<supertest.Test>;
   let repository: Repository<User>;
@@ -58,163 +73,303 @@ describe(url(''), () => {
     await app.close();
   });
 
-  describe('/ (GET)', () => {
-    it('should return a 401 when not authed', async () => {
-      await requester.get(url('/')).expect(401);
+  let response: Response;
+
+  describe('/ (GET) No Auth', () => {
+    beforeEach(async () => {
+      response = await requester.get(url('/'));
     });
 
-    it.each([[PAGINATION_MAX_LIMIT - 10, PAGINATION_MAX_LIMIT - 10]])(
-      'should return %i entities when `limit` is %i',
-      async (count, limit) => {
-        await requester
-          .get(url('/'))
-          .query({ limit })
-          .auth(token, { type: 'bearer' })
-          .expect(200)
-          .expect(({ body }: Resp) => {
-            expect(body.total).toBe(COUNT);
-            expect(body.results).toHaveLength(count);
-          });
-      },
-    );
+    it('should return 401', () => {
+      expect(response.status).toBe(401);
+    });
+  });
 
-    it.each`
-      limit
-      ${0}
-      ${''}
-      ${PAGINATION_MAX_LIMIT + 5}
-    `('should return a 400 when limit is $limit', async (queries) => {
-      await requester
+  describe.each`
+    limit                       | offset       | count
+    ${PAGINATION_MAX_LIMIT - 1} | ${undefined} | ${PAGINATION_MAX_LIMIT - 1}
+    ${undefined}                | ${1}         | ${PAGINATION_DEFAULT_LIMIT}
+  `(
+    '/?limit=$limit&offset=$offset (GET) Legal Queries',
+    ({ count, ...queries }) => {
+      let body: ListResponse<User>;
+
+      beforeEach(async () => {
+        response = await requester
+          .get(url('/'))
+          .query(queries)
+          .auth(token, { type: 'bearer' });
+        body = response.body;
+      });
+
+      it('should return 200', () => {
+        expect(response.status).toBe(200);
+      });
+
+      it('should return the total number of all the entities', () => {
+        expect(body.total).toBe(COUNT);
+      });
+
+      it(`should return ${count} entities`, () => {
+        expect(body.results).toHaveLength(count);
+        assertSerializedEntity(body.results[0]);
+      });
+    },
+  );
+
+  describe.each`
+    limit                       | offset
+    ${0}                        | ${undefined}
+    ${''}                       | ${undefined}
+    ${PAGINATION_MAX_LIMIT + 5} | ${undefined}
+    ${undefined}                | ${0}
+    ${undefined}                | ${''}
+  `('/?limit=$limit (GET) Illegal Queries', (queries) => {
+    beforeEach(async () => {
+      response = await requester
         .get(url('/'))
         .query(queries)
-        .auth(token, { type: 'bearer' })
-        .expect(400);
+        .auth(token, { type: 'bearer' });
     });
 
-    it.each([[1, COUNT - 1]])(
-      'should return %i entities when `offset` is %i',
-      async (count, offset) => {
-        await requester
-          .get(url('/'))
-          .query({ offset })
-          .auth(token, { type: 'bearer' })
-          .expect(200)
-          .expect(({ body }: Resp) => {
-            expect(body.results).toHaveLength(count);
-          });
-      },
-    );
-  });
-
-  describe('/ (POST)', () => {
-    const dtos: Partial<CreateUserDto>[] = [
-      {},
-      { username: 'lackofparams' },
-      { username: ' illegal', password: 'short' },
-    ];
-    it.each(dtos)(
-      'should return a 400 when passed illegal data',
-      async (dto) => {
-        await requester.post(url('/')).send(dto).expect(400);
-      },
-    );
-
-    it('should return the created entity with 201 when passed legal data', async () => {
-      const dto: CreateUserDto = { username: 'legal', password: 'legalpwd' };
-      await requester
-        .post(url('/'))
-        .send(dto)
-        .expect(201)
-        .expect(({ body }: { body: Partial<User> }) => {
-          expect(body.username).toBe(dto.username);
-          expect(body.password).toBeUndefined();
-          expect(body.gender).toBe(Gender.Unknown);
-        });
+    it('should return 400', () => {
+      expect(response.status).toBe(400);
     });
   });
 
-  describe('/:username/ (GET)', () => {
-    it('should return a 401 when not authed', async () => {
-      await requester.get(url('/anything/')).expect(401);
+  describe.each`
+    data
+    ${{}}
+    ${{ username: 'lackofparams' }}
+    ${{ username: ' illegal', password: 'short' }}
+  `('/ $data (POST) Illegal Data', ({ data }) => {
+    beforeEach(async () => {
+      response = await requester.post(url('/')).send(data);
     });
 
-    it('should return the target entity with 200 when authed and exists', async () => {
-      await requester
+    it('should return 400', () => {
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe.each`
+    data
+    ${{ username: 'legal', password: 'legalpwd' }}
+  `('/ $data (POST) Legal Data', ({ data }) => {
+    beforeEach(async () => {
+      response = await requester.post(url('/')).send(data);
+    });
+
+    it('should return 201', () => {
+      expect(response.status).toBe(201);
+    });
+
+    it('should return an entity', () => {
+      assertSerializedEntity(response.body);
+    });
+  });
+
+  describe('/anything/ (GET) No Auth', () => {
+    beforeEach(async () => {
+      response = await requester.get(url('/anything/'));
+    });
+
+    it('should return 401', () => {
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('/<lookup>/ (GET) Legal Lookup', () => {
+    beforeEach(async () => {
+      response = await requester
         .get(url(`/${users[0].username}/`))
-        .auth(token, { type: 'bearer' })
-        .expect(200)
-        .expect(({ body }: { body: User }) => {
-          expect(body.id).toBe(users[0].id);
-          expect(body.password).toBeUndefined();
-        });
+        .auth(token, { type: 'bearer' });
     });
 
-    it('should return a 404 when authed but not exists', async () => {
-      await requester
+    it('should return 200', () => {
+      expect(response.status).toBe(200);
+    });
+
+    it('should return an entity', () => {
+      assertSerializedEntity(response.body);
+    });
+  });
+
+  describe('/notexists/ (GET) Target Not Exists', () => {
+    beforeEach(async () => {
+      response = await requester
         .get(url('/notexists/'))
-        .auth(token, { type: 'bearer' })
-        .expect(404);
+        .auth(token, { type: 'bearer' });
+    });
+
+    it('should return 404', () => {
+      expect(response.status).toBe(404);
     });
   });
 
-  describe('/:username/ (PATCH)', () => {
-    it('should return a 401 when not authed', async () => {
-      await requester.patch(url(`/${users[0].username}/`)).expect(401);
+  describe('/anything/ (PATCH) No Auth', () => {
+    beforeEach(async () => {
+      response = await requester.patch(url('/anything/'));
     });
 
-    it('should return a 404 when the target not exists', async () => {
-      await requester
-        .patch(url(`/notexists/`))
+    it('should return 401', () => {
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('/notexists/ (PATCH) Target Not Exists', () => {
+    beforeEach(async () => {
+      response = await requester
+        .patch(url('/notexists/'))
         .auth(token, { type: 'bearer' })
-        .expect(404);
+        .send({});
     });
 
-    it('should return a 400 when passed illegal data', async () => {
-      const dto: UpdateUserDto = { username: 'i llegal', password: '' };
-      await requester
+    it('should return 404', () => {
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe.each`
+    data
+    ${{ username: 'illegal ' }}
+    ${{ password: '' }}
+    ${{ gender: 'wtf' }}
+  `('/<lookup>/ $data (PATCH) Illegal Data', ({ data }) => {
+    beforeEach(async () => {
+      response = await requester
         .patch(url(`/${users[0].username}/`))
         .auth(token, { type: 'bearer' })
-        .send(dto)
-        .expect(400);
+        .send(data);
     });
 
-    it('should update and return the target and a 200', async () => {
-      const dto: UpdateUserDto = { username: 'updated', password: 'updated' };
-      await requester
+    it('should return 400', () => {
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe.each`
+    data
+    ${{ username: 'updated', password: 'updated' }}
+    ${{}}
+  `('/<lookup>/ $data (PATCH) All Legal', ({ data }) => {
+    beforeEach(async () => {
+      response = await requester
         .patch(url(`/${users[0].username}/`))
         .auth(token, { type: 'bearer' })
-        .send(dto)
-        .expect(200)
-        .expect(async ({ body }: { body: User }) => {
-          expect(body.username).toBe(dto.username);
-          expect(body.password).toBeUndefined();
-          const entity = await repository.findOne({ id: body.id });
-          const compareResult = await compare(dto.password, entity.password);
-          expect(compareResult).toBe(true);
+        .send(data);
+    });
+
+    it('should return 200', () => {
+      expect(response.status).toBe(200);
+    });
+
+    it('should return an updated entity', async () => {
+      assertSerializedEntity(response.body);
+      assertUpdatedEntity(response.body, data);
+    });
+  });
+
+  describe('/anything/ (PUT) No Auth', () => {
+    beforeEach(async () => {
+      response = await requester.put(url('/anything/'));
+    });
+
+    it('should return 401', () => {
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('/notexists/ (PUT) Target Not Exists', () => {
+    beforeEach(async () => {
+      response = await requester
+        .put(url('/notexists/'))
+        .auth(token, { type: 'bearer' })
+        .send({
+          username: 'aaaaaa',
+          password: 'abcdef',
+          gender: Gender.Male,
         });
     });
+
+    it('should return 404', () => {
+      expect(response.status).toBe(404);
+    });
   });
 
-  describe('/:username/ (DELETE)', () => {
-    it('should return a 401 when not authed', async () => {
-      await requester.delete(url(`/anything/`)).expect(401);
-    });
-
-    it('should delete the target and return a 204 when it exists', async () => {
-      await requester
-        .delete(url(`/${users[0].username}/`))
+  describe.each`
+    data
+    ${{}}
+    ${{ username: 'illegal ', password: '123456', gender: Gender.Male }}
+  `('/<lookup>/ $data (PUT) Illegal Data', ({ data }) => {
+    beforeEach(async () => {
+      response = await requester
+        .put(url(`/${users[0].username}/`))
         .auth(token, { type: 'bearer' })
-        .expect(204);
-      await expect(
-        repository.findOne({ username: users[0].username }),
-      ).resolves.toBeUndefined();
+        .send(data);
     });
 
-    it('should return a 404 when the target not exists', async () => {
-      await requester
+    it('should return 400', () => {
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe.each`
+    data
+    ${{ username: 'updated', password: '123456', gender: Gender.Female }}
+  `('/<lookup>/ $data (PUT) All Legal', ({ data }) => {
+    beforeEach(async () => {
+      response = await requester
+        .put(url(`/${users[0].username}/`))
+        .auth(token, { type: 'bearer' })
+        .send(data);
+    });
+
+    it('should return 200', () => {
+      expect(response.status).toBe(200);
+    });
+
+    it('should return an updated entity', async () => {
+      assertSerializedEntity(response.body);
+      assertUpdatedEntity(response.body, data);
+    });
+  });
+
+  describe('/anything/ (DELETE) No Auth', () => {
+    beforeEach(async () => {
+      response = await requester.delete(url('/anything/'));
+    });
+
+    it('should return 401', () => {
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('/notexists/ (DELETE) Target Not Exists', () => {
+    beforeEach(async () => {
+      response = await requester
         .delete(url('/notexists/'))
-        .auth(token, { type: 'bearer' })
-        .expect(404);
+        .auth(token, { type: 'bearer' });
+    });
+
+    it('should return 404', () => {
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe('/<lookup>/ (DELETE) Legal Lookup', () => {
+    beforeEach(async () => {
+      response = await requester
+        .delete(url(`/${users[0].username}/`))
+        .auth(token, { type: 'bearer' });
+    });
+
+    it('should return 204', () => {
+      expect(response.status).toBe(204);
+    });
+
+    it('should return no content', () => {
+      expect(response.text).toBe('');
     });
   });
 });
