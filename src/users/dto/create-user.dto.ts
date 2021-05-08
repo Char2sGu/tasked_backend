@@ -1,4 +1,10 @@
-import { IsString, Length, NotContains } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsString,
+  Length,
+  NotContains,
+} from 'class-validator';
 import { Gender } from '../gender.enum';
 
 export class CreateUserDto {
@@ -11,5 +17,7 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
+  @IsOptional()
+  @IsEnum(Gender)
   gender?: Gender;
 }
