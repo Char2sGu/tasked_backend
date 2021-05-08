@@ -14,7 +14,7 @@ export class JwtStragegy extends PassportStrategy(Strategy) {
   }
 
   async validate({ username }) {
-    const user = await this.usersService.findOne({ username });
+    const user = await this.usersService.retrieve(username, { expand: [] });
     if (!user) throw new UnauthorizedException('认证失败');
     return user;
   }

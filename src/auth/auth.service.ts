@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
-import { UsersService } from '../users/users.service';
 import ms from 'ms';
+import { EntityNotFoundError } from 'typeorm';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -12,9 +13,14 @@ export class AuthService {
   ) {}
 
   async obtainJwt(username: string, password: string) {
-    const user = await this.usersService.findOne({ username });
-    if (user && (await compare(password, user.password)))
-      return await this.jwtService.signAsync({ username });
+    try {
+      const user = await this.usersService.retrieve(username, { expand: [] });
+      if (await compare(password, user.password))
+        return await this.jwtService.signAsync({ username });
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) return;
+      throw error;
+    }
   }
 
   getExpirationDate(from = new Date()) {

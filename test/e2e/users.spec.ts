@@ -6,6 +6,7 @@ import { compare } from 'bcryptjs';
 import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStragegy } from 'src/auth/jwt.strategy';
+import { PAGINATION_MAX_LIMIT } from 'src/config';
 import { useGlobalComponents } from 'src/main';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
@@ -16,12 +17,10 @@ import { UsersModule } from 'src/users/users.module';
 import request from 'supertest';
 import { insertUsers } from 'test/utils/insert-data';
 import { getConnection, Repository } from 'typeorm';
-import { GetManyDefaultResponse } from '@nestjsx/crud';
-import { PAGINATION_DEFAULT_LIMIT, PAGINATION_MAX_LIMIT } from 'src/config';
-
-type Resp = { body: GetManyDefaultResponse<User> };
 
 describe(UsersController.name, () => {
+  type Resp = { body: User[] };
+
   const COUNT = PAGINATION_MAX_LIMIT + 10;
 
   let repository: Repository<User>;
@@ -64,42 +63,30 @@ describe(UsersController.name, () => {
       await request(httpServer).get(`/${PREFIX}/`).expect(401);
     });
 
-    it.each([
-      [PAGINATION_DEFAULT_LIMIT, 0],
-      [PAGINATION_MAX_LIMIT - 10, PAGINATION_MAX_LIMIT - 10],
-      [PAGINATION_MAX_LIMIT, PAGINATION_MAX_LIMIT + 5],
-    ])('should return %i entities when `limit` is %i', async (count, limit) => {
-      await request(httpServer)
-        .get(`/${PREFIX}/?limit=${limit}`)
-        .auth(token, { type: 'bearer' })
-        .expect(200)
-        .expect(({ body }: Resp) => {
-          expect(body.count).toBe(count);
-        });
-    });
+    it.each([[PAGINATION_MAX_LIMIT - 10, PAGINATION_MAX_LIMIT - 10]])(
+      'should return %i entities when `limit` is %i',
+      async (count, limit) => {
+        await request(httpServer)
+          .get(`/${PREFIX}/?limit=${limit}`)
+          .auth(token, { type: 'bearer' })
+          .expect(200)
+          .expect(({ body }: Resp) => {
+            expect(body).toHaveLength(count);
+          });
+      },
+    );
 
-    it.each([
-      [PAGINATION_DEFAULT_LIMIT, -1],
-      [PAGINATION_DEFAULT_LIMIT, 0],
-      [PAGINATION_DEFAULT_LIMIT, 1],
-      [
-        COUNT % PAGINATION_DEFAULT_LIMIT || PAGINATION_DEFAULT_LIMIT,
-        Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT),
-      ],
-      [0, Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT) + 1],
-    ])('should return %i entities when `page` is %i', async (count, page) => {
+    it.each`
+      limit
+      ${0}
+      ${''}
+      ${PAGINATION_MAX_LIMIT + 5}
+    `('should return a 400 when limit is $limit', async (queries) => {
       await request(httpServer)
-        .get(`/${PREFIX}/?page=${page}`)
+        .get(`/${PREFIX}/`)
+        .query(queries)
         .auth(token, { type: 'bearer' })
-        .expect(200)
-        .expect(({ body }: Resp) => {
-          expect(body.count).toBe(count);
-          expect(body.page).toBe(page || 1);
-          expect(body.total).toBe(COUNT);
-          expect(body.pageCount).toBe(
-            Math.ceil(COUNT / PAGINATION_DEFAULT_LIMIT),
-          );
-        });
+        .expect(400);
     });
 
     it.each([[1, COUNT - 1]])(
@@ -110,7 +97,7 @@ describe(UsersController.name, () => {
           .auth(token, { type: 'bearer' })
           .expect(200)
           .expect(({ body }: Resp) => {
-            expect(body.count).toBe(count);
+            expect(body).toHaveLength(count);
           });
       },
     );

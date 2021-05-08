@@ -1,12 +1,12 @@
 import { hash } from 'bcryptjs';
 import { Exclude } from 'class-transformer';
-import { GenericEntity } from 'src/generic.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Gender } from '../gender.enum';
@@ -22,7 +22,10 @@ declare global {
 }
 
 @Entity()
-export class User extends GenericEntity {
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column({ unique: true })
   username: string;
 
