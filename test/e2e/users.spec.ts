@@ -1,35 +1,38 @@
 import { INestApplication } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { compare } from 'bcryptjs';
 import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStragegy } from 'src/auth/jwt.strategy';
 import { PAGINATION_MAX_LIMIT } from 'src/constants';
 import { ListResponse } from 'src/list-response.interface';
-import { useGlobalComponents } from 'src/main';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
-import { getRequester, insertUsers, urlBuilder } from 'test/utils';
+import supertest from 'supertest';
+import {
+  getRepositories,
+  insertUsers,
+  prepareE2E,
+  urlBuilder,
+} from 'test/utils';
 import { getConnection, Repository } from 'typeorm';
 
+type Resp = { body: ListResponse<User> };
+const COUNT = PAGINATION_MAX_LIMIT + 10;
 const url = urlBuilder(`/${PREFIX}`);
+
 describe(url(''), () => {
-  type Resp = { body: ListResponse<User> };
-
-  const COUNT = PAGINATION_MAX_LIMIT + 10;
-
+  let app: INestApplication;
+  let requester: supertest.SuperTest<supertest.Test>;
   let repository: Repository<User>;
+
   let users: User[] = [];
   let token: string;
-
-  let app: INestApplication;
-  let requester: ReturnType<typeof getRequester>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -41,12 +44,8 @@ describe(url(''), () => {
       providers: [AuthService, JwtStragegy],
     }).compile();
 
-    repository = moduleFixture.get(getRepositoryToken(User));
-
-    app = moduleFixture.createNestApplication();
-    useGlobalComponents(app);
-    await app.init();
-    requester = getRequester(app);
+    ({ app, requester } = await prepareE2E(moduleFixture));
+    [repository] = getRepositories(moduleFixture, User);
 
     users = await insertUsers(repository, COUNT, UsersController.name);
     token = await moduleFixture
