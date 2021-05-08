@@ -7,14 +7,13 @@ import { AuthController, PREFIX } from 'src/auth/auth.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { User } from 'src/users/entities/user.entity';
-import request from 'supertest';
-import { insertUsers } from 'test/utils';
+import { getRequester, insertUsers } from 'test/utils';
 import { getConnection, Repository } from 'typeorm';
 
 describe(AuthController.name, () => {
   let repository: Repository<User>;
   let app: INestApplication;
-  let httpServer: unknown;
+  let requester: ReturnType<typeof getRequester>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -25,7 +24,7 @@ describe(AuthController.name, () => {
     repository = moduleFixture.get(getRepositoryToken(User));
     await insertUsers(repository, 2, AuthController.name);
     await app.init();
-    httpServer = app.getHttpServer();
+    requester = getRequester(app);
   });
 
   afterEach(async () => {
@@ -39,7 +38,7 @@ describe(AuthController.name, () => {
         username: 'username1',
         password: 'password1',
       };
-      await request(httpServer)
+      await requester
         .post(`/${PREFIX}/`)
         .send(data)
         .expect(201)
@@ -54,7 +53,7 @@ describe(AuthController.name, () => {
         username: 'username1',
         password: 'wrong',
       };
-      await request(httpServer).post(`/${PREFIX}/`).send(data).expect(401);
+      await requester.post(`/${PREFIX}/`).send(data).expect(401);
     });
   });
 });
