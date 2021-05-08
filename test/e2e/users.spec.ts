@@ -7,6 +7,7 @@ import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStragegy } from 'src/auth/jwt.strategy';
 import { PAGINATION_MAX_LIMIT } from 'src/config';
+import { ListResponse } from 'src/list-response.interface';
 import { useGlobalComponents } from 'src/main';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
@@ -19,7 +20,7 @@ import { insertUsers } from 'test/utils/insert-data';
 import { getConnection, Repository } from 'typeorm';
 
 describe(UsersController.name, () => {
-  type Resp = { body: User[] };
+  type Resp = { body: ListResponse<User> };
 
   const COUNT = PAGINATION_MAX_LIMIT + 10;
 
@@ -71,7 +72,8 @@ describe(UsersController.name, () => {
           .auth(token, { type: 'bearer' })
           .expect(200)
           .expect(({ body }: Resp) => {
-            expect(body).toHaveLength(count);
+            expect(body.total).toBe(COUNT);
+            expect(body.results).toHaveLength(count);
           });
       },
     );
@@ -97,7 +99,7 @@ describe(UsersController.name, () => {
           .auth(token, { type: 'bearer' })
           .expect(200)
           .expect(({ body }: Resp) => {
-            expect(body).toHaveLength(count);
+            expect(body.results).toHaveLength(count);
           });
       },
     );
