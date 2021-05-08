@@ -5,9 +5,11 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { insertUsers } from 'test/utils';
+import { buildKeyChecker, insertUsers } from 'test/utils';
 
 describe(AuthService.name, () => {
+  const d = buildKeyChecker<AuthService>();
+
   const COUNT = 1;
   const username = `username${COUNT}`;
   const password = `password${COUNT}`;
@@ -29,7 +31,7 @@ describe(AuthService.name, () => {
     expect(service).toBeDefined();
   });
 
-  describe(`#${AuthService.prototype.obtainJwt.name}()`, () => {
+  describe(d('#obtainJwt()'), () => {
     it('should return a token when passed legal data', async () => {
       const token = await service.obtainJwt(username, password);
       expect(typeof token).toBe('string');
@@ -41,7 +43,7 @@ describe(AuthService.name, () => {
     });
   });
 
-  describe(`#${AuthService.prototype.getExpirationDate.name}()`, () => {
+  describe(d('#getExpirationDate()'), () => {
     it('should return a valid `Date`', () => {
       const date = service.getExpirationDate();
       expect(date.constructor).toBe(Date);
