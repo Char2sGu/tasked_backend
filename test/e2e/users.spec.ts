@@ -6,7 +6,7 @@ import { compare } from 'bcryptjs';
 import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtStragegy } from 'src/auth/jwt.strategy';
-import { PAGINATION_MAX_LIMIT } from 'src/config';
+import { PAGINATION_MAX_LIMIT } from 'src/constants';
 import { ListResponse } from 'src/list-response.interface';
 import { useGlobalComponents } from 'src/main';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
