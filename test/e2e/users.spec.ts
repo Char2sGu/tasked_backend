@@ -15,10 +15,11 @@ import { User } from 'src/users/entities/user.entity';
 import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
-import { getRequester, insertUsers } from 'test/utils';
+import { getRequester, insertUsers, urlBuilder } from 'test/utils';
 import { getConnection, Repository } from 'typeorm';
 
-describe(UsersController.name, () => {
+const url = urlBuilder(`/${PREFIX}`);
+describe(url(''), () => {
   type Resp = { body: ListResponse<User> };
 
   const COUNT = PAGINATION_MAX_LIMIT + 10;
@@ -58,16 +59,17 @@ describe(UsersController.name, () => {
     await app.close();
   });
 
-  describe(`/${PREFIX}/ (GET)`, () => {
+  describe('/ (GET)', () => {
     it('should return a 401 when not authed', async () => {
-      await requester.get(`/${PREFIX}/`).expect(401);
+      await requester.get(url('/')).expect(401);
     });
 
     it.each([[PAGINATION_MAX_LIMIT - 10, PAGINATION_MAX_LIMIT - 10]])(
       'should return %i entities when `limit` is %i',
       async (count, limit) => {
         await requester
-          .get(`/${PREFIX}/?limit=${limit}`)
+          .get(url('/'))
+          .query({ limit })
           .auth(token, { type: 'bearer' })
           .expect(200)
           .expect(({ body }: Resp) => {
@@ -84,7 +86,7 @@ describe(UsersController.name, () => {
       ${PAGINATION_MAX_LIMIT + 5}
     `('should return a 400 when limit is $limit', async (queries) => {
       await requester
-        .get(`/${PREFIX}/`)
+        .get(url('/'))
         .query(queries)
         .auth(token, { type: 'bearer' })
         .expect(400);
@@ -94,7 +96,8 @@ describe(UsersController.name, () => {
       'should return %i entities when `offset` is %i',
       async (count, offset) => {
         await requester
-          .get(`/${PREFIX}/?offset=${offset}`)
+          .get(url('/'))
+          .query({ offset })
           .auth(token, { type: 'bearer' })
           .expect(200)
           .expect(({ body }: Resp) => {
@@ -104,7 +107,7 @@ describe(UsersController.name, () => {
     );
   });
 
-  describe(`/${PREFIX}/ (POST)`, () => {
+  describe('/ (POST)', () => {
     const dtos: Partial<CreateUserDto>[] = [
       {},
       { username: 'lackofparams' },
@@ -113,14 +116,14 @@ describe(UsersController.name, () => {
     it.each(dtos)(
       'should return a 400 when passed illegal data',
       async (dto) => {
-        await requester.post(`/${PREFIX}/`).send(dto).expect(400);
+        await requester.post(url('/')).send(dto).expect(400);
       },
     );
 
     it('should return the created entity with 201 when passed legal data', async () => {
       const dto: CreateUserDto = { username: 'legal', password: 'legalpwd' };
       await requester
-        .post(`/${PREFIX}/`)
+        .post(url('/'))
         .send(dto)
         .expect(201)
         .expect(({ body }: { body: Partial<User> }) => {
@@ -131,14 +134,14 @@ describe(UsersController.name, () => {
     });
   });
 
-  describe(`/${PREFIX}/:username/ (GET)`, () => {
+  describe('/:username/ (GET)', () => {
     it('should return a 401 when not authed', async () => {
-      await requester.get(`/${PREFIX}/anything/`).expect(401);
+      await requester.get(url('/anything/')).expect(401);
     });
 
     it('should return the target entity with 200 when authed and exists', async () => {
       await requester
-        .get(`/${PREFIX}/${users[0].username}/`)
+        .get(url(`/${users[0].username}/`))
         .auth(token, { type: 'bearer' })
         .expect(200)
         .expect(({ body }: { body: User }) => {
@@ -149,20 +152,20 @@ describe(UsersController.name, () => {
 
     it('should return a 404 when authed but not exists', async () => {
       await requester
-        .get(`/${PREFIX}/notexists/`)
+        .get(url('/notexists/'))
         .auth(token, { type: 'bearer' })
         .expect(404);
     });
   });
 
-  describe(`/${PREFIX}/:username/ (PATCH)`, () => {
+  describe('/:username/ (PATCH)', () => {
     it('should return a 401 when not authed', async () => {
-      await requester.patch(`/${PREFIX}/${users[0].username}/`).expect(401);
+      await requester.patch(url(`/${users[0].username}/`)).expect(401);
     });
 
     it('should return a 404 when the target not exists', async () => {
       await requester
-        .patch(`/${PREFIX}/notexists/`)
+        .patch(url(`/notexists/`))
         .auth(token, { type: 'bearer' })
         .expect(404);
     });
@@ -170,7 +173,7 @@ describe(UsersController.name, () => {
     it('should return a 400 when passed illegal data', async () => {
       const dto: UpdateUserDto = { username: 'i llegal', password: '' };
       await requester
-        .patch(`/${PREFIX}/${users[0].username}/`)
+        .patch(url(`/${users[0].username}/`))
         .auth(token, { type: 'bearer' })
         .send(dto)
         .expect(400);
@@ -179,7 +182,7 @@ describe(UsersController.name, () => {
     it('should update and return the target and a 200', async () => {
       const dto: UpdateUserDto = { username: 'updated', password: 'updated' };
       await requester
-        .patch(`/${PREFIX}/${users[0].username}/`)
+        .patch(url(`/${users[0].username}/`))
         .auth(token, { type: 'bearer' })
         .send(dto)
         .expect(200)
@@ -193,14 +196,14 @@ describe(UsersController.name, () => {
     });
   });
 
-  describe(`/${PREFIX}/:username/ (DELETE)`, () => {
+  describe('/:username/ (DELETE)', () => {
     it('should return a 401 when not authed', async () => {
-      await requester.delete(`/${PREFIX}/anything/`).expect(401);
+      await requester.delete(url(`/anything/`)).expect(401);
     });
 
     it('should delete the target and return a 204 when it exists', async () => {
       await requester
-        .delete(`/${PREFIX}/${users[0].username}/`)
+        .delete(url(`/${users[0].username}/`))
         .auth(token, { type: 'bearer' })
         .expect(204);
       await expect(
@@ -210,7 +213,7 @@ describe(UsersController.name, () => {
 
     it('should return a 404 when the target not exists', async () => {
       await requester
-        .delete(`/${PREFIX}/notexists/`)
+        .delete(url('/notexists/'))
         .auth(token, { type: 'bearer' })
         .expect(404);
     });

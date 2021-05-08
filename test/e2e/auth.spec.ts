@@ -7,10 +7,11 @@ import { AuthController, PREFIX } from 'src/auth/auth.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { User } from 'src/users/entities/user.entity';
-import { getRequester, insertUsers } from 'test/utils';
+import { getRequester, insertUsers, urlBuilder } from 'test/utils';
 import { getConnection, Repository } from 'typeorm';
 
-describe(AuthController.name, () => {
+const url = urlBuilder(`/${PREFIX}`);
+describe(url(''), () => {
   let repository: Repository<User>;
   let app: INestApplication;
   let requester: ReturnType<typeof getRequester>;
@@ -32,14 +33,14 @@ describe(AuthController.name, () => {
     await app.close();
   });
 
-  describe(`/${PREFIX}/ (POST)`, () => {
+  describe('/ (POST)', () => {
     it('should return a token when passed correct data', async () => {
       const data: ObtainTokenDto = {
         username: 'username1',
         password: 'password1',
       };
       await requester
-        .post(`/${PREFIX}/`)
+        .post(url('/'))
         .send(data)
         .expect(201)
         .expect(({ body }: { body: AuthInfo }) => {
@@ -53,7 +54,7 @@ describe(AuthController.name, () => {
         username: 'username1',
         password: 'wrong',
       };
-      await requester.post(`/${PREFIX}/`).send(data).expect(401);
+      await requester.post(url('/')).send(data).expect(401);
     });
   });
 });
