@@ -8,7 +8,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { User } from 'src/users/entities/user.entity';
 import request from 'supertest';
-import { insertUsers } from 'test/utils/insert-data';
+import { insertUsers } from 'test/utils';
 import { getConnection, Repository } from 'typeorm';
 
 describe(AuthController.name, () => {

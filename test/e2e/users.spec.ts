@@ -16,7 +16,7 @@ import { Gender } from 'src/users/gender.enum';
 import { PREFIX, UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
 import request from 'supertest';
-import { insertUsers } from 'test/utils/insert-data';
+import { insertUsers } from 'test/utils';
 import { getConnection, Repository } from 'typeorm';
 
 describe(UsersController.name, () => {
