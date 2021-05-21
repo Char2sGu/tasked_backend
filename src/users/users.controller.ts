@@ -10,7 +10,7 @@ export const PREFIX = `${ROOT_PREFIX}/users`;
 @Controller(PREFIX)
 export class UsersController extends new RestControllerFactory({
   restServiceClass: UsersService,
-  routes: ['list', 'create', 'retrieve', 'replace', 'update', 'destroy'],
+  actions: ['list', 'create', 'retrieve', 'replace', 'update', 'destroy'],
   queryDto: new QueryDtoFactory({
     limit: { max: PAGINATION_MAX_LIMIT, default: PAGINATION_DEFAULT_LIMIT },
   }).product,

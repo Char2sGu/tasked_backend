@@ -15,7 +15,7 @@ export class AuthService {
 
   async obtainJwt(username: string, password: string) {
     try {
-      const user = await this.usersService.retrieve(username, { expand: [] });
+      const user = await this.usersService.retrieve({ lookup: username });
       if (await compare(password, user.password))
         return await this.jwtService.signAsync({ username });
     } catch (error) {
