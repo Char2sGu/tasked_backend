@@ -334,42 +334,4 @@ describe(url(''), () => {
       assertUpdatedEntity(response.body, data);
     });
   });
-
-  describe('/anything/ (DELETE) No Auth', () => {
-    beforeEach(async () => {
-      response = await requester.delete(url('/anything/'));
-    });
-
-    it('should return 401', () => {
-      expect(response.status).toBe(401);
-    });
-  });
-
-  describe('/notexists/ (DELETE) Target Not Exists', () => {
-    beforeEach(async () => {
-      response = await requester
-        .delete(url('/notexists/'))
-        .auth(token, { type: 'bearer' });
-    });
-
-    it('should return 404', () => {
-      expect(response.status).toBe(404);
-    });
-  });
-
-  describe('/<lookup>/ (DELETE) Legal Lookup', () => {
-    beforeEach(async () => {
-      response = await requester
-        .delete(url(`/${users[0].username}/`))
-        .auth(token, { type: 'bearer' });
-    });
-
-    it('should return 204', () => {
-      expect(response.status).toBe(204);
-    });
-
-    it('should return no content', () => {
-      expect(response.text).toBe('');
-    });
-  });
 });
