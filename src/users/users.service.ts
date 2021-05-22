@@ -24,7 +24,7 @@ export class UsersService extends new RestServiceFactory({
         // forbid the user to update anyone except himself
         if (targetUser.id != user.id) throw new ForbiddenException();
         // forbid to update if updated recently
-        if (!targetUser.isRecentUpdated) throw new ForbiddenException();
+        if (!targetUser.isUpdatedRecently) throw new ForbiddenException();
       }
     }
   }

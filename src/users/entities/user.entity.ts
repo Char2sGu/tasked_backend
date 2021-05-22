@@ -43,7 +43,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  get isRecentUpdated() {
+  get isUpdatedRecently() {
     const DAYS = 3;
     return dayjs(this.updatedAt).isAfter(dayjs().subtract(DAYS, 'd'));
   }
