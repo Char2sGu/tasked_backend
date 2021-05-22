@@ -49,6 +49,9 @@ describe(url(''), () => {
   let users: User[] = [];
   let token: string;
 
+  let createUserDto: CreateUserDto;
+  let updateUserDto: UpdateUserDto;
+
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
@@ -66,6 +69,9 @@ describe(url(''), () => {
     token = await moduleFixture
       .get(AuthService)
       .obtainJwt(users[0].username, 'password1');
+
+    createUserDto = { username: 'created', password: 'newpassword' };
+    updateUserDto = { username: 'updated' };
   });
 
   afterEach(async () => {
@@ -169,7 +175,7 @@ describe(url(''), () => {
     });
   });
 
-  describe('/anything/ (GET) No Auth', () => {
+  describe('/:lookup/ (GET) No Auth', () => {
     beforeEach(async () => {
       response = await requester.get(url('/anything/'));
     });
@@ -179,7 +185,30 @@ describe(url(''), () => {
     });
   });
 
-  describe('/<lookup>/ (GET) Legal Lookup', () => {
+  describe('/ (POST) Authed', () => {
+    beforeEach(async () => {
+      response = await requester
+        .post(url('/'))
+        .auth(token, { type: 'bearer' })
+        .send(createUserDto);
+    });
+
+    it('should return 403', () => {
+      expect(response.status).toBe(403);
+    });
+  });
+
+  describe('/:lookup/ (GET) No Auth', () => {
+    beforeEach(async () => {
+      response = await requester.get(url('/anything/'));
+    });
+
+    it('should return 401', () => {
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('/:lookup/ (GET) Legal Lookup', () => {
     beforeEach(async () => {
       response = await requester
         .get(url(`/${users[0].username}/`))
@@ -195,7 +224,19 @@ describe(url(''), () => {
     });
   });
 
-  describe('/notexists/ (GET) Target Not Exists', () => {
+  describe('/:lookup/ (GET) Not Self', () => {
+    beforeEach(async () => {
+      response = await requester
+        .get(url(`/${users[1].username}/`))
+        .auth(token, { type: 'bearer' });
+    });
+
+    it('should return 403', () => {
+      expect(response.status).toBe(403);
+    });
+  });
+
+  describe('/:lookup/ (GET) Target Not Exists', () => {
     beforeEach(async () => {
       response = await requester
         .get(url('/notexists/'))
@@ -207,7 +248,7 @@ describe(url(''), () => {
     });
   });
 
-  describe('/anything/ (PATCH) No Auth', () => {
+  describe('/:lookup/ (PATCH) No Auth', () => {
     beforeEach(async () => {
       response = await requester.patch(url('/anything/'));
     });
@@ -217,7 +258,7 @@ describe(url(''), () => {
     });
   });
 
-  describe('/notexists/ (PATCH) Target Not Exists', () => {
+  describe('/:lookup/ (PATCH) Target Not Exists', () => {
     beforeEach(async () => {
       response = await requester
         .patch(url('/notexists/'))
@@ -235,7 +276,7 @@ describe(url(''), () => {
     ${{ username: 'illegal ' }}
     ${{ password: '' }}
     ${{ gender: 'wtf' }}
-  `('/<lookup>/ $data (PATCH) Illegal Data', ({ data }) => {
+  `('/:lookup/ $data (PATCH) Illegal Data', ({ data }) => {
     beforeEach(async () => {
       response = await requester
         .patch(url(`/${users[0].username}/`))
@@ -252,7 +293,7 @@ describe(url(''), () => {
     data
     ${{ username: 'updated', password: 'updated' }}
     ${{}}
-  `('/<lookup>/ $data (PATCH) All Legal', ({ data }) => {
+  `('/:lookup/ $data (PATCH) All Legal', ({ data }) => {
     beforeEach(async () => {
       response = await requester
         .patch(url(`/${users[0].username}/`))
@@ -270,9 +311,22 @@ describe(url(''), () => {
     });
   });
 
+  describe('/:lookup/ (PATCH) Not Self', () => {
+    beforeEach(async () => {
+      response = await requester
+        .patch(url(`/${users[1].username}/`))
+        .auth(token, { type: 'bearer' })
+        .send(updateUserDto);
+    });
+
+    it('should return 403', () => {
+      expect(response.status).toBe(403);
+    });
+  });
+
   describe('/anything/ (PUT) No Auth', () => {
     beforeEach(async () => {
-      response = await requester.put(url('/anything/'));
+      response = await requester.put(url('/anything/')).send(createUserDto);
     });
 
     it('should return 401', () => {
@@ -280,16 +334,12 @@ describe(url(''), () => {
     });
   });
 
-  describe('/notexists/ (PUT) Target Not Exists', () => {
+  describe('/:lookup/ (PUT) Target Not Exists', () => {
     beforeEach(async () => {
       response = await requester
         .put(url('/notexists/'))
         .auth(token, { type: 'bearer' })
-        .send({
-          username: 'aaaaaa',
-          password: 'abcdef',
-          gender: Gender.Male,
-        });
+        .send(createUserDto);
     });
 
     it('should return 404', () => {
@@ -301,7 +351,7 @@ describe(url(''), () => {
     data
     ${{}}
     ${{ username: 'illegal ', password: '123456', gender: Gender.Male }}
-  `('/<lookup>/ $data (PUT) Illegal Data', ({ data }) => {
+  `('/:lookup/ $data (PUT) Illegal Data', ({ data }) => {
     beforeEach(async () => {
       response = await requester
         .put(url(`/${users[0].username}/`))
@@ -314,24 +364,16 @@ describe(url(''), () => {
     });
   });
 
-  describe.each`
-    data
-    ${{ username: 'updated', password: '123456', gender: Gender.Female }}
-  `('/<lookup>/ $data (PUT) All Legal', ({ data }) => {
+  describe('/:lookup/ (PUT) Not Self', () => {
     beforeEach(async () => {
       response = await requester
-        .put(url(`/${users[0].username}/`))
+        .put(url(`/${users[1].username}/`))
         .auth(token, { type: 'bearer' })
-        .send(data);
+        .send(createUserDto);
     });
 
-    it('should return 200', () => {
-      expect(response.status).toBe(200);
-    });
-
-    it('should return an updated entity', async () => {
-      assertSerializedEntity(response.body);
-      assertUpdatedEntity(response.body, data);
+    it('should return 403', () => {
+      expect(response.status).toBe(403);
     });
   });
 });
