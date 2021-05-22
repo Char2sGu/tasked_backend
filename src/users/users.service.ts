@@ -12,17 +12,19 @@ export class UsersService extends new RestServiceFactory({
 }).product {
   async checkPermission({
     action,
-    entity,
+    entity: targetUser,
     user,
   }: {
     action: ActionName;
     entity?: User;
     user?: User;
   }) {
-    if (entity) {
+    if (targetUser) {
       if (action == 'replace' || action == 'update') {
-        if (entity.id != user.id) throw new ForbiddenException();
-        if (!entity.isRecentUpdated) throw new ForbiddenException();
+        // forbid the user to update anyone except himself
+        if (targetUser.id != user.id) throw new ForbiddenException();
+        // forbid to update if updated recently
+        if (!targetUser.isRecentUpdated) throw new ForbiddenException();
       }
     }
   }
