@@ -43,16 +43,16 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  get isRecentUpdated() {
+    const DAYS = 3;
+    return dayjs(this.updatedAt).isAfter(dayjs().subtract(DAYS, 'd'));
+  }
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
     const HASHED_LENGTH = 60;
     if (this.password.length == HASHED_LENGTH) return;
     this.password = await hash(this.password, 10);
-  }
-
-  get isRecentUpdated() {
-    const DAYS = 3;
-    return dayjs(this.updatedAt).isAfter(dayjs().subtract(DAYS, 'd'));
   }
 }
