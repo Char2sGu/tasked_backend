@@ -39,47 +39,46 @@ describe(url(''), () => {
     await app.close();
   });
 
-  describe('/ (POST) Right Data', () => {
-    let response: Response;
-    let body: AuthInfo;
+  describe('/ (POST)', () => {
+    describe('Legal Data', () => {
+      let response: Response;
+      let body: AuthInfo;
 
-    beforeEach(async () => {
-      const data: ObtainTokenDto = {
-        username: 'username1',
-        password: 'password1',
-      };
-      response = await requester.post(url('/')).send(data);
-      body = response.body;
+      beforeEach(async () => {
+        const data: ObtainTokenDto = {
+          username: 'username1',
+          password: 'password1',
+        };
+        response = await requester.post(url('/')).send(data);
+        body = response.body;
+      });
+
+      it('should return status 201', () => {
+        expect(response.status).toBe(201);
+      });
+
+      it('should return the token and the expiry date', () => {
+        expect(body.token).toBeDefined();
+        expect(body.token).toHaveLength(TOKEN_LENGTH);
+        expect(body.expiresAt).toBeDefined();
+        expect(new Date(body.expiresAt)).not.toBeNaN();
+      });
     });
 
-    it('should return 201', () => {
-      expect(response.status).toBe(201);
-    });
+    describe('Illegal Data', () => {
+      let response: Response;
 
-    it('should return a token in the body', () => {
-      expect(body.token).toBeDefined();
-      expect(body.token).toHaveLength(TOKEN_LENGTH);
-    });
+      beforeEach(async () => {
+        const data: ObtainTokenDto = {
+          username: 'username1',
+          password: 'wrong',
+        };
+        response = await requester.post(url('/')).send(data);
+      });
 
-    it('should return the expiry date', () => {
-      expect(body.expiresAt).toBeDefined();
-      expect(new Date(body.expiresAt)).not.toBeNaN();
-    });
-  });
-
-  describe('/ (POST) Wrong Data', () => {
-    let response: Response;
-
-    beforeEach(async () => {
-      const data: ObtainTokenDto = {
-        username: 'username1',
-        password: 'wrong',
-      };
-      response = await requester.post(url('/')).send(data);
-    });
-
-    it('should return 401', () => {
-      expect(response.status).toBe(401);
+      it('should return status 401', () => {
+        expect(response.status).toBe(401);
+      });
     });
   });
 });
