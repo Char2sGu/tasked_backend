@@ -8,18 +8,16 @@ import { config } from 'dotenv';
 
 config();
 
-export function getTypeOrmRootModule(debug = false) {
-  return TypeOrmModule.forRoot({
-    type: 'sqlite',
-    database: process.env.DB_PATH,
-    autoLoadEntities: true,
-    synchronize: debug,
-    keepConnectionAlive: debug,
-  });
-}
-
 @Module({
-  imports: [getTypeOrmRootModule(), UsersModule, AuthModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: process.env.DB_PATH,
+      autoLoadEntities: true,
+    }),
+    UsersModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

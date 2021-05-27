@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthInfo } from 'src/auth/auth-info.interface';
 import { AuthController, PREFIX } from 'src/auth/auth.controller';
 import { AuthModule } from 'src/auth/auth.module';
@@ -10,6 +9,7 @@ import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import {
   getRepositories,
+  getTypeOrmRootModule,
   insertUsers,
   prepareE2E,
   urlBuilder,
@@ -25,7 +25,7 @@ describe(url(''), () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [getTypeOrmRootModule(true), AuthModule],
+      imports: [getTypeOrmRootModule(), AuthModule],
     }).compile();
 
     ({ app, requester } = await prepareE2E(moduleFixture));

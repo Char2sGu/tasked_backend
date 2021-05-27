@@ -1,11 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { getTypeOrmRootModule } from 'src/app.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
+import { buildKeyChecker, getTypeOrmRootModule, insertUsers } from 'test/utils';
 import { Repository } from 'typeorm';
-import { buildKeyChecker, insertUsers } from 'test/utils';
 
 describe(AuthService.name, () => {
   const d = buildKeyChecker<AuthService>();
@@ -19,7 +18,7 @@ describe(AuthService.name, () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [getTypeOrmRootModule(true), AuthModule],
+      imports: [getTypeOrmRootModule(), AuthModule],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
