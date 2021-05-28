@@ -22,6 +22,8 @@ describe(url(''), () => {
   let app: INestApplication;
   let requester: supertest.SuperTest<supertest.Test>;
   let repository: Repository<User>;
+  let response: Response;
+  let authInfo: AuthInfo;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -46,16 +48,13 @@ describe(url(''), () => {
 
   describe('/ (POST)', () => {
     describe('Legal Data', () => {
-      let response: Response;
-      let body: AuthInfo;
-
       beforeEach(async () => {
         const data: ObtainTokenDto = {
           username: 'username1',
           password: 'password1',
         };
         response = await requester.post(url('/')).send(data);
-        body = response.body;
+        authInfo = response.body;
       });
 
       it('should return status 201', () => {
@@ -63,22 +62,19 @@ describe(url(''), () => {
       });
 
       it('should return the token and the expiry date', () => {
-        expect(body.token).toBeDefined();
-        expect(body.token).toHaveLength(TOKEN_LENGTH);
-        expect(body.expiresAt).toBeDefined();
-        expect(new Date(body.expiresAt)).not.toBeNaN();
+        expect(authInfo.token).toBeDefined();
+        expect(authInfo.token).toHaveLength(TOKEN_LENGTH);
+        expect(authInfo.expiresAt).toBeDefined();
+        expect(new Date(authInfo.expiresAt)).not.toBeNaN();
       });
     });
 
     describe('Illegal Data', () => {
-      let response: Response;
-
       beforeEach(async () => {
-        const data: ObtainTokenDto = {
+        response = await requester.post(url('/')).send({
           username: 'username1',
           password: 'wrong',
-        };
-        response = await requester.post(url('/')).send(data);
+        });
       });
 
       it('should return status 401', () => {
