@@ -1,16 +1,16 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthInfo } from 'src/auth/auth-info.interface';
-import { AuthController, PREFIX } from 'src/auth/auth.controller';
+import { PREFIX } from 'src/auth/auth.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { TOKEN_LENGTH } from 'src/constants';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import {
   getRepositories,
   getTypeOrmRootModule,
-  insertUsers,
   prepareE2E,
   urlBuilder,
 } from 'test/utils';
@@ -31,7 +31,12 @@ describe(url(''), () => {
     ({ app, requester } = await prepareE2E(moduleFixture));
     [repository] = getRepositories(moduleFixture, User);
 
-    await insertUsers(repository, 2, AuthController.name);
+    await repository.save<CreateUserDto>(
+      repository.create({
+        username: 'username1',
+        password: 'password1',
+      }),
+    );
   });
 
   afterEach(async () => {
