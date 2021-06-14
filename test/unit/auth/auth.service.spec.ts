@@ -1,29 +1,27 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { AuthModule } from 'src/auth/auth.module';
+import { EntityRepository } from '@mikro-orm/core';
+import { getRepositoryToken } from '@mikro-orm/nestjs';
+import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
-import { buildKeyChecker, getTypeOrmRootModule, insertUsers } from 'test/utils';
-import { Repository } from 'typeorm';
+import { buildKeyChecker, prepareE2E } from 'test/utils';
 
 describe(AuthService.name, () => {
   const d = buildKeyChecker<AuthService>();
 
-  const COUNT = 1;
-  const username = `username${COUNT}`;
-  const password = `password${COUNT}`;
-
-  let repository: Repository<User>;
+  let module: TestingModule;
+  let repository: EntityRepository<User>;
   let service: AuthService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [getTypeOrmRootModule(), AuthModule],
-    }).compile();
+    ({ module } = await prepareE2E());
 
     service = module.get<AuthService>(AuthService);
     repository = module.get(getRepositoryToken(User));
-    await insertUsers(repository, COUNT, AuthService.name);
+
+    repository.persist(
+      repository.create({ username: 'username', password: 'password' }),
+    );
+    await repository.flush();
   });
 
   it('should be defined', () => {
@@ -32,7 +30,7 @@ describe(AuthService.name, () => {
 
   describe(d('#obtainJwt()'), () => {
     it('should return a token when passed legal data', async () => {
-      const token = await service.obtainJwt(username, password);
+      const token = await service.obtainJwt('username', 'password');
       expect(typeof token).toBe('string');
     });
 

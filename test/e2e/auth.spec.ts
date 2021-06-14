@@ -1,49 +1,34 @@
-import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import { EntityRepository } from '@mikro-orm/core';
+import { getRepositoryToken } from '@mikro-orm/nestjs';
+import { TestingModule } from '@nestjs/testing';
 import { AuthInfo } from 'src/auth/auth-info.interface';
 import { PREFIX } from 'src/auth/auth.controller';
-import { AuthModule } from 'src/auth/auth.module';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { TOKEN_LENGTH } from 'src/constants';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
-import {
-  getRepositories,
-  getTypeOrmRootModule,
-  prepareE2E,
-  urlBuilder,
-} from 'test/utils';
-import { getConnection, Repository } from 'typeorm';
+import { prepareE2E, urlBuilder } from 'test/utils';
 
 const url = urlBuilder(`/${PREFIX}`);
 
 describe(url(''), () => {
-  let app: INestApplication;
+  let module: TestingModule;
   let requester: supertest.SuperTest<supertest.Test>;
-  let repository: Repository<User>;
+  let repository: EntityRepository<User>;
   let response: Response;
   let authInfo: AuthInfo;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [getTypeOrmRootModule(), AuthModule],
-    }).compile();
+    ({ module, requester } = await prepareE2E());
+    repository = module.get<EntityRepository<User>>(getRepositoryToken(User));
 
-    ({ app, requester } = await prepareE2E(moduleFixture));
-    [repository] = getRepositories(moduleFixture, User);
-
-    await repository.save<CreateUserDto>(
+    repository.persist(
       repository.create({
         username: 'username1',
         password: 'password1',
       }),
     );
-  });
-
-  afterEach(async () => {
-    await getConnection().close();
-    await app.close();
+    await repository.flush();
   });
 
   describe('/ (POST)', () => {

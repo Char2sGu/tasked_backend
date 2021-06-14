@@ -1,44 +1,63 @@
-import { hash } from 'bcryptjs';
-import { Exclude } from 'class-transformer';
-import dayjs from 'dayjs';
 import {
-  BeforeInsert,
+  BeforeCreate,
   BeforeUpdate,
-  Column,
-  CreateDateColumn,
+  Collection,
   Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  OneToMany,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
+import { hash } from 'bcryptjs';
+import dayjs from 'dayjs';
+import { BaseEntity } from 'src/base-entity.entity';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
+import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
+import { Membership } from 'src/memberships/entities/membership.entity';
 import { Gender } from '../gender.enum';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ unique: true })
+export class User extends BaseEntity<User> {
+  @Property()
+  @Unique()
   username: string;
 
-  @Exclude()
-  @Column()
+  @Property({
+    nullable: true,
+  })
+  nickname: string | null;
+
+  @Property({
+    hidden: true,
+  })
   password: string;
 
-  @Column({ default: Gender.Unknown })
-  gender: Gender;
+  @Property()
+  gender: Gender = Gender.Unknown;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @OneToMany({
+    entity: () => Classroom,
+    mappedBy: (classroom) => classroom.creator,
+  })
+  classroomsCreated = new Collection<Classroom>(this);
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @OneToMany({
+    entity: () => JoinApplication,
+    mappedBy: (application) => application.owner,
+  })
+  joinApplications = new Collection<JoinApplication>(this);
+
+  @OneToMany({
+    entity: () => Membership,
+    mappedBy: (memberships) => memberships.owner,
+  })
+  memberships = new Collection<Membership>(this);
 
   get isUpdatedRecently() {
     const DAYS = 3;
     return dayjs(this.updatedAt).isAfter(dayjs().subtract(DAYS, 'd'));
   }
 
-  @BeforeInsert()
+  @BeforeCreate()
   @BeforeUpdate()
   async hashPassword() {
     const HASHED_LENGTH = 60;
