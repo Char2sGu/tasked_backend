@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsService } from './join-applications.service';
 
-export const PREFIX = `${ROOT_PREFIX}/join-applications`;
+export const PREFIX = `${ROOT_PREFIX}/join-applications` as const;
 
 @UseGuards(JwtAuthGuard)
 @Controller(PREFIX)

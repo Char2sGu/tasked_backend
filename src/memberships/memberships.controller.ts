@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { Membership } from './entities/membership.entity';
 import { MembershipsService } from './memberships.service';
 
-export const PREFIX = `${ROOT_PREFIX}/memberships`;
+export const PREFIX = `${ROOT_PREFIX}/memberships` as const;
 
 @UseGuards(JwtAuthGuard)
 @Controller(PREFIX)

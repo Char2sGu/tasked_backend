@@ -4,7 +4,7 @@ import { AuthInfo } from './auth-info.interface';
 import { AuthService } from './auth.service';
 import { ObtainTokenDto } from './dto/obtain-token.dto';
 
-export const PREFIX = `${ROOT_PREFIX}/auth`;
+export const PREFIX = `${ROOT_PREFIX}/auth` as const;
 
 @Controller(PREFIX)
 export class AuthController {

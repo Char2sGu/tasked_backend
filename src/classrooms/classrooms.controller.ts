@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { ClassroomsService } from './classrooms.service';
 import { Classroom } from './entities/classroom.entity';
 
-export const PREFIX = `${ROOT_PREFIX}/classrooms`;
+export const PREFIX = `${ROOT_PREFIX}/classrooms` as const;
 
 @UseGuards(JwtAuthGuard)
 @Controller(PREFIX)

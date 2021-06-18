@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
-export const PREFIX = `${ROOT_PREFIX}/users`;
+export const PREFIX = `${ROOT_PREFIX}/users` as const;
 
 @Controller(PREFIX)
 export class UsersController extends new MikroCrudControllerFactory<UsersService>(
