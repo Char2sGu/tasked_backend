@@ -219,6 +219,25 @@ describe(url(''), () => {
       });
     });
 
+    describe('Soft Deleted', () => {
+      beforeEach(async () => {
+        const entity = entityManager.create(Classroom, {
+          name: 'soft-deleted',
+          creator: users.creator,
+          deletedAt: new Date(),
+        });
+        await entityManager.persistAndFlush(entity);
+
+        response = await requester
+          .get(url(`/${entity.id}/`))
+          .auth(tokens.creator, { type: 'bearer' });
+      });
+
+      it(`should return status ${HttpStatus.NOT_FOUND}`, () => {
+        expect(response.status).toBe(HttpStatus.NOT_FOUND);
+      });
+    });
+
     describe('Not Authed', () => {
       beforeEach(async () => {
         response = await requester.get(url(`/${classrooms[0].id}/`));
@@ -290,6 +309,11 @@ describe(url(''), () => {
 
       it('should return nothing', () => {
         expect(response.body).toEqual({});
+      });
+
+      it('should soft-delete the entity', async () => {
+        const entity = await entityManager.findOne(Classroom, classrooms[0].id);
+        expect(entity).toBeNull();
       });
     });
 

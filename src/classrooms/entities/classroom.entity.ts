@@ -12,6 +12,11 @@ import { Membership } from 'src/memberships/entities/membership.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Filter<Classroom>({
+  name: 'exclude-soft-deleted',
+  cond: { deletedAt: null },
+  default: true,
+})
+@Filter<Classroom>({
   name: 'crud',
   cond: ({ user }: { user: User }) => ({
     memberships: { owner: user },
