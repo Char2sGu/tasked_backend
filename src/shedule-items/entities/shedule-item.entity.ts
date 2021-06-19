@@ -26,4 +26,9 @@ export class SheduleItem extends BaseEntity<SheduleItem> {
     nullable: true,
   })
   remark: string | null;
+
+  @Property({
+    default: true,
+  })
+  isActivated: boolean;
 }

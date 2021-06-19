@@ -39,6 +39,7 @@ describe(url(''), () => {
       title,
       time,
       remark,
+      isActivated,
       updatedAt,
       createdAt,
       ...rest
@@ -49,6 +50,7 @@ describe(url(''), () => {
     expect(title).toBeDefined();
     expect(time).toBeDefined();
     expect(remark).toBeDefined();
+    expect(isActivated).toBeDefined();
     expect(updatedAt).toBeDefined();
     expect(createdAt).toBeDefined();
     expect(rest).toEqual({});
