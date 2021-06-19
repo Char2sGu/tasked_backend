@@ -9,6 +9,8 @@ import { JoinApplication } from 'src/join-applications/entities/join-application
 import { JoinApplicationsModule } from 'src/join-applications/join-applications.module';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsModule } from 'src/memberships/memberships.module';
+import { SheduleItem } from 'src/shedule-items/entities/shedule-item.entity';
+import { SheduleItemsModule } from 'src/shedule-items/shedule-items.module';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
 import supertest from 'supertest';
@@ -23,7 +25,7 @@ export async function prepareE2E(
       MikroOrmModule.forRoot({
         type: 'sqlite',
         dbName: ':memory:',
-        entities: [User, Membership, Classroom, JoinApplication],
+        entities: [User, Membership, Classroom, JoinApplication, SheduleItem],
         debug,
       }),
       AuthModule,
@@ -31,6 +33,7 @@ export async function prepareE2E(
       MembershipsModule,
       ClassroomsModule,
       JoinApplicationsModule,
+      SheduleItemsModule,
       ...(metadata.imports ?? []),
     ],
   }).compile();

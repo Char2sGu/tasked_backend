@@ -9,6 +9,7 @@ import {
 import { BaseEntity } from 'src/base-entity.entity';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { SheduleItem } from 'src/shedule-items/entities/shedule-item.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Filter<Classroom>({
@@ -43,6 +44,12 @@ export class Classroom extends BaseEntity<Classroom> {
     mappedBy: (membership) => membership.classroom,
   })
   memberships = new Collection<Membership>(this);
+
+  @OneToMany({
+    entity: () => SheduleItem,
+    mappedBy: (item) => item.classroom,
+  })
+  sheduleItems = new Collection<SheduleItem>(this);
 
   @Property({
     hidden: true,

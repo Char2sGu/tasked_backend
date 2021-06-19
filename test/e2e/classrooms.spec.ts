@@ -39,6 +39,7 @@ describe(url(''), () => {
       creator,
       joinApplications,
       memberships,
+      sheduleItems,
       updatedAt,
       createdAt,
       ...rest
@@ -49,6 +50,7 @@ describe(url(''), () => {
     expect(creator).toBeDefined();
     expect(joinApplications).toBeDefined();
     expect(memberships).toBeDefined();
+    expect(sheduleItems).toBeDefined();
     expect(updatedAt).toBeDefined();
     expect(createdAt).toBeDefined();
     expect(rest).toEqual({});

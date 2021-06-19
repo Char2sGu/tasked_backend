@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
 import { JoinApplicationsModule } from './join-applications/join-applications.module';
 import { MembershipsModule } from './memberships/memberships.module';
+import { SheduleItemsModule } from './shedule-items/shedule-items.module';
 import { UsersModule } from './users/users.module';
 
 config();
@@ -23,6 +24,7 @@ config();
     ClassroomsModule,
     MembershipsModule,
     JoinApplicationsModule,
+    SheduleItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
