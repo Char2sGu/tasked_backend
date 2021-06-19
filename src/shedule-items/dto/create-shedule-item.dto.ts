@@ -12,7 +12,7 @@ export class CreateSheduleItemDto {
 
   @IsString()
   @Length(1, 50)
-  name: string;
+  title: string;
 
   @IsDateString()
   time: string;

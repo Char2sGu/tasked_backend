@@ -36,7 +36,7 @@ describe(url(''), () => {
     const {
       id,
       classroom,
-      name,
+      title,
       time,
       remark,
       updatedAt,
@@ -46,7 +46,7 @@ describe(url(''), () => {
 
     expect(id).toBeDefined();
     expect(classroom).toBeDefined();
-    expect(name).toBeDefined();
+    expect(title).toBeDefined();
     expect(time).toBeDefined();
     expect(remark).toBeDefined();
     expect(updatedAt).toBeDefined();
@@ -101,12 +101,12 @@ describe(url(''), () => {
     sheduleItems = {
       own: entityManager.create(SheduleItem, {
         classroom: classrooms.own,
-        name: 'own',
+        title: 'own',
         time: dayjs(0).set('day', 1).set('hour', 3).toDate(),
       }),
       unrelated: entityManager.create(SheduleItem, {
         classroom: classrooms.unrelated,
-        name: 'unrelated',
+        title: 'unrelated',
         time: dayjs(0).set('day', 2).set('hour', 6).toDate(),
       }),
     };
@@ -158,7 +158,7 @@ describe(url(''), () => {
     beforeEach(() => {
       createDto = {
         classroom: classrooms.own.id,
-        name: 'name',
+        title: 'name',
         time: dayjs().set('day', 3).set('hour', 4).toISOString(),
       };
     });
@@ -223,7 +223,7 @@ describe(url(''), () => {
 
   describe(url('/:id/ (PATCH)'), () => {
     beforeEach(() => {
-      updateDto = { name: 'new' };
+      updateDto = { title: 'new' };
     });
 
     describe('Basic', () => {

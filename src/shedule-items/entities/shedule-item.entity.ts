@@ -17,7 +17,7 @@ export class SheduleItem extends BaseEntity<SheduleItem> {
   classroom: Classroom;
 
   @Property()
-  name: string;
+  title: string;
 
   @Property()
   time: Date;
