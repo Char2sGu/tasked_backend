@@ -120,7 +120,7 @@ describe(url(''), () => {
   });
 
   describe(url('/ (GET)'), () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url('/'))
@@ -163,7 +163,7 @@ describe(url(''), () => {
       };
     });
 
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .post(url('/'))
@@ -192,7 +192,7 @@ describe(url(''), () => {
   });
 
   describe(url('/:id/ (GET)'), () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url(`/${sheduleItems.own.id}/`))
@@ -226,7 +226,7 @@ describe(url(''), () => {
       updateDto = { name: 'new' };
     });
 
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .patch(url(`/${sheduleItems.own.id}/`))
@@ -257,7 +257,7 @@ describe(url(''), () => {
   });
 
   describe(url('/:id/ (DELETE)'), () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .delete(url(`/${sheduleItems.own.id}/`))

@@ -170,7 +170,7 @@ describe(url(''), () => {
   });
 
   describe('/ (GET)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url('/'))
@@ -209,7 +209,7 @@ describe(url(''), () => {
   });
 
   describe('/ (POST)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         createDto = { classroom: classrooms.b.id, role: Role.Student };
         response = await requester
@@ -261,7 +261,7 @@ describe(url(''), () => {
   });
 
   describe('/:id/ (GET)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url(`/${applications[0].id}/`))
@@ -289,7 +289,7 @@ describe(url(''), () => {
   });
 
   describe('/:id/ (PATCH)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         updateDto = { role: Role.Teacher };
         response = await requester

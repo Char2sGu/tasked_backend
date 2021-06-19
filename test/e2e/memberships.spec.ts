@@ -200,7 +200,7 @@ describe(url(''), () => {
   });
 
   describe('/:id/ (GET)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url('/1/'))

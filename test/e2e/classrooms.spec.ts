@@ -137,7 +137,7 @@ describe(url(''), () => {
   });
 
   describe('/ (GET)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url('/'))
@@ -172,7 +172,7 @@ describe(url(''), () => {
   });
 
   describe('/ (POST)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(() => {
         createDto = { name: 'name' };
       });
@@ -205,7 +205,7 @@ describe(url(''), () => {
   });
 
   describe('/:id/ (GET)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url(`/${classrooms[0].id}/`))
@@ -252,7 +252,7 @@ describe(url(''), () => {
   });
 
   describe('/:id/ (PATCH)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         updateDto = { name: 'updated' };
         response = await requester
@@ -298,7 +298,7 @@ describe(url(''), () => {
   });
 
   describe('/:id/ (DELETE)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .delete(url(`/${classrooms[0].id}/`))

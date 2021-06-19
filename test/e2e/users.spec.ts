@@ -80,7 +80,7 @@ describe(url(''), () => {
       body: { total: number; results: User[] };
     };
 
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url('/'))
@@ -112,7 +112,7 @@ describe(url(''), () => {
   });
 
   describe('/ (POST)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         createDto = { username: 'username', password: 'password' };
         response = await requester.post(url('/')).send(createDto);
@@ -139,7 +139,7 @@ describe(url(''), () => {
   });
 
   describe('/:username/ (GET)', () => {
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
           .get(url('/username1/'))
@@ -193,7 +193,7 @@ describe(url(''), () => {
       updateDto = { username: 'newusername' };
     });
 
-    describe('Common', () => {
+    describe('Basic', () => {
       beforeEach(async () => {
         jest
           .spyOn(User.prototype, 'isUpdatedRecently', 'get')
