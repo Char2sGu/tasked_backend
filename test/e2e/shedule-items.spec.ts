@@ -21,10 +21,10 @@ describe(url(''), () => {
   let requester: supertest.SuperTest<supertest.Test>;
   let response: Response;
   let entityManager: EntityManager;
-  let users: Record<'me' | 'else', User>;
-  let token: string;
+  let users: Record<'me' | 'student' | 'else', User>;
+  let tokens: Record<'own' | 'student' | 'else', string>;
   let classrooms: Record<'own' | 'unrelated', Classroom>;
-  let memberships: Record<'own' | 'unrelated', Membership>;
+  let memberships: Record<'own' | 'student' | 'unrelated', Membership>;
   let sheduleItems: Record<'own' | 'unrelated', SheduleItem>;
   let createDto: CreateSheduleItemDto;
   let updateDto: UpdateSheduleItemDto;
@@ -62,14 +62,21 @@ describe(url(''), () => {
     ({ module, requester } = await prepareE2E());
     entityManager = module.get(EntityManager);
 
+    const HASHED_PASSWORD = // "password"
+      '$2a$10$a50UJxxNGkLOoLfuB.g6be2EKZDrYvrYWVFbpNTCkqgHi/eMA0IDm';
+
     users = {
       me: entityManager.create(User, {
         username: 'me',
-        password: 'password',
+        password: HASHED_PASSWORD,
+      }),
+      student: entityManager.create(User, {
+        username: 'member',
+        password: HASHED_PASSWORD,
       }),
       else: entityManager.create(User, {
         username: 'else',
-        password: 'password',
+        password: HASHED_PASSWORD,
       }),
     };
     entityManager.persist(Object.values(users));
@@ -91,6 +98,11 @@ describe(url(''), () => {
         owner: users.me,
         classroom: classrooms.own,
         role: Role.Teacher,
+      }),
+      student: entityManager.create(Membership, {
+        owner: users.student,
+        classroom: classrooms.own,
+        role: Role.Student,
       }),
       unrelated: entityManager.create(Membership, {
         owner: users.else,
@@ -116,17 +128,24 @@ describe(url(''), () => {
 
     await entityManager.flush();
 
-    token = await module
-      .get(AuthService)
-      .obtainJwt(users.me.username, 'password');
+    const authService = module.get(AuthService);
+    tokens = {
+      own: await authService.obtainJwt(users.me.username, 'password'),
+      student: await authService.obtainJwt(users.student.username, 'password'),
+      else: await authService.obtainJwt(users.else.username, 'password'),
+    };
   });
 
   describe(url('/ (GET)'), () => {
-    describe('Basic', () => {
+    describe.each`
+      description     | token
+      ${'as creator'} | ${() => tokens.own}
+      ${'as student'} | ${() => tokens.student}
+    `('Basic: $description', ({ token }) => {
       beforeEach(async () => {
         response = await requester
           .get(url('/'))
-          .auth(token, { type: 'bearer' });
+          .auth(token(), { type: 'bearer' });
       });
 
       it(`should return status ${HttpStatus.OK}`, () => {
@@ -169,7 +188,7 @@ describe(url(''), () => {
       beforeEach(async () => {
         response = await requester
           .post(url('/'))
-          .auth(token, { type: 'bearer' })
+          .auth(tokens.own, { type: 'bearer' })
           .send(createDto);
       });
 
@@ -179,6 +198,23 @@ describe(url(''), () => {
 
       it('should return the created shedule item entities', () => {
         assertTransformedSheduleItem(response.body, createDto);
+      });
+    });
+
+    describe.each`
+      description           | status                    | token
+      ${'not as member'}    | ${HttpStatus.BAD_REQUEST} | ${() => tokens.else}
+      ${'as normal member'} | ${HttpStatus.FORBIDDEN}   | ${() => tokens.student}
+    `('Not Allowed: $description', ({ status, token }) => {
+      beforeEach(async () => {
+        response = await requester
+          .post(url('/'))
+          .auth(token(), { type: 'bearer' })
+          .send(createDto);
+      });
+
+      it(`should return status ${status}`, () => {
+        expect(response.status).toBe(status);
       });
     });
 
@@ -198,7 +234,7 @@ describe(url(''), () => {
       beforeEach(async () => {
         response = await requester
           .get(url(`/${sheduleItems.own.id}/`))
-          .auth(token, { type: 'bearer' });
+          .auth(tokens.own, { type: 'bearer' });
       });
 
       it(`should return status ${HttpStatus.OK}`, () => {
@@ -232,7 +268,7 @@ describe(url(''), () => {
       beforeEach(async () => {
         response = await requester
           .patch(url(`/${sheduleItems.own.id}/`))
-          .auth(token, { type: 'bearer' })
+          .auth(tokens.own, { type: 'bearer' })
           .send(updateDto);
       });
 
@@ -242,6 +278,23 @@ describe(url(''), () => {
 
       it('should return the updated shedule item entities', () => {
         assertTransformedSheduleItem(response.body, updateDto);
+      });
+    });
+
+    describe.each`
+      description           | status                  | token
+      ${'not as member'}    | ${HttpStatus.NOT_FOUND} | ${() => tokens.else}
+      ${'as normal member'} | ${HttpStatus.FORBIDDEN} | ${() => tokens.student}
+    `('Not Allowed: $description', ({ status, token }) => {
+      beforeEach(async () => {
+        response = await requester
+          .patch(url(`/${sheduleItems.own.id}/`))
+          .auth(token(), { type: 'bearer' })
+          .send(updateDto);
+      });
+
+      it(`should return status ${status}`, () => {
+        expect(response.status).toBe(status);
       });
     });
 
@@ -263,7 +316,7 @@ describe(url(''), () => {
       beforeEach(async () => {
         response = await requester
           .delete(url(`/${sheduleItems.own.id}/`))
-          .auth(token, { type: 'bearer' });
+          .auth(tokens.own, { type: 'bearer' });
       });
 
       it(`should return status ${HttpStatus.NO_CONTENT}`, () => {
@@ -272,6 +325,22 @@ describe(url(''), () => {
 
       it('should return nothing', () => {
         expect(response.body).toEqual({});
+      });
+    });
+
+    describe.each`
+      description           | status                  | token
+      ${'not as member'}    | ${HttpStatus.NOT_FOUND} | ${() => tokens.else}
+      ${'as normal member'} | ${HttpStatus.FORBIDDEN} | ${() => tokens.student}
+    `('Not Allowed: $description', ({ status, token }) => {
+      beforeEach(async () => {
+        response = await requester
+          .delete(url(`/${sheduleItems.own.id}/`))
+          .auth(token(), { type: 'bearer' });
+      });
+
+      it(`should return status ${status}`, () => {
+        expect(response.status).toBe(status);
       });
     });
 
