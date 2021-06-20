@@ -136,7 +136,7 @@ describe(url(''), () => {
         response = await requester.post(url('/')).send({});
       });
 
-      it(`should return status ${HttpStatus.BAD_GATEWAY}`, () => {
+      it(`should return status ${HttpStatus.BAD_REQUEST}`, () => {
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       });
     });
