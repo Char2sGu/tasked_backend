@@ -128,12 +128,17 @@ describe(url(''), () => {
 
     await entityManager.flush();
 
-    const authService = module.get(AuthService);
-    tokens = {
-      own: await authService.obtainJwt(users.me.username, 'password'),
-      student: await authService.obtainJwt(users.student.username, 'password'),
-      else: await authService.obtainJwt(users.else.username, 'password'),
-    };
+    if (!tokens) {
+      const authService = module.get(AuthService);
+      tokens = {
+        own: await authService.obtainJwt(users.me.username, 'password'),
+        student: await authService.obtainJwt(
+          users.student.username,
+          'password',
+        ),
+        else: await authService.obtainJwt(users.else.username, 'password'),
+      };
+    }
   });
 
   describe(url('/ (GET)'), () => {

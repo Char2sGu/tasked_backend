@@ -58,21 +58,25 @@ describe(url(''), () => {
 
     entityManager = module.get(EntityManager);
 
+    const HASHED_PASSWORD = // "password"
+      '$2a$10$a50UJxxNGkLOoLfuB.g6be2EKZDrYvrYWVFbpNTCkqgHi/eMA0IDm';
+
     users = [
       entityManager.create(User, {
         username: 'username1',
-        password: 'password',
+        password: HASHED_PASSWORD,
       }),
       entityManager.create(User, {
         username: 'username2',
-        password: 'password',
+        password: HASHED_PASSWORD,
       }),
     ];
     entityManager.persist(users);
 
     await entityManager.flush();
 
-    token = await module.get(AuthService).obtainJwt('username1', 'password');
+    if (!token)
+      token = await module.get(AuthService).obtainJwt('username1', 'password');
   });
 
   describe('/ (GET)', () => {
