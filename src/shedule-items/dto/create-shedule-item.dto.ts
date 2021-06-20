@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDateString,
   IsInt,
   IsOptional,
@@ -21,4 +22,8 @@ export class CreateSheduleItemDto {
   @IsString()
   @Length(1, 200)
   remark?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActivated?: boolean;
 }

@@ -181,6 +181,8 @@ describe(url(''), () => {
         classroom: classrooms.own.id,
         title: 'name',
         time: dayjs().set('day', 3).set('hour', 4).toISOString(),
+        remark: 'adfasdfhasdhlfajshdflkahsdfkja',
+        isActivated: false,
       };
     });
 
