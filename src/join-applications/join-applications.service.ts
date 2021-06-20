@@ -37,18 +37,17 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
         },
         user,
       });
-      throw new ForbiddenException();
+      throw new ForbiddenException('A pending application already exists');
     } catch (error) {
       if (!(error instanceof NotFoundError)) throw error;
     }
 
-    // forbid to create applications if the user is already a member
     try {
       await this.membershipsService.retrieve({
         conditions: { owner: user, classroom },
         user,
       });
-      throw new ForbiddenException();
+      throw new ForbiddenException('Already a member');
     } catch (error) {
       if (!(error instanceof NotFoundError)) throw error;
     }
@@ -75,12 +74,15 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
     await this.repository.populate(application, [
       'classroom',
     ] as RelationPath<JoinApplication>[]);
-    // forbid anyone except the classroom's creator to manage the application
-    if (user != application.classroom.creator) throw new ForbiddenException();
+    if (user != application.classroom.creator)
+      throw new ForbiddenException(
+        'Only the creator can manage the applications',
+      );
 
-    // forbid to update a rejected application
     if (application.status == ApplicationStatus.Rejected)
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        'Rejected applications are not allowed to be updated',
+      );
 
     application = await super.update({ data, entity: application, user });
 

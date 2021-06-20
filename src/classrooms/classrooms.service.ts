@@ -42,8 +42,8 @@ export class ClassroomsService extends new MikroCrudServiceFactory({
     data: UpdateClassroomDto;
     user: User;
   }) {
-    // forbid anyone except the creator to update the classroom
-    if (user != classroom.creator) throw new ForbiddenException();
+    if (user != classroom.creator)
+      throw new ForbiddenException('Only the creator can update the classroom');
     return await super.update({ entity: classroom, data, user });
   }
 
@@ -54,8 +54,10 @@ export class ClassroomsService extends new MikroCrudServiceFactory({
     entity: Classroom;
     user: User;
   }) {
-    // forbid anyone except the creator to destroy the classroom
-    if (user != classroom.creator) throw new ForbiddenException();
+    if (user != classroom.creator)
+      throw new ForbiddenException(
+        'Only the creator can destroy the classroom',
+      );
     return await super.destroy({ entity: classroom, user });
   }
 }

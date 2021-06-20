@@ -33,9 +33,10 @@ export class MembershipsService extends new MikroCrudServiceFactory({
       'classroom',
     ] as RelationPath<Membership>[]);
 
-    // forbid to delete the creator's membership
     if (targetMembership.classroom.creator == targetMembership.owner)
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        'The membership of the creator cannot be destroyed',
+      );
 
     // skip when deleting one's own membership
     if (user == targetMembership.owner) return;
@@ -51,15 +52,18 @@ export class MembershipsService extends new MikroCrudServiceFactory({
       user,
     });
 
-    // forbid students to delete any memberships
-    if (ownMembership.role == Role.Student) throw new ForbiddenException();
+    if (ownMembership.role == Role.Student)
+      throw new ForbiddenException(
+        'Students are not allowed to destroy memberships of others',
+      );
 
-    // firbid teachers to delete teachers
     if (
       ownMembership.role == Role.Teacher &&
       targetMembership.role == Role.Teacher
     )
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        'Teachers are only allowed to destroy memberships of students',
+      );
 
     return await super.destroy({ entity: targetMembership, user });
   }

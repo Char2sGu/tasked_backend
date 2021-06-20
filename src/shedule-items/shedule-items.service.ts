@@ -33,9 +33,12 @@ export class SheduleItemsService extends new MikroCrudServiceFactory({
         user,
       })
       .catch(() => {
-        throw new BadRequestException();
+        throw new BadRequestException('Classroom not found');
       });
-    if (user != classroom.creator) throw new ForbiddenException();
+    if (user != classroom.creator)
+      throw new ForbiddenException(
+        'Only the creator is allowed to create shedule items',
+      );
 
     return await super.create({ data, user });
   }
@@ -50,7 +53,10 @@ export class SheduleItemsService extends new MikroCrudServiceFactory({
     user: User;
   }) {
     await sheduleItem.classroom.init();
-    if (user != sheduleItem.classroom.creator) throw new ForbiddenException();
+    if (user != sheduleItem.classroom.creator)
+      throw new ForbiddenException(
+        'Only the creator is allowed to update shedule items',
+      );
 
     return await super.update({ entity: sheduleItem, data, user });
   }
@@ -63,7 +69,10 @@ export class SheduleItemsService extends new MikroCrudServiceFactory({
     user: User;
   }) {
     await sheduleItem.classroom.init();
-    if (user != sheduleItem.classroom.creator) throw new ForbiddenException();
+    if (user != sheduleItem.classroom.creator)
+      throw new ForbiddenException(
+        'Only the creator is allowed to destroy shedule items',
+      );
 
     return await super.destroy({ entity: sheduleItem, user });
   }

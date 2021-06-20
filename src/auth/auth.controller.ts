@@ -16,7 +16,7 @@ export class AuthController {
       obtainTokenDto.username,
       obtainTokenDto.password,
     );
-    if (!token) throw new UnauthorizedException();
+    if (!token) throw new UnauthorizedException('Invalid username or password');
     return {
       token,
       expiresAt: this.authService.getExpirationDate(),

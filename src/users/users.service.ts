@@ -18,10 +18,10 @@ export class UsersService extends new MikroCrudServiceFactory({
     data: UpdateUserDto;
     user: User;
   }) {
-    // forbid the user to update anyone except himself
-    if (targetUser != user) throw new ForbiddenException();
-    // forbid to update if updated recently
-    if (targetUser.isUpdatedRecently) throw new ForbiddenException();
+    if (targetUser != user)
+      throw new ForbiddenException('Updating other users is not allowed');
+    if (targetUser.isUpdatedRecently)
+      throw new ForbiddenException('Updating is not allowed within three days');
     return await super.update({ entity: targetUser, data, user });
   }
 }
