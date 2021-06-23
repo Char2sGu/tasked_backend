@@ -31,7 +31,7 @@ describe(url(''), () => {
       username,
       nickname,
       gender,
-      classroomsCreated,
+      classrooms,
       joinApplications,
       memberships,
       updatedAt,
@@ -43,7 +43,7 @@ describe(url(''), () => {
     expect(username).toBeDefined();
     expect(nickname).toBeDefined();
     expect(gender).toBeDefined();
-    expect(classroomsCreated).toBeInstanceOf(Array);
+    expect(classrooms).toBeInstanceOf(Array);
     expect(joinApplications).toBeInstanceOf(Array);
     expect(memberships).toBeInstanceOf(Array);
     expect(updatedAt).toBeDefined();
@@ -177,7 +177,7 @@ describe(url(''), () => {
       });
 
       it('should return the private data as empty', () => {
-        assertSerializedUser(response.body, { classroomsCreated: [] });
+        assertSerializedUser(response.body, { classrooms: [] });
       });
     });
 

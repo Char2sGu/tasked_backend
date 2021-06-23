@@ -38,7 +38,7 @@ export class User extends BaseEntity<User> {
     entity: () => Classroom,
     mappedBy: (classroom) => classroom.creator,
   })
-  classroomsCreated = new Collection<Classroom>(this);
+  classrooms = new Collection<Classroom>(this);
 
   @OneToMany({
     entity: () => JoinApplication,
