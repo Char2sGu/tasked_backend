@@ -2,7 +2,6 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { HttpStatus } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -31,9 +30,6 @@ describe(url(''), () => {
       username,
       nickname,
       gender,
-      classrooms,
-      joinApplications,
-      memberships,
       updatedAt,
       createdAt,
       ...rest
@@ -43,9 +39,6 @@ describe(url(''), () => {
     expect(username).toBeDefined();
     expect(nickname).toBeDefined();
     expect(gender).toBeDefined();
-    expect(classrooms).toBeInstanceOf(Array);
-    expect(joinApplications).toBeInstanceOf(Array);
-    expect(memberships).toBeInstanceOf(Array);
     expect(updatedAt).toBeDefined();
     expect(createdAt).toBeDefined();
     expect(rest).toEqual({});
@@ -156,28 +149,6 @@ describe(url(''), () => {
 
       it('should return the target user entity', () => {
         assertSerializedUser(response.body, { username: 'username1' });
-      });
-    });
-
-    describe('Not Self', () => {
-      let classroom: Classroom;
-
-      beforeEach(async () => {
-        classroom = entityManager.create(Classroom, {
-          name: 'classroom',
-          creator: users[1],
-        });
-        entityManager.persist(classroom);
-
-        await entityManager.flush();
-
-        response = await requester
-          .get(url(`/${users[1].username}/`))
-          .auth(token, { type: 'bearer' });
-      });
-
-      it('should return the private data as empty', () => {
-        assertSerializedUser(response.body, { classrooms: [] });
       });
     });
 

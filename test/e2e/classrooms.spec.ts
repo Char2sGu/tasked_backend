@@ -33,24 +33,11 @@ describe(url(''), () => {
     classroom: Classroom,
     data: Partial<Record<keyof Classroom, unknown>> = {},
   ) {
-    const {
-      id,
-      name,
-      creator,
-      joinApplications,
-      memberships,
-      sheduleItems,
-      updatedAt,
-      createdAt,
-      ...rest
-    } = classroom;
+    const { id, name, creator, updatedAt, createdAt, ...rest } = classroom;
 
     expect(id).toBeDefined();
     expect(name).toBeDefined();
     expect(creator).toBeDefined();
-    expect(joinApplications).toBeDefined();
-    expect(memberships).toBeDefined();
-    expect(sheduleItems).toBeDefined();
     expect(updatedAt).toBeDefined();
     expect(createdAt).toBeDefined();
     expect(rest).toEqual({});
