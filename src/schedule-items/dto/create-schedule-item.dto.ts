@@ -7,7 +7,7 @@ import {
   Length,
 } from 'class-validator';
 
-export class CreateSheduleItemDto {
+export class CreateScheduleItemDto {
   @IsInt()
   classroom: number;
 

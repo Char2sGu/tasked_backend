@@ -6,10 +6,10 @@ import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/role.enum';
-import { CreateSheduleItemDto } from 'src/shedule-items/dto/create-shedule-item.dto';
-import { UpdateSheduleItemDto } from 'src/shedule-items/dto/update-shedule-item.dto';
-import { SheduleItem } from 'src/shedule-items/entities/shedule-item.entity';
-import { PREFIX } from 'src/shedule-items/shedule-items.controller';
+import { CreateScheduleItemDto } from 'src/schedule-items/dto/create-schedule-item.dto';
+import { UpdateScheduleItemDto } from 'src/schedule-items/dto/update-schedule-item.dto';
+import { ScheduleItem } from 'src/schedule-items/entities/schedule-item.entity';
+import { PREFIX } from 'src/schedule-items/schedule-items.controller';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
@@ -25,13 +25,13 @@ describe(url(''), () => {
   let tokens: Record<'own' | 'student' | 'else', string>;
   let classrooms: Record<'own' | 'unrelated', Classroom>;
   let memberships: Record<'own' | 'student' | 'unrelated', Membership>;
-  let sheduleItems: Record<'own' | 'unrelated', SheduleItem>;
-  let createDto: CreateSheduleItemDto;
-  let updateDto: UpdateSheduleItemDto;
+  let scheduleItems: Record<'own' | 'unrelated', ScheduleItem>;
+  let createDto: CreateScheduleItemDto;
+  let updateDto: UpdateScheduleItemDto;
 
-  function assertTransformedSheduleItem(
-    sheduleItem: SheduleItem,
-    data?: Partial<Record<keyof SheduleItem, unknown>>,
+  function assertTransformedScheduleItem(
+    scheduleItem: ScheduleItem,
+    data?: Partial<Record<keyof ScheduleItem, unknown>>,
   ) {
     const {
       id,
@@ -43,7 +43,7 @@ describe(url(''), () => {
       updatedAt,
       createdAt,
       ...rest
-    } = sheduleItem;
+    } = scheduleItem;
 
     expect(id).toBeDefined();
     expect(classroom).toBeDefined();
@@ -55,7 +55,7 @@ describe(url(''), () => {
     expect(createdAt).toBeDefined();
     expect(rest).toEqual({});
 
-    if (data) for (const k in data) expect(sheduleItem[k]).toEqual(data[k]);
+    if (data) for (const k in data) expect(scheduleItem[k]).toEqual(data[k]);
   }
 
   beforeEach(async () => {
@@ -112,19 +112,19 @@ describe(url(''), () => {
     };
     entityManager.persist(Object.values(memberships));
 
-    sheduleItems = {
-      own: entityManager.create(SheduleItem, {
+    scheduleItems = {
+      own: entityManager.create(ScheduleItem, {
         classroom: classrooms.own,
         title: 'own',
         time: dayjs(0).set('day', 1).set('hour', 3).toDate(),
       }),
-      unrelated: entityManager.create(SheduleItem, {
+      unrelated: entityManager.create(ScheduleItem, {
         classroom: classrooms.unrelated,
         title: 'unrelated',
         time: dayjs(0).set('day', 2).set('hour', 6).toDate(),
       }),
     };
-    entityManager.persist(Object.values(sheduleItems));
+    entityManager.persist(Object.values(scheduleItems));
 
     await entityManager.flush();
 
@@ -161,10 +161,10 @@ describe(url(''), () => {
         expect(response.body.total).toBe(1);
       });
 
-      it('should return own shedule item entities', () => {
-        const sheduleItems: SheduleItem[] = response.body.results;
-        sheduleItems.forEach((item) =>
-          assertTransformedSheduleItem(item, { classroom: classrooms.own.id }),
+      it('should return own schedule item entities', () => {
+        const scheduleItems: ScheduleItem[] = response.body.results;
+        scheduleItems.forEach((item) =>
+          assertTransformedScheduleItem(item, { classroom: classrooms.own.id }),
         );
       });
     });
@@ -203,8 +203,8 @@ describe(url(''), () => {
         expect(response.status).toBe(HttpStatus.CREATED);
       });
 
-      it('should return the created shedule item entities', () => {
-        assertTransformedSheduleItem(response.body, createDto);
+      it('should return the created schedule item entities', () => {
+        assertTransformedScheduleItem(response.body, createDto);
       });
     });
 
@@ -240,7 +240,7 @@ describe(url(''), () => {
     describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
-          .get(url(`/${sheduleItems.own.id}/`))
+          .get(url(`/${scheduleItems.own.id}/`))
           .auth(tokens.own, { type: 'bearer' });
       });
 
@@ -248,16 +248,16 @@ describe(url(''), () => {
         expect(response.status).toBe(HttpStatus.OK);
       });
 
-      it('should return the target shedule item entity', () => {
-        assertTransformedSheduleItem(response.body, {
-          id: sheduleItems.own.id,
+      it('should return the target schedule item entity', () => {
+        assertTransformedScheduleItem(response.body, {
+          id: scheduleItems.own.id,
         });
       });
     });
 
     describe('Not Authed', () => {
       beforeEach(async () => {
-        response = await requester.get(url(`/${sheduleItems.own.id}/`));
+        response = await requester.get(url(`/${scheduleItems.own.id}/`));
       });
 
       it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {
@@ -274,7 +274,7 @@ describe(url(''), () => {
     describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
-          .patch(url(`/${sheduleItems.own.id}/`))
+          .patch(url(`/${scheduleItems.own.id}/`))
           .auth(tokens.own, { type: 'bearer' })
           .send(updateDto);
       });
@@ -283,8 +283,8 @@ describe(url(''), () => {
         expect(response.status).toBe(HttpStatus.OK);
       });
 
-      it('should return the updated shedule item entities', () => {
-        assertTransformedSheduleItem(response.body, updateDto);
+      it('should return the updated schedule item entities', () => {
+        assertTransformedScheduleItem(response.body, updateDto);
       });
     });
 
@@ -295,7 +295,7 @@ describe(url(''), () => {
     `('Not Allowed: $description', ({ status, token }) => {
       beforeEach(async () => {
         response = await requester
-          .patch(url(`/${sheduleItems.own.id}/`))
+          .patch(url(`/${scheduleItems.own.id}/`))
           .auth(token(), { type: 'bearer' })
           .send(updateDto);
       });
@@ -308,7 +308,7 @@ describe(url(''), () => {
     describe('Not Authed', () => {
       beforeEach(async () => {
         response = await requester
-          .patch(url(`/${sheduleItems.own.id}/`))
+          .patch(url(`/${scheduleItems.own.id}/`))
           .send(updateDto);
       });
 
@@ -322,7 +322,7 @@ describe(url(''), () => {
     describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
-          .delete(url(`/${sheduleItems.own.id}/`))
+          .delete(url(`/${scheduleItems.own.id}/`))
           .auth(tokens.own, { type: 'bearer' });
       });
 
@@ -342,7 +342,7 @@ describe(url(''), () => {
     `('Not Allowed: $description', ({ status, token }) => {
       beforeEach(async () => {
         response = await requester
-          .delete(url(`/${sheduleItems.own.id}/`))
+          .delete(url(`/${scheduleItems.own.id}/`))
           .auth(token(), { type: 'bearer' });
       });
 
@@ -353,7 +353,7 @@ describe(url(''), () => {
 
     describe('Not Authed', () => {
       beforeEach(async () => {
-        response = await requester.delete(url(`/${sheduleItems.own.id}/`));
+        response = await requester.delete(url(`/${scheduleItems.own.id}/`));
       });
 
       it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {

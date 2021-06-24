@@ -3,14 +3,14 @@ import { BaseEntity } from 'src/base-entity.entity';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { User } from 'src/users/entities/user.entity';
 
-@Filter<SheduleItem>({
+@Filter<ScheduleItem>({
   name: 'crud',
   cond: ({ user }: { user: User }) => ({
     classroom: { memberships: { owner: user } },
   }),
 })
 @Entity()
-export class SheduleItem extends BaseEntity<SheduleItem> {
+export class ScheduleItem extends BaseEntity<ScheduleItem> {
   @ManyToOne({
     entity: () => Classroom,
   })
