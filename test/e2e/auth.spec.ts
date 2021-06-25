@@ -46,11 +46,9 @@ describe(url(''), () => {
         expect(response.status).toBe(201);
       });
 
-      it('should return the token and the expiry date', () => {
+      it('should return a token', () => {
         expect(authInfo.token).toBeDefined();
         expect(authInfo.token).toHaveLength(TOKEN_LENGTH);
-        expect(authInfo.expiresAt).toBeDefined();
-        expect(new Date(authInfo.expiresAt)).not.toBeNaN();
       });
     });
 

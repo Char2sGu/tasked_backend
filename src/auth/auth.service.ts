@@ -2,8 +2,6 @@ import { NotFoundError } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
-import ms from 'ms';
-import { TOKEN_VALIDITY_PERIOD } from 'src/constants';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -24,9 +22,5 @@ export class AuthService {
       if (error instanceof NotFoundError) return;
       throw error;
     }
-  }
-
-  getExpirationDate(from = new Date()) {
-    return new Date(from.getTime() + ms(TOKEN_VALIDITY_PERIOD));
   }
 }
