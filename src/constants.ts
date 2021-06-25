@@ -1,5 +1,3 @@
-export const TOKEN_VALIDITY_PERIOD = '4h';
-
 export const TOKEN_LENGTH = 159;
 
 declare global {
