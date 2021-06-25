@@ -54,7 +54,7 @@ export class MembershipsService extends new MikroCrudServiceFactory({
 
     if (ownMembership.role == Role.Student)
       throw new ForbiddenException(
-        'Students are not allowed to destroy memberships of others',
+        'Students are forbidden to destroy memberships of others',
       );
 
     if (

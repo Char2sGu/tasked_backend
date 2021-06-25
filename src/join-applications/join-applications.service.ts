@@ -81,7 +81,7 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
 
     if (application.status == ApplicationStatus.Rejected)
       throw new ForbiddenException(
-        'Rejected applications are not allowed to be updated',
+        'Rejected applications are forbidden to be updated',
       );
 
     application = await super.update({ data, entity: application, user });
