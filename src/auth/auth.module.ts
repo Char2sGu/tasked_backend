@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { SECRET_KEY } from 'src/constants';
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -9,7 +10,7 @@ import { JwtStragegy } from './jwt.strategy';
   imports: [
     UsersModule,
     JwtModule.register({
-      secret: process.env.SECRET_KEY,
+      secret: SECRET_KEY,
       signOptions: { expiresIn: '4h' },
     }),
   ],
