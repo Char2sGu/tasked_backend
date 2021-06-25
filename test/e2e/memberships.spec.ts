@@ -188,7 +188,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.get(url('/'));
       });
@@ -216,7 +216,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.get(url('/1/'));
       });
@@ -283,7 +283,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.delete(url('/1/'));
       });

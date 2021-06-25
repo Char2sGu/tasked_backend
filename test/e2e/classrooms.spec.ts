@@ -147,7 +147,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.get(url('/'));
       });
@@ -180,7 +180,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.post(url('/')).send(createDto);
       });
@@ -227,7 +227,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.get(url(`/${classrooms[0].id}/`));
       });
@@ -273,7 +273,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.patch(url('/1/')).send({});
       });
@@ -318,7 +318,7 @@ describe(url(''), () => {
       });
     });
 
-    describe('Not Authed', () => {
+    describe('Unauthorized', () => {
       beforeEach(async () => {
         response = await requester.delete(url(`/${classrooms[0].id}/`));
       });
