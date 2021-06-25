@@ -2,6 +2,8 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ModuleMetadata } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { AffairsModule } from 'src/affairs/affairs.module';
+import { Affair } from 'src/affairs/entities/affair.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { ClassroomsModule } from 'src/classrooms/classrooms.module';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
@@ -9,8 +11,6 @@ import { JoinApplication } from 'src/join-applications/entities/join-application
 import { JoinApplicationsModule } from 'src/join-applications/join-applications.module';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsModule } from 'src/memberships/memberships.module';
-import { ScheduleItem } from 'src/schedule-items/entities/schedule-item.entity';
-import { ScheduleItemsModule } from 'src/schedule-items/schedule-items.module';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
 import supertest from 'supertest';
@@ -25,7 +25,7 @@ export async function prepareE2E(
       MikroOrmModule.forRoot({
         type: 'sqlite',
         dbName: ':memory:',
-        entities: [User, Membership, Classroom, JoinApplication, ScheduleItem],
+        entities: [User, Membership, Classroom, JoinApplication, Affair],
         debug,
       }),
       AuthModule,
@@ -33,7 +33,7 @@ export async function prepareE2E(
       MembershipsModule,
       ClassroomsModule,
       JoinApplicationsModule,
-      ScheduleItemsModule,
+      AffairsModule,
       ...(metadata.imports ?? []),
     ],
   }).compile();

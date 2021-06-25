@@ -6,10 +6,10 @@ import {
   OneToMany,
   Property,
 } from '@mikro-orm/core';
+import { Affair } from 'src/affairs/entities/affair.entity';
 import { BaseEntity } from 'src/base-entity.entity';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
-import { ScheduleItem } from 'src/schedule-items/entities/schedule-item.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Filter<Classroom>({
@@ -48,11 +48,11 @@ export class Classroom extends BaseEntity<Classroom> {
   memberships = new Collection<Membership>(this);
 
   @OneToMany({
-    entity: () => ScheduleItem,
+    entity: () => Affair,
     mappedBy: (item) => item.classroom,
     hidden: true,
   })
-  scheduleItems = new Collection<ScheduleItem>(this);
+  affairs = new Collection<Affair>(this);
 
   @Property({
     hidden: true,
