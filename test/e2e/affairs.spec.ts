@@ -185,7 +185,7 @@ describe(url(''), () => {
       createDto = {
         classroom: classrooms.own.id,
         title: 'name',
-        time: dayjs().set('day', 3).set('hour', 4).toISOString(),
+        time: dayjs().set('day', 3).set('hour', 4).toDate(),
         remark: 'adfasdfhasdhlfajshdflkahsdfkja',
         isActivated: false,
       };
@@ -204,7 +204,10 @@ describe(url(''), () => {
       });
 
       it('should return the created affair entities', () => {
-        assertTransformedAffair(response.body, createDto);
+        assertTransformedAffair(response.body, {
+          ...createDto,
+          time: createDto.time.toISOString(),
+        });
       });
     });
 

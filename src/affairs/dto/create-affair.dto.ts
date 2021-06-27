@@ -1,6 +1,7 @@
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
-  IsDateString,
+  IsDate,
   IsInt,
   IsOptional,
   IsString,
@@ -15,8 +16,9 @@ export class CreateAffairDto {
   @Length(1, 50)
   title: string;
 
-  @IsDateString()
-  time: string;
+  @Type(() => Date)
+  @IsDate()
+  time: Date;
 
   @IsOptional()
   @IsString()
