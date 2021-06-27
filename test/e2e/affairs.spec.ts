@@ -37,7 +37,8 @@ describe(url(''), () => {
       id,
       classroom,
       title,
-      time,
+      timeStart,
+      timeEnd,
       remark,
       isActivated,
       updatedAt,
@@ -48,7 +49,8 @@ describe(url(''), () => {
     expect(id).toBeDefined();
     expect(classroom).toBeDefined();
     expect(title).toBeDefined();
-    expect(time).toBeDefined();
+    expect(timeStart).toBeDefined();
+    expect(timeEnd).toBeDefined();
     expect(remark).toBeDefined();
     expect(isActivated).toBeDefined();
     expect(updatedAt).toBeDefined();
@@ -116,12 +118,14 @@ describe(url(''), () => {
       own: entityManager.create(Affair, {
         classroom: classrooms.own,
         title: 'own',
-        time: dayjs(0).set('day', 1).set('hour', 3).toDate(),
+        timeStart: dayjs(0).set('day', 3).set('hour', 3).toDate(),
+        timeEnd: dayjs(0).set('day', 6).set('hour', 3).toDate(),
       }),
       unrelated: entityManager.create(Affair, {
         classroom: classrooms.unrelated,
         title: 'unrelated',
-        time: dayjs(0).set('day', 2).set('hour', 6).toDate(),
+        timeStart: dayjs(0).set('day', 2).set('hour', 6).toDate(),
+        timeEnd: dayjs(0).set('day', 4).set('hour', 3).toDate(),
       }),
     };
     entityManager.persist(Object.values(affairs));
@@ -185,7 +189,8 @@ describe(url(''), () => {
       createDto = {
         classroom: classrooms.own.id,
         title: 'name',
-        time: dayjs().set('day', 3).set('hour', 4).toDate(),
+        timeStart: dayjs().set('day', 3).set('hour', 4).toDate(),
+        timeEnd: dayjs().set('day', 4).toDate(),
         remark: 'adfasdfhasdhlfajshdflkahsdfkja',
         isActivated: false,
       };
@@ -206,8 +211,25 @@ describe(url(''), () => {
       it('should return the created affair entities', () => {
         assertTransformedAffair(response.body, {
           ...createDto,
-          time: createDto.time.toISOString(),
+          timeStart: createDto.timeStart.toISOString(),
+          timeEnd: createDto.timeEnd.toISOString(),
         });
+      });
+    });
+
+    describe('Illegal: end time earlier than start time', () => {
+      beforeEach(async () => {
+        createDto.timeEnd = dayjs(createDto.timeStart)
+          .subtract(7, 'day')
+          .toDate();
+        response = await requester
+          .post(url('/'))
+          .auth(tokens.own, { type: 'bearer' })
+          .send(createDto);
+      });
+
+      it(`should return status ${HttpStatus.BAD_REQUEST}`, () => {
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       });
     });
 
@@ -215,7 +237,7 @@ describe(url(''), () => {
       description           | status                    | token
       ${'not as member'}    | ${HttpStatus.BAD_REQUEST} | ${() => tokens.else}
       ${'as normal member'} | ${HttpStatus.FORBIDDEN}   | ${() => tokens.student}
-    `('Not Allowed: $description', ({ status, token }) => {
+    `('Forbidden: $description', ({ status, token }) => {
       beforeEach(async () => {
         response = await requester
           .post(url('/'))
@@ -291,11 +313,25 @@ describe(url(''), () => {
       });
     });
 
+    describe('Illegal: end time earlier than start time', () => {
+      beforeEach(async () => {
+        updateDto.timeEnd = dayjs(0).set('day', 1).toDate();
+        response = await requester
+          .patch(url(`/${affairs.own.id}/`))
+          .auth(tokens.own, { type: 'bearer' })
+          .send(updateDto);
+      });
+
+      it(`should return status ${HttpStatus.BAD_REQUEST}`, () => {
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+      });
+    });
+
     describe.each`
       description           | status                  | token
       ${'not as member'}    | ${HttpStatus.NOT_FOUND} | ${() => tokens.else}
       ${'as normal member'} | ${HttpStatus.FORBIDDEN} | ${() => tokens.student}
-    `('Not Allowed: $description', ({ status, token }) => {
+    `('Forbidden: $description', ({ status, token }) => {
       beforeEach(async () => {
         response = await requester
           .patch(url(`/${affairs.own.id}/`))
@@ -342,7 +378,7 @@ describe(url(''), () => {
       description           | status                  | token
       ${'not as member'}    | ${HttpStatus.NOT_FOUND} | ${() => tokens.else}
       ${'as normal member'} | ${HttpStatus.FORBIDDEN} | ${() => tokens.student}
-    `('Not Allowed: $description', ({ status, token }) => {
+    `('Forbidden: $description', ({ status, token }) => {
       beforeEach(async () => {
         response = await requester
           .delete(url(`/${affairs.own.id}/`))

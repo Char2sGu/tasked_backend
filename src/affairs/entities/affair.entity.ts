@@ -20,7 +20,10 @@ export class Affair extends BaseEntity<Affair> {
   title: string;
 
   @Property()
-  time: Date;
+  timeStart: Date;
+
+  @Property()
+  timeEnd: Date;
 
   @Property({
     nullable: true,

@@ -40,6 +40,7 @@ export class AffairsService extends new MikroCrudServiceFactory({
         'Only the creator is allowed to create affairs',
       );
 
+    await this.validate({ data });
     return await super.create({ data, user });
   }
 
@@ -58,7 +59,9 @@ export class AffairsService extends new MikroCrudServiceFactory({
         'Only the creator is allowed to update affairs',
       );
 
-    return await super.update({ entity: affair, data, user });
+    await super.update({ entity: affair, data, user });
+    await this.validate({ data: affair });
+    return affair;
   }
 
   async destroy({ entity: affair, user }: { entity: Affair; user: User }) {
@@ -69,5 +72,12 @@ export class AffairsService extends new MikroCrudServiceFactory({
       );
 
     return await super.destroy({ entity: affair, user });
+  }
+
+  async validate({ data }: { data: EntityData<Affair> }) {
+    if (data.timeEnd <= data.timeStart)
+      throw new BadRequestException(
+        'The start time must be earlier than the end time',
+      );
   }
 }

@@ -18,7 +18,11 @@ export class CreateAffairDto {
 
   @Type(() => Date)
   @IsDate()
-  time: Date;
+  timeStart: Date;
+
+  @Type(() => Date)
+  @IsDate()
+  timeEnd: Date;
 
   @IsOptional()
   @IsString()
