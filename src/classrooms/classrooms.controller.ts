@@ -1,7 +1,7 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { ROOT_PREFIX } from 'src/app.controller';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { JwtAuthGuard } from 'src/jwt-auth.guard';
 import { ClassroomsService } from './classrooms.service';
 import { Classroom } from './entities/classroom.entity';
 
