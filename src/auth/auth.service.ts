@@ -1,5 +1,5 @@
 import { NotFoundError } from '@mikro-orm/core';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
@@ -7,10 +7,10 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
-  ) {
+  @Inject() private readonly usersService: UsersService;
+  @Inject() private readonly jwtService: JwtService;
+
+  constructor() {
     JwtAuthGuard.verifyJwt = this.verifyJwt.bind(this) as this['verifyJwt'];
   }
 

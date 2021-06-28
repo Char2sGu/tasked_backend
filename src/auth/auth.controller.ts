@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ROOT_PREFIX } from 'src/app.controller';
 import { AuthInfo } from './auth-info.interface';
 import { AuthService } from './auth.service';
@@ -8,7 +14,7 @@ export const PREFIX = `${ROOT_PREFIX}/auth` as const;
 
 @Controller(PREFIX)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  @Inject() private readonly authService: AuthService;
 
   @Post()
   async obtainToken(@Body() obtainTokenDto: ObtainTokenDto): Promise<AuthInfo> {

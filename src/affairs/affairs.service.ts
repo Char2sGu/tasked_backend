@@ -17,8 +17,7 @@ export class AffairsService extends new MikroCrudServiceFactory({
   entityClass: Affair,
   dtoClasses: { create: CreateAffairDto, update: UpdateAffairDto },
 }).product {
-  @Inject()
-  classroomsService: ClassroomsService;
+  @Inject() classroomsService: ClassroomsService;
 
   async create({
     data,

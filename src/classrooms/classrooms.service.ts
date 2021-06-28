@@ -12,8 +12,7 @@ export class ClassroomsService extends new MikroCrudServiceFactory({
   entityClass: Classroom,
   dtoClasses: { create: CreateClassroomDto, update: UpdateClassroomDto },
 }).product {
-  @Inject()
-  membershipsService: MembershipsService;
+  @Inject() membershipsService: MembershipsService;
 
   async create({ data, user }: { data: CreateClassroomDto; user: User }) {
     const classroom = await super.create({
