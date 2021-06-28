@@ -69,12 +69,8 @@ export class User extends BaseEntity<User> {
   }
 }
 
-type UserEntity = User;
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Express {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface User extends UserEntity {}
+declare module 'express' {
+  interface Request {
+    user?: User;
   }
 }
