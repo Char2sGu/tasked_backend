@@ -20,5 +20,6 @@ import { JwtStragegy } from './jwt.strategy';
   // The `JwtStrategy` doesn't provide anything, but it needs to be instantiated
   // to register itself so that `AuthGuard('jwt')` can work.
   providers: [AuthService, JwtStragegy],
+  exports: [AuthService],
 })
 export class AuthModule {}
