@@ -2,6 +2,8 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ModuleMetadata } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { Server } from 'http';
+import { AddressInfo } from 'node:net';
 import { Affair } from 'src/affairs/entities/affair.entity';
 import { AppModule } from 'src/app.module';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
@@ -40,7 +42,9 @@ export async function prepareE2E(
 
   const app = module.createNestApplication();
   await app.listen(0); // start own http server, otherwise supertest will create one internally
-  const requester = supertest(app.getHttpServer());
+  const server: Server = app.getHttpServer();
+  const address = server.address() as AddressInfo;
+  const requester = supertest(server);
 
-  return { module, app, requester };
+  return { module, app, server, address, requester };
 }
