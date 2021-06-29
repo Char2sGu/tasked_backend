@@ -39,7 +39,7 @@ export async function prepareE2E(
   await schemaGenerator.execute(await schemaGenerator.generate());
 
   const app = module.createNestApplication();
-  app.listen(0); // start own http server, otherwise supertest will create one internally
+  await app.listen(0); // start own http server, otherwise supertest will create one internally
   const requester = supertest(app.getHttpServer());
 
   return { module, app, requester };
