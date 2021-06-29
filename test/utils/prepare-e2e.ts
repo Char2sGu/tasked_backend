@@ -15,7 +15,6 @@ export async function prepareE2E(
   debug?: boolean,
 ) {
   const module = await Test.createTestingModule({
-    ...metadata,
     imports: [
       MikroOrmModule.forRoot({
         type: 'sqlite',
@@ -25,6 +24,14 @@ export async function prepareE2E(
       }),
       ...(Reflect.getMetadata('imports', AppModule) as any[]).slice(1),
       ...(metadata.imports ?? []),
+    ],
+    controllers: [
+      ...(Reflect.getMetadata('controllers', AppModule) ?? []),
+      ...(metadata.controllers ?? []),
+    ],
+    providers: [
+      ...(Reflect.getMetadata('providers', AppModule) ?? []),
+      ...(metadata.providers ?? []),
     ],
   }).compile();
 
