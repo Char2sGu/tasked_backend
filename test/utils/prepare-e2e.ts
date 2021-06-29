@@ -2,17 +2,12 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ModuleMetadata } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { AffairsModule } from 'src/affairs/affairs.module';
 import { Affair } from 'src/affairs/entities/affair.entity';
-import { AuthModule } from 'src/auth/auth.module';
-import { ClassroomsModule } from 'src/classrooms/classrooms.module';
+import { AppModule } from 'src/app.module';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
-import { JoinApplicationsModule } from 'src/join-applications/join-applications.module';
 import { Membership } from 'src/memberships/entities/membership.entity';
-import { MembershipsModule } from 'src/memberships/memberships.module';
 import { User } from 'src/users/entities/user.entity';
-import { UsersModule } from 'src/users/users.module';
 import supertest from 'supertest';
 
 export async function prepareE2E(
@@ -28,12 +23,7 @@ export async function prepareE2E(
         entities: [User, Membership, Classroom, JoinApplication, Affair],
         debug,
       }),
-      AuthModule,
-      UsersModule,
-      MembershipsModule,
-      ClassroomsModule,
-      JoinApplicationsModule,
-      AffairsModule,
+      ...(Reflect.getMetadata('imports', AppModule) as any[]).slice(1),
       ...(metadata.imports ?? []),
     ],
   }).compile();
