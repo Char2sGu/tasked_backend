@@ -2,7 +2,6 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { HttpStatus } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import dayjs from 'dayjs';
-import { PREFIX } from 'src/affairs/affairs.controller';
 import { CreateAffairDto } from 'src/affairs/dto/create-affair.dto';
 import { UpdateAffairDto } from 'src/affairs/dto/update-affair.dto';
 import { Affair } from 'src/affairs/entities/affair.entity';
@@ -14,7 +13,7 @@ import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
 
-const url = urlBuilder(`/${PREFIX}`);
+const url = urlBuilder('/api/affairs');
 
 describe(url(''), () => {
   let module: TestingModule;
@@ -145,7 +144,7 @@ describe(url(''), () => {
     }
   });
 
-  describe(url('/ (GET)'), () => {
+  describe('/ (GET)', () => {
     describe.each`
       description     | token
       ${'as creator'} | ${() => tokens.own}
@@ -184,7 +183,7 @@ describe(url(''), () => {
     });
   });
 
-  describe(url('/ (POST)'), () => {
+  describe('/ (POST)', () => {
     beforeEach(() => {
       createDto = {
         classroom: classrooms.own.id,
@@ -261,7 +260,7 @@ describe(url(''), () => {
     });
   });
 
-  describe(url('/:id/ (GET)'), () => {
+  describe('/:id/ (GET)', () => {
     describe('Basic', () => {
       beforeEach(async () => {
         response = await requester
@@ -291,7 +290,7 @@ describe(url(''), () => {
     });
   });
 
-  describe(url('/:id/ (PATCH)'), () => {
+  describe('/:id/ (PATCH)', () => {
     beforeEach(() => {
       updateDto = { title: 'new' };
     });
@@ -357,7 +356,7 @@ describe(url(''), () => {
     });
   });
 
-  describe(url('/:id/ (DELETE)'), () => {
+  describe('/:id/ (DELETE)', () => {
     describe('Basic', () => {
       beforeEach(async () => {
         response = await requester

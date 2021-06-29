@@ -1,14 +1,11 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
-import { ROOT_PREFIX } from 'src/app.controller';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
 import { Membership } from './entities/membership.entity';
 import { MembershipsService } from './memberships.service';
 
-export const PREFIX = `${ROOT_PREFIX}/memberships` as const;
-
 @UseGuards(JwtAuthGuard)
-@Controller(PREFIX)
+@Controller()
 export class MembershipsController extends new MikroCrudControllerFactory<MembershipsService>(
   {
     serviceClass: MembershipsService,

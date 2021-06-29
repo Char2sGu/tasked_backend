@@ -1,8 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
+import { RouterModule } from 'nest-router';
 import { AffairsModule } from './affairs/affairs.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
 import { DB_PATH } from './constants';
@@ -17,14 +16,25 @@ import { UsersModule } from './users/users.module';
       dbName: DB_PATH,
       autoLoadEntities: true,
     }),
-    UsersModule,
+    RouterModule.forRoutes([
+      {
+        path: '/api',
+        children: [
+          { path: '/auth', module: AuthModule },
+          { path: '/users', module: UsersModule },
+          { path: '/classrooms', module: ClassroomsModule },
+          { path: '/memberships', module: MembershipsModule },
+          { path: '/join-applications', module: JoinApplicationsModule },
+          { path: '/affairs', module: AffairsModule },
+        ],
+      },
+    ]),
     AuthModule,
+    UsersModule,
     ClassroomsModule,
     MembershipsModule,
     JoinApplicationsModule,
     AffairsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

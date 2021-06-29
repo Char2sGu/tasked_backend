@@ -7,14 +7,13 @@ import { ApplicationStatus } from 'src/join-applications/application-status.enum
 import { CreateJoinApplicationDto } from 'src/join-applications/dto/create-join-application.dto';
 import { UpdateJoinApplicationDto } from 'src/join-applications/dto/update-join-application.dto';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
-import { PREFIX } from 'src/join-applications/join-applications.controller';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/role.enum';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
 
-const url = urlBuilder(`/${PREFIX}`);
+const url = urlBuilder('/api/join-applications');
 
 describe(url(''), () => {
   let module: TestingModule;

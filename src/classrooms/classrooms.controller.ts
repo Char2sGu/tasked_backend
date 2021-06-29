@@ -1,14 +1,11 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
-import { ROOT_PREFIX } from 'src/app.controller';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
 import { ClassroomsService } from './classrooms.service';
 import { Classroom } from './entities/classroom.entity';
 
-export const PREFIX = `${ROOT_PREFIX}/classrooms` as const;
-
 @UseGuards(JwtAuthGuard)
-@Controller(PREFIX)
+@Controller()
 export class ClassroomsController extends new MikroCrudControllerFactory<ClassroomsService>(
   {
     serviceClass: ClassroomsService,

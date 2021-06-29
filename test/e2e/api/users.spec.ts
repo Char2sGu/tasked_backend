@@ -5,11 +5,10 @@ import { AuthService } from 'src/auth/auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { User } from 'src/users/entities/user.entity';
-import { PREFIX } from 'src/users/users.controller';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
 
-const url = urlBuilder(`/${PREFIX}`);
+const url = urlBuilder('/api/users');
 
 describe(url(''), () => {
   let module: TestingModule;

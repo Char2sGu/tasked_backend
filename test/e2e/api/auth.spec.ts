@@ -2,14 +2,13 @@ import { EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { TestingModule } from '@nestjs/testing';
 import { AuthInfo } from 'src/auth/auth-info.interface';
-import { PREFIX } from 'src/auth/auth.controller';
 import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
 import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
 
-const url = urlBuilder(`/${PREFIX}`);
+const url = urlBuilder('/api/auth');
 
 describe(url(''), () => {
   let module: TestingModule;

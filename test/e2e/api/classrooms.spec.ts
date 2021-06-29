@@ -2,7 +2,6 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { HttpStatus } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
-import { PREFIX } from 'src/classrooms/classrooms.controller';
 import { CreateClassroomDto } from 'src/classrooms/dto/create-classroom.dto';
 import { UpdateClassroomDto } from 'src/classrooms/dto/update-classroom.dto';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
@@ -14,7 +13,7 @@ import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
 
-const url = urlBuilder(`/${PREFIX}`);
+const url = urlBuilder('/api/classrooms');
 
 describe(url(''), () => {
   let module: TestingModule;

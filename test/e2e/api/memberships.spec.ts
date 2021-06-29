@@ -4,13 +4,12 @@ import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
-import { PREFIX } from 'src/memberships/memberships.controller';
 import { Role } from 'src/memberships/role.enum';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
 
-const url = urlBuilder(`/${PREFIX}`);
+const url = urlBuilder('/api/memberships');
 
 describe(url(''), () => {
   enum Id {
