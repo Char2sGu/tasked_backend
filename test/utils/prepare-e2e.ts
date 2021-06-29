@@ -38,7 +38,7 @@ export async function prepareE2E(
   const schemaGenerator = module.get(MikroORM).getSchemaGenerator();
   await schemaGenerator.execute(await schemaGenerator.generate());
 
-  const app = await module.createNestApplication().init();
+  const app = module.createNestApplication();
   app.listen(0); // start own http server, otherwise supertest will create one internally
   const requester = supertest(app.getHttpServer());
 
