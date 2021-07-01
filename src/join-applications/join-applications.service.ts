@@ -16,7 +16,8 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
     update: UpdateJoinApplicationDto,
   },
 }).product {
-  @Inject() membershipsService: MembershipsService;
+  @Inject()
+  membershipsService: MembershipsService;
 
   async create({
     data,

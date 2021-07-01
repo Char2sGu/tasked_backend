@@ -2,17 +2,16 @@ import { NotFoundError } from '@mikro-orm/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
-import { JwtAuthGuard } from 'src/jwt-auth.guard';
+import { IncomingHttpHeaders } from 'node:http';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  @Inject() private readonly usersService: UsersService;
-  @Inject() private readonly jwtService: JwtService;
+  @Inject()
+  private readonly usersService: UsersService;
 
-  constructor() {
-    JwtAuthGuard.verifyJwt = this.verifyJwt.bind(this) as this['verifyJwt'];
-  }
+  @Inject()
+  private readonly jwtService: JwtService;
 
   async obtainJwt(username: string, password: string) {
     try {
@@ -36,5 +35,9 @@ export class AuthService {
     } catch (error) {
       return;
     }
+  }
+
+  getJwtFromHeaders(headers: IncomingHttpHeaders): string | undefined {
+    return headers.authorization?.slice(7); // `7` is the length of the prefix "Bearer "
   }
 }

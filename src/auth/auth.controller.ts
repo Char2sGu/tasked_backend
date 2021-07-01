@@ -11,7 +11,8 @@ import { ObtainTokenDto } from './dto/obtain-token.dto';
 
 @Controller()
 export class AuthController {
-  @Inject() private readonly authService: AuthService;
+  @Inject()
+  private readonly authService: AuthService;
 
   @Post()
   async obtainToken(@Body() obtainTokenDto: ObtainTokenDto): Promise<AuthInfo> {
