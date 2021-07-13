@@ -160,6 +160,18 @@ describe(url(''), () => {
         expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
       });
     });
+
+    describe('Illegal Lookup', () => {
+      beforeEach(async () => {
+        response = await requester
+          .get(url('/asldfj/'))
+          .auth(token, { type: 'bearer' });
+      });
+
+      it('should return 404', () => {
+        expect(response.status).toBe(HttpStatus.NOT_FOUND);
+      });
+    });
   });
 
   describe('/:username/ (PATCH)', () => {
@@ -184,6 +196,19 @@ describe(url(''), () => {
 
       it('should return the updated user entity', () => {
         assertSerializedUser(response.body, updateDto);
+      });
+    });
+
+    describe('Illegal Lookup', () => {
+      beforeEach(async () => {
+        response = await requester
+          .patch(url('/asdfasdf/'))
+          .auth(token, { type: 'bearer' })
+          .send(updateDto);
+      });
+
+      it('should return 404', () => {
+        expect(response.status).toBe(HttpStatus.NOT_FOUND);
       });
     });
 

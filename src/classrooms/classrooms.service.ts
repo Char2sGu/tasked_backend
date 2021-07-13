@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { Role } from 'src/memberships/role.enum';
@@ -31,33 +31,5 @@ export class ClassroomsService extends new MikroCrudServiceFactory({
     });
 
     return classroom;
-  }
-
-  async update({
-    entity: classroom,
-    data,
-    user,
-  }: {
-    entity: Classroom;
-    data: UpdateClassroomDto;
-    user: User;
-  }) {
-    if (user != classroom.creator)
-      throw new ForbiddenException('Only the creator can update the classroom');
-    return await super.update({ entity: classroom, data, user });
-  }
-
-  async destroy({
-    entity: classroom,
-    user,
-  }: {
-    entity: Classroom;
-    user: User;
-  }) {
-    if (user != classroom.creator)
-      throw new ForbiddenException(
-        'Only the creator can destroy the classroom',
-      );
-    return await super.destroy({ entity: classroom, user });
   }
 }

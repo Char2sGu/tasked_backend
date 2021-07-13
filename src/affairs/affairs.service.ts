@@ -1,10 +1,5 @@
 import { EntityData } from '@mikro-orm/core';
-import {
-  BadRequestException,
-  ForbiddenException,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { User } from 'src/users/entities/user.entity';
@@ -27,19 +22,6 @@ export class AffairsService extends new MikroCrudServiceFactory({
     data: CreateAffairDto | EntityData<Affair>;
     user: User;
   }) {
-    const classroom = await this.classroomsService
-      .retrieve({
-        conditions: { id: data.classroom },
-        user,
-      })
-      .catch(() => {
-        throw new BadRequestException('Classroom not found');
-      });
-    if (user != classroom.creator)
-      throw new ForbiddenException(
-        'Only the creator is allowed to create affairs',
-      );
-
     await this.validate({ data });
     return await super.create({ data, user });
   }
@@ -53,25 +35,9 @@ export class AffairsService extends new MikroCrudServiceFactory({
     data: UpdateAffairDto | EntityData<Affair>;
     user: User;
   }) {
-    await affair.classroom.init();
-    if (user != affair.classroom.creator)
-      throw new ForbiddenException(
-        'Only the creator is allowed to update affairs',
-      );
-
     await super.update({ entity: affair, data, user });
     await this.validate({ data: affair });
     return affair;
-  }
-
-  async destroy({ entity: affair, user }: { entity: Affair; user: User }) {
-    await affair.classroom.init();
-    if (user != affair.classroom.creator)
-      throw new ForbiddenException(
-        'Only the creator is allowed to destroy affairs',
-      );
-
-    return await super.destroy({ entity: affair, user });
   }
 
   async validate({ data }: { data: EntityData<Affair> }) {

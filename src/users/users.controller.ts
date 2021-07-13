@@ -1,9 +1,12 @@
 import { Controller, UseGuards } from '@nestjs/common';
+import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
 import { User } from './entities/user.entity';
+import { UsersAccessPolicy } from './users.access-policy';
 import { UsersService } from './users.service';
 
+@UseAccessPolicies(UsersAccessPolicy)
 @Controller()
 export class UsersController extends new MikroCrudControllerFactory<UsersService>(
   {
@@ -16,6 +19,7 @@ export class UsersController extends new MikroCrudControllerFactory<UsersService
     }).product,
   },
 )
-  .applyMethodDecorators('list', UseGuards(JwtAuthGuard))
-  .applyMethodDecorators('retrieve', UseGuards(JwtAuthGuard))
-  .applyMethodDecorators('update', UseGuards(JwtAuthGuard)).product {}
+  .applyMethodDecorators('list', UseGuards(JwtAuthGuard, AccessPolicyGuard))
+  .applyMethodDecorators('retrieve', UseGuards(JwtAuthGuard, AccessPolicyGuard))
+  .applyMethodDecorators('update', UseGuards(JwtAuthGuard, AccessPolicyGuard))
+  .product {}
