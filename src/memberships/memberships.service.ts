@@ -5,6 +5,7 @@ import { User } from 'src/users/entities/user.entity';
 import { CreateMembershipDto } from './dto/create-membership.dto';
 import { UpdateMembershipDto } from './dto/update-membership.dto';
 import { Membership } from './entities/membership.entity';
+import { Role } from './role.enum';
 
 @Injectable()
 export class MembershipsService extends new MikroCrudServiceFactory({
@@ -19,5 +20,12 @@ export class MembershipsService extends new MikroCrudServiceFactory({
     user: User;
   }) {
     return await super.create({ data: { ...data, owner: user }, user });
+  }
+
+  async getWeight(membership: Membership) {
+    await membership.classroom.init();
+    if (membership.owner == membership.classroom.creator) return 3;
+    if (membership.role == Role.Teacher) return 2;
+    return 1;
   }
 }

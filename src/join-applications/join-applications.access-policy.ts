@@ -14,6 +14,24 @@ import { JoinApplicationsService } from './join-applications.service';
 
 export class JoinApplicationsAccessPolicy
   implements AccessPolicy<ActionName, Request> {
+  @Inject()
+  applicationService: JoinApplicationsService;
+
+  @Inject()
+  membershipsService: MembershipsService;
+
+  async getEntity({ params: { id }, user }: Request) {
+    try {
+      return await this.applicationService.retrieve({
+        conditions: { id: +id },
+        expand: ['classroom'],
+        user,
+      });
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
   existsPendingRequest: AccessPolicyCondition<ActionName, Request> = async ({
     req: { body, user },
   }) => {
@@ -84,22 +102,4 @@ export class JoinApplicationsAccessPolicy
       reason: 'Rejected applications are forbidden to be updated',
     },
   ];
-
-  @Inject()
-  applicationService: JoinApplicationsService;
-
-  @Inject()
-  membershipsService: MembershipsService;
-
-  async getEntity({ params: { id }, user }: Request) {
-    try {
-      return await this.applicationService.retrieve({
-        conditions: { id: +id },
-        expand: ['classroom'],
-        user,
-      });
-    } catch (error) {
-      throw new NotFoundException();
-    }
-  }
 }

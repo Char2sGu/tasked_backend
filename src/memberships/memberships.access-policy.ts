@@ -8,59 +8,9 @@ import {
 } from 'nest-access-policy';
 import { ActionName } from 'nest-mikro-crud';
 import { MembershipsService } from './memberships.service';
-import { Role } from './role.enum';
 
 export class MembershipsAccessPolicy
   implements AccessPolicy<ActionName, Request> {
-  isCreator: AccessPolicyCondition<ActionName, Request> = async ({ req }) => {
-    const {
-      owner,
-      classroom: { creator },
-    } = await this.getEntity(req);
-    return owner == creator;
-  };
-
-  isOwn: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
-    (await this.getEntity(req)).owner == req.user;
-
-  asCreator: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
-    (await this.getEntity(req)).classroom.creator == req.user;
-
-  asMorePowerful: AccessPolicyCondition<ActionName, Request> = async ({
-    req,
-  }) => {
-    const own = await this.getOwnMembership(req);
-    const target = await this.getEntity(req);
-
-    const weightMap = {
-      [Role.Student]: 0,
-      [Role.Teacher]: 1,
-    };
-    const ownWeight = weightMap[own.role];
-    const targetWeight = weightMap[target.role];
-
-    return ownWeight > targetWeight;
-  };
-
-  statements: AccessPolicyStatement<ActionName, Request>[] = [
-    {
-      actions: ['list', 'retrieve', 'destroy'],
-      effect: Effect.Allow,
-    },
-    {
-      actions: ['destroy'],
-      effect: Effect.Forbid,
-      conditions: [this.isCreator],
-      reason: 'The membership of the creator cannot be destroyed',
-    },
-    {
-      actions: ['destroy'],
-      effect: Effect.Allow,
-      conditions: [[this.isOwn, this.asCreator, this.asMorePowerful]],
-      reason: 'Not eligible to delete this member',
-    },
-  ];
-
   @Inject()
   membershipsService: MembershipsService;
 
@@ -84,4 +34,48 @@ export class MembershipsAccessPolicy
       user: req.user,
     });
   }
+
+  isCreator: AccessPolicyCondition<ActionName, Request> = async ({ req }) => {
+    const {
+      owner,
+      classroom: { creator },
+    } = await this.getEntity(req);
+    return owner == creator;
+  };
+
+  isOwn: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
+    (await this.getEntity(req)).owner == req.user;
+
+  asCreator: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
+    (await this.getEntity(req)).classroom.creator == req.user;
+
+  asMorePowerful: AccessPolicyCondition<ActionName, Request> = async ({
+    req,
+  }) => {
+    const ownMembership = await this.getOwnMembership(req);
+    const targetMembership = await this.getEntity(req);
+    return (
+      (await this.membershipsService.getWeight(ownMembership)) >
+      (await this.membershipsService.getWeight(targetMembership))
+    );
+  };
+
+  statements: AccessPolicyStatement<ActionName, Request>[] = [
+    {
+      actions: ['list', 'retrieve', 'destroy'],
+      effect: Effect.Allow,
+    },
+    {
+      actions: ['destroy'],
+      effect: Effect.Forbid,
+      conditions: [this.isCreator],
+      reason: 'The membership of the creator cannot be destroyed',
+    },
+    {
+      actions: ['destroy'],
+      effect: Effect.Allow,
+      conditions: [[this.isOwn, this.asCreator, this.asMorePowerful]],
+      reason: 'Not eligible to delete this member',
+    },
+  ];
 }

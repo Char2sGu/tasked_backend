@@ -11,6 +11,20 @@ import { ClassroomsService } from './classrooms.service';
 
 export class ClassroomsAccessPolicy
   implements AccessPolicy<ActionName, Request> {
+  @Inject()
+  classroomsService: ClassroomsService;
+
+  async getEntity({ params: { id }, user }: Request) {
+    try {
+      return await this.classroomsService.retrieve({
+        conditions: { id: +id },
+        user,
+      });
+    } catch {
+      throw new NotFoundException();
+    }
+  }
+
   asCreator: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
     (await this.getEntity(req)).creator == req.user;
 
@@ -32,18 +46,4 @@ export class ClassroomsAccessPolicy
       reason: 'Only the creator can desetroy the classroom',
     },
   ];
-
-  @Inject()
-  classroomsService: ClassroomsService;
-
-  async getEntity({ params: { id }, user }: Request) {
-    try {
-      return await this.classroomsService.retrieve({
-        conditions: { id: +id },
-        user,
-      });
-    } catch {
-      throw new NotFoundException();
-    }
-  }
 }

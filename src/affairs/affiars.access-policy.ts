@@ -18,30 +18,6 @@ import { CreateAffairDto } from './dto/create-affair.dto';
 
 @Injectable()
 export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
-  asCreator: AccessPolicyCondition<ActionName, Request> = async ({
-    action,
-    req,
-  }) => {
-    const classroom =
-      action == 'create'
-        ? await this.getClassroomWhenCreating(req)
-        : (await this.getEntity(req)).classroom;
-    return classroom.creator == req.user;
-  };
-
-  statements: AccessPolicyStatement<ActionName, Request>[] = [
-    {
-      actions: ['list', 'create', 'retrieve', 'update', 'destroy'],
-      effect: Effect.Allow,
-    },
-    {
-      actions: ['create', 'update', 'destroy'],
-      effect: Effect.Allow,
-      conditions: [this.asCreator],
-      reason: 'Only the creator is allowed to manage affairs',
-    },
-  ];
-
   @Inject()
   affairsService: AffairsService;
 
@@ -71,4 +47,27 @@ export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
         throw new BadRequestException('Classroom not found');
       });
   }
+  asCreator: AccessPolicyCondition<ActionName, Request> = async ({
+    action,
+    req,
+  }) => {
+    const classroom =
+      action == 'create'
+        ? await this.getClassroomWhenCreating(req)
+        : (await this.getEntity(req)).classroom;
+    return classroom.creator == req.user;
+  };
+
+  statements: AccessPolicyStatement<ActionName, Request>[] = [
+    {
+      actions: ['list', 'create', 'retrieve', 'update', 'destroy'],
+      effect: Effect.Allow,
+    },
+    {
+      actions: ['create', 'update', 'destroy'],
+      effect: Effect.Allow,
+      conditions: [this.asCreator],
+      reason: 'Only the creator is allowed to manage affairs',
+    },
+  ];
 }

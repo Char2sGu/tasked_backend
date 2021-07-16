@@ -11,6 +11,20 @@ import { UsersService } from './users.service';
 
 @Injectable()
 export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
+  @Inject()
+  usersService: UsersService;
+
+  async getEntity({ params: { username }, user }: Request) {
+    try {
+      return await this.usersService.retrieve({
+        conditions: { username },
+        user,
+      });
+    } catch {
+      throw new NotFoundException();
+    }
+  }
+
   isSelf: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
     (await this.getEntity(req)) == req.user;
 
@@ -36,18 +50,4 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
       reason: 'Updating is forbidden within 3 days',
     },
   ];
-
-  @Inject()
-  usersService: UsersService;
-
-  async getEntity({ params: { username }, user }: Request) {
-    try {
-      return await this.usersService.retrieve({
-        conditions: { username },
-        user,
-      });
-    } catch {
-      throw new NotFoundException();
-    }
-  }
 }
