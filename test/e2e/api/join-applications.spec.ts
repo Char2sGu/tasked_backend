@@ -233,7 +233,7 @@ describe(url(''), () => {
       description                      | classroom                | token
       ${'already a member'}            | ${() => classrooms.a.id} | ${() => tokens.creator}
       ${'already sent an application'} | ${() => classrooms.a.id} | ${() => tokens.creator}
-    `('Duplicate: $description', ({ classroom, token }) => {
+    `('Illegal: $description', ({ classroom, token }) => {
       beforeEach(async () => {
         createDto = { classroom: classroom(), role: Role.Student };
         response = await requester
@@ -242,8 +242,8 @@ describe(url(''), () => {
           .send(createDto);
       });
 
-      it(`should return status ${HttpStatus.FORBIDDEN}`, () => {
-        expect(response.status).toBe(HttpStatus.FORBIDDEN);
+      it(`should return status ${HttpStatus.BAD_REQUEST}`, () => {
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       });
     });
 
