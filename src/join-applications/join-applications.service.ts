@@ -1,7 +1,6 @@
 import { EntityData } from '@mikro-orm/core';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { MikroCrudServiceFactory } from 'nest-mikro-crud';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 import { ApplicationStatus } from './application-status.enum';
@@ -27,14 +26,6 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
     data: CreateJoinApplicationDto | EntityData<JoinApplication>;
     user: User;
   }) {
-    const { classroom } = data;
-
-    if (await this.membershipsService.exists({ classroom, user }))
-      throw new BadRequestException('Already a member of this classroom');
-    if (await this.isPending({ classroom, user }))
-      throw new BadRequestException(
-        'A pending application already exists in this classroom',
-      );
     return await super.create({
       data: {
         ...data,
@@ -65,21 +56,5 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
     }
 
     return application;
-  }
-
-  async isPending({ classroom, user }: { classroom: Classroom; user: User }) {
-    try {
-      await this.retrieve({
-        conditions: {
-          owner: user,
-          classroom,
-          status: ApplicationStatus.Pending,
-        },
-        user,
-      });
-      return true;
-    } catch {
-      return false;
-    }
   }
 }

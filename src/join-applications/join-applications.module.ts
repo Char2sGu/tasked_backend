@@ -7,6 +7,8 @@ import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsAccessPolicy } from './join-applications.access-policy';
 import { JoinApplicationsController } from './join-applications.controller';
 import { JoinApplicationsService } from './join-applications.service';
+import { AsNonMember } from './validators/as-non-member.validator';
+import { NoPendingApplicaiton } from './validators/no-pending-application.validator';
 
 @Module({
   imports: [
@@ -16,7 +18,12 @@ import { JoinApplicationsService } from './join-applications.service';
     MembershipsModule,
   ],
   controllers: [JoinApplicationsController],
-  providers: [JoinApplicationsService, JoinApplicationsAccessPolicy],
+  providers: [
+    JoinApplicationsService,
+    JoinApplicationsAccessPolicy,
+    AsNonMember,
+    NoPendingApplicaiton,
+  ],
   exports: [JoinApplicationsService],
 })
 export class JoinApplicationsModule {}

@@ -232,7 +232,7 @@ describe(url(''), () => {
     describe.each`
       description                      | classroom                | token
       ${'already a member'}            | ${() => classrooms.a.id} | ${() => tokens.creator}
-      ${'already sent an application'} | ${() => classrooms.a.id} | ${() => tokens.creator}
+      ${'already sent an application'} | ${() => classrooms.a.id} | ${() => tokens.someone}
     `('Illegal: $description', ({ classroom, token }) => {
       beforeEach(async () => {
         createDto = { classroom: classroom(), role: Role.Student };

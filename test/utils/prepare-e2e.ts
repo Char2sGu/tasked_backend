@@ -2,6 +2,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ModuleMetadata } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { useContainer } from 'class-validator';
 import { Server } from 'http';
 import { AddressInfo } from 'node:net';
 import { Affair } from 'src/affairs/entities/affair.entity';
@@ -45,6 +46,8 @@ export async function prepareE2E(
   const server: Server = app.getHttpServer();
   const address = server.address() as AddressInfo;
   const requester = supertest(server);
+
+  useContainer(app, { fallbackOnErrors: true });
 
   return { module, app, server, address, requester };
 }
