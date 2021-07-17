@@ -1,4 +1,4 @@
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Request } from 'express';
 import {
   AccessPolicy,
@@ -10,6 +10,7 @@ import { ActionName } from 'nest-mikro-crud';
 import { ApplicationStatus } from './application-status.enum';
 import { JoinApplicationsService } from './join-applications.service';
 
+@Injectable()
 export class JoinApplicationsAccessPolicy
   implements AccessPolicy<ActionName, Request> {
   @Inject()
