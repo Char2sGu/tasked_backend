@@ -5,7 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { ClassroomsModule } from 'src/classrooms/classrooms.module';
 import { AffairsController } from './affairs.controller';
 import { AffairsService } from './affairs.service';
-import { AffairsAccessPolicy } from './affiars.access-policy';
+import { AffairsAccessPolicy } from './affairs.access-policy';
 import { Affair } from './entities/affair.entity';
 
 @Module({

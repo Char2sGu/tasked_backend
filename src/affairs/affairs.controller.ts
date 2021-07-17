@@ -3,7 +3,7 @@ import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
 import { AffairsService } from './affairs.service';
-import { AffairsAccessPolicy } from './affiars.access-policy';
+import { AffairsAccessPolicy } from './affairs.access-policy';
 import { Affair } from './entities/affair.entity';
 
 @UseAccessPolicies(AffairsAccessPolicy)
