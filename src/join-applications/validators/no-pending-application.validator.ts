@@ -5,7 +5,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { BodyContextAttached } from 'src/body-context-attached.interface';
+import { BodyContextAttached } from 'src/body-context/body-context-attached.interface';
 import { ApplicationStatus } from '../application-status.enum';
 import type { JoinApplicationsService } from '../join-applications.service';
 

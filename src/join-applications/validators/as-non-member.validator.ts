@@ -4,7 +4,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { BodyContextAttached } from 'src/body-context-attached.interface';
+import { BodyContextAttached } from 'src/body-context/body-context-attached.interface';
 import { MembershipsService } from 'src/memberships/memberships.service';
 
 @ValidatorConstraint({ async: true })
