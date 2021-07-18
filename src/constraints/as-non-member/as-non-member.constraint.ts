@@ -8,7 +8,7 @@ import { BodyContextAttached } from 'src/body-context/body-context-attached.inte
 import { MembershipsService } from 'src/memberships/memberships.service';
 
 @ValidatorConstraint({ async: true })
-export class AsNonMember implements ValidatorConstraintInterface {
+export class AsNonMemberConstraint implements ValidatorConstraintInterface {
   @Inject()
   membershipsService: MembershipsService;
 

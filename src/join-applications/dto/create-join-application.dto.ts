@@ -4,15 +4,14 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-  Validate,
 } from 'class-validator';
+import { AsNonMember } from 'src/constraints/as-non-member/as-non-member.decorator';
+import { NoPendingApplication } from 'src/constraints/no-pending-application/no-pending-application.decorator';
 import { Role } from 'src/memberships/role.enum';
-import { AsNonMember } from '../validators/as-non-member.validator';
-import { NoPendingApplicaiton } from '../validators/no-pending-application.validator';
 
 export class CreateJoinApplicationDto {
-  @Validate(AsNonMember)
-  @Validate(NoPendingApplicaiton)
+  @NoPendingApplication()
+  @AsNonMember()
   @IsInt()
   classroom: number;
 

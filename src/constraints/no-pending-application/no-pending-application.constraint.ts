@@ -6,12 +6,12 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { BodyContextAttached } from 'src/body-context/body-context-attached.interface';
-import { ApplicationStatus } from '../application-status.enum';
-import type { JoinApplicationsService } from '../join-applications.service';
+import { ApplicationStatus } from '../../join-applications/application-status.enum';
+import type { JoinApplicationsService } from '../../join-applications/join-applications.service';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class NoPendingApplicaiton
+export class NoPendingApplicaitonConstraint
   implements ValidatorConstraintInterface, OnModuleInit {
   @Inject()
   moduleRef: ModuleRef;
@@ -19,9 +19,11 @@ export class NoPendingApplicaiton
   applicationsService: JoinApplicationsService;
 
   async onModuleInit() {
-    // require lazy load due to circular import
+    // exists circular import
     this.applicationsService = this.moduleRef.get(
-      (await import('../join-applications.service')).JoinApplicationsService,
+      (await import('../../join-applications/join-applications.service'))
+        .JoinApplicationsService,
+      { strict: false }, // don't known why it only works when `strict` is `false`
     );
   }
 
