@@ -1,3 +1,4 @@
 import { Request } from 'express';
 
-export type BodyContext = Pick<Request, 'user'>;
+export type BodyContext<T = Record<string, unknown>> = Pick<Request, 'user'> &
+  T;

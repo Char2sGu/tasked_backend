@@ -1,5 +1,5 @@
 import { BodyContext } from './body-context.type';
 
-export interface BodyContextAttached {
-  _context?: BodyContext;
+export interface BodyContextAttached<T = Record<string, unknown>> {
+  _context?: BodyContext<T>;
 }
