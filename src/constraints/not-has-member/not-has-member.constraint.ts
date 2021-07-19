@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { HasMemberConstraint } from '../has-member/has-member.constraint';
+import { ValidationArguments } from '../validation-arguments.interface';
+
+type Constraints = [string | undefined];
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -14,7 +16,7 @@ export class NotHasMemberConstraint implements ValidatorConstraintInterface {
 
   async validate(
     classroomId: number,
-    validationArguments: ValidationArguments,
+    validationArguments: ValidationArguments<Constraints>,
   ) {
     return !(await this.inverseConstraint.validate(
       classroomId,
@@ -22,7 +24,7 @@ export class NotHasMemberConstraint implements ValidatorConstraintInterface {
     ));
   }
 
-  defaultMessage(validationArguments: ValidationArguments) {
+  defaultMessage(validationArguments: ValidationArguments<Constraints>) {
     return this.inverseConstraint
       .defaultMessage(validationArguments)
       .replace('must', 'must not');

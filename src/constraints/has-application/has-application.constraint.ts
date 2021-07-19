@@ -1,13 +1,14 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import {
-  ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { BodyContextAttached } from 'src/body-context/body-context-attached.interface';
 import { ApplicationStatus } from 'src/join-applications/application-status.enum';
 import type { JoinApplicationsService } from 'src/join-applications/join-applications.service';
+import { ValidationArguments } from '../validation-arguments.interface';
+
+type Constraints = [ApplicationStatus | undefined];
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -28,10 +29,13 @@ export class HasApplicationConstraint
 
   async validate(
     classroomId: number,
-    validationArguments: ValidationArguments & { object: BodyContextAttached },
+    {
+      object: {
+        _context: { user },
+      },
+      constraints: [status],
+    }: ValidationArguments<Constraints>,
   ) {
-    const { user } = validationArguments.object._context;
-    const status = this.getStatus(validationArguments);
     try {
       await this.applicationsService.retrieve({
         conditions: {
@@ -47,13 +51,7 @@ export class HasApplicationConstraint
     }
   }
 
-  defaultMessage(validationArguments: ValidationArguments) {
-    const status = this.getStatus(validationArguments);
+  defaultMessage({ constraints: [status] }: ValidationArguments<Constraints>) {
     return `The classroom must have an ${status} application sent by you`;
-  }
-
-  getStatus({ constraints }: ValidationArguments) {
-    const [status] = constraints as [ApplicationStatus | undefined];
-    return status;
   }
 }

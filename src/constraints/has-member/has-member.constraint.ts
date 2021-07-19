@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { BodyContextAttached } from 'src/body-context/body-context-attached.interface';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { ValidationArguments } from '../validation-arguments.interface';
+
+type Constraints = [string | undefined];
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -15,7 +16,7 @@ export class HasMemberConstraint implements ValidatorConstraintInterface {
 
   async validate(
     classroomId: number,
-    validationArguments: ValidationArguments & { object: BodyContextAttached },
+    validationArguments: ValidationArguments<Constraints>,
   ) {
     const userId = this.getUserId(validationArguments);
     const { user } = validationArguments.object._context;
@@ -30,7 +31,7 @@ export class HasMemberConstraint implements ValidatorConstraintInterface {
     }
   }
 
-  defaultMessage(validationArguments: ValidationArguments) {
+  defaultMessage(validationArguments: ValidationArguments<Constraints>) {
     const userId = this.getUserId(validationArguments);
     return `The classroom must have a member with user ID ${userId}`;
   }
@@ -41,8 +42,8 @@ export class HasMemberConstraint implements ValidatorConstraintInterface {
       ...object
     },
     constraints,
-  }: ValidationArguments & { object: BodyContextAttached }): number {
+  }: ValidationArguments<Constraints>) {
     const [userField] = constraints as [string | undefined];
-    return userField ? object[userField] : user.id;
+    return userField ? (object[userField] as number) : user.id;
   }
 }
