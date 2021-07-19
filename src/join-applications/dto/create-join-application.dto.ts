@@ -5,13 +5,14 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { AsNonMember } from 'src/constraints/as-non-member/as-non-member.decorator';
-import { NoPendingApplication } from 'src/constraints/no-pending-application/no-pending-application.decorator';
+import { NotHasApplication } from 'src/constraints/not-has-application/not-has-application.decorator';
+import { NotHasMember } from 'src/constraints/not-has-member/not-has-member.decorator';
 import { Role } from 'src/memberships/role.enum';
+import { ApplicationStatus } from '../application-status.enum';
 
 export class CreateJoinApplicationDto {
-  @NoPendingApplication()
-  @AsNonMember()
+  @NotHasApplication(ApplicationStatus.Pending)
+  @NotHasMember()
   @IsInt()
   classroom: number;
 

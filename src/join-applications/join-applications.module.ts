@@ -1,9 +1,9 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AccessPolicyModule } from 'nest-access-policy';
 import { AuthModule } from 'src/auth/auth.module';
-import { AsNonMemberModule } from 'src/constraints/as-non-member/as-non-member.module';
-import { NoPendingApplicationModule } from 'src/constraints/no-pending-application/no-pending-application.module';
+import { NotHasApplicationModule } from 'src/constraints/not-has-application/not-has-application.module';
+import { NotHasMemberModule } from 'src/constraints/not-has-member/not-has-member.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsAccessPolicy } from './join-applications.access-policy';
@@ -16,8 +16,8 @@ import { JoinApplicationsService } from './join-applications.service';
     AccessPolicyModule,
     AuthModule,
     MembershipsModule,
-    forwardRef(() => AsNonMemberModule),
-    forwardRef(() => NoPendingApplicationModule),
+    NotHasMemberModule,
+    NotHasApplicationModule,
   ],
   controllers: [JoinApplicationsController],
   providers: [JoinApplicationsService, JoinApplicationsAccessPolicy],
