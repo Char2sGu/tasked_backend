@@ -41,9 +41,8 @@ export class HasMemberConstraint implements ValidatorConstraintInterface {
       _context: { user },
       ...object
     },
-    constraints,
+    constraints: [userField],
   }: ValidationArguments<Constraints>) {
-    const [userField] = constraints as [string | undefined];
     return userField ? (object[userField] as number) : user.id;
   }
 }
