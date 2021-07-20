@@ -18,5 +18,8 @@ export class ClassroomsController extends new MikroCrudControllerFactory<Classro
       limit: { max: 200, default: 50 },
       offset: { max: 2000 },
     }).product,
+    validationPipeOptions: {
+      whitelist: true,
+    },
   },
 ).product {}

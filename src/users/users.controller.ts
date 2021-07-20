@@ -17,6 +17,9 @@ export class UsersController extends new MikroCrudControllerFactory<UsersService
       limit: { max: 200, default: 50 },
       offset: { max: 2000 },
     }).product,
+    validationPipeOptions: {
+      whitelist: true,
+    },
   },
 )
   .applyMethodDecorators('list', UseGuards(JwtAuthGuard, AccessPolicyGuard))

@@ -20,5 +20,8 @@ export class JoinApplicationsController extends new MikroCrudControllerFactory<J
       limit: { max: 200, default: 50 },
       offset: { max: 2000 },
     }).product,
+    validationPipeOptions: {
+      whitelist: true,
+    },
   },
 ).product {}

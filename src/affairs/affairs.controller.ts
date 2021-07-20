@@ -2,8 +2,8 @@ import { Controller, UseGuards } from '@nestjs/common';
 import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
-import { AffairsService } from './affairs.service';
 import { AffairsAccessPolicy } from './affairs.access-policy';
+import { AffairsService } from './affairs.service';
 import { Affair } from './entities/affair.entity';
 
 @UseAccessPolicies(AffairsAccessPolicy)
@@ -17,4 +17,7 @@ export class AffairsController extends new MikroCrudControllerFactory({
     limit: { max: 200, default: 50 },
     offset: { max: 2000 },
   }).product,
+  validationPipeOptions: {
+    whitelist: true,
+  },
 }).product {}
