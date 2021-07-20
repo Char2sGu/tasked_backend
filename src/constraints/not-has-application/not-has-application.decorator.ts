@@ -1,10 +1,10 @@
 import { ValidatorOptions } from '@nestjs/common/interfaces/external/validator-options.interface';
 import { registerDecorator } from 'class-validator';
-import { ApplicationStatus } from 'src/join-applications/application-status.enum';
+import { NotHasApplicationConstraintArguments } from './not-has-application-constraint-arguments.type';
 import { NotHasApplicationConstraint } from './not-has-application.constraint';
 
 export const NotHasApplication = (
-  status?: ApplicationStatus,
+  [status]: NotHasApplicationConstraintArguments = [,],
   options?: ValidatorOptions,
 ): PropertyDecorator => ({ constructor: target }, propertyName: string) =>
   registerDecorator({

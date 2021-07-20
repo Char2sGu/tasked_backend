@@ -5,8 +5,7 @@ import {
 } from 'class-validator';
 import { HasMemberConstraint } from '../has-member/has-member.constraint';
 import { ValidationArguments } from '../validation-arguments.interface';
-
-type Constraints = [string | undefined];
+import { NotHasMmemberConstraintArgument } from './not-has-member-constraint-arguments.type';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -16,7 +15,7 @@ export class NotHasMemberConstraint implements ValidatorConstraintInterface {
 
   async validate(
     classroomId: number,
-    validationArguments: ValidationArguments<Constraints>,
+    validationArguments: ValidationArguments<NotHasMmemberConstraintArgument>,
   ) {
     return !(await this.inverseConstraint.validate(
       classroomId,
@@ -24,7 +23,9 @@ export class NotHasMemberConstraint implements ValidatorConstraintInterface {
     ));
   }
 
-  defaultMessage(validationArguments: ValidationArguments<Constraints>) {
+  defaultMessage(
+    validationArguments: ValidationArguments<NotHasMmemberConstraintArgument>,
+  ) {
     return this.inverseConstraint
       .defaultMessage(validationArguments)
       .replace('must', 'must not');

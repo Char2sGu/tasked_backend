@@ -4,11 +4,9 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { ApplicationStatus } from 'src/join-applications/application-status.enum';
 import type { JoinApplicationsService } from 'src/join-applications/join-applications.service';
 import { ValidationArguments } from '../validation-arguments.interface';
-
-type Constraints = [ApplicationStatus | undefined];
+import { HasApplicationConstraintArguments } from './has-application-constraint-arguments.type';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -34,7 +32,7 @@ export class HasApplicationConstraint
         _context: { user },
       },
       constraints: [status],
-    }: ValidationArguments<Constraints>,
+    }: ValidationArguments<HasApplicationConstraintArguments>,
   ) {
     try {
       await this.applicationsService.retrieve({
@@ -51,7 +49,9 @@ export class HasApplicationConstraint
     }
   }
 
-  defaultMessage({ constraints: [status] }: ValidationArguments<Constraints>) {
+  defaultMessage({
+    constraints: [status],
+  }: ValidationArguments<HasApplicationConstraintArguments>) {
     return `The classroom must have an ${status} application sent by you`;
   }
 }

@@ -1,5 +1,6 @@
 import { ValidatorOptions } from '@nestjs/common/interfaces/external/validator-options.interface';
 import { registerDecorator } from 'class-validator';
+import { NotHasMmemberConstraintArgument } from './not-has-member-constraint-arguments.type';
 import { NotHasMemberConstraint } from './not-has-member.constraint';
 
 /**
@@ -9,7 +10,7 @@ import { NotHasMemberConstraint } from './not-has-member.constraint';
  * @param options
  */
 export const NotHasMember = <T>(
-  userField?: string & keyof T,
+  [userField]: NotHasMmemberConstraintArgument<T> = [,],
   options?: ValidatorOptions,
 ): PropertyDecorator => ({ constructor: target }, propertyName: string) =>
   registerDecorator({

@@ -3,11 +3,9 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { ApplicationStatus } from 'src/join-applications/application-status.enum';
 import { HasApplicationConstraint } from '../has-application/has-application.constraint';
 import { ValidationArguments } from '../validation-arguments.interface';
-
-type Constraints = [ApplicationStatus | undefined];
+import { NotHasApplicationConstraintArguments } from './not-has-application-constraint-arguments.type';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -18,7 +16,7 @@ export class NotHasApplicationConstraint
 
   async validate(
     classroomId: number,
-    validationArguments: ValidationArguments<Constraints>,
+    validationArguments: ValidationArguments<NotHasApplicationConstraintArguments>,
   ) {
     return !(await this.inverseConstraint.validate(
       classroomId,
@@ -26,7 +24,9 @@ export class NotHasApplicationConstraint
     ));
   }
 
-  defaultMessage(validationArguments: ValidationArguments<Constraints>) {
+  defaultMessage(
+    validationArguments: ValidationArguments<NotHasApplicationConstraintArguments>,
+  ) {
     return this.inverseConstraint
       .defaultMessage(validationArguments)
       .replace('must', 'must not');

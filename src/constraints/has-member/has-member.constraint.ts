@@ -5,8 +5,7 @@ import {
 } from 'class-validator';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { ValidationArguments } from '../validation-arguments.interface';
-
-type Constraints = [string | undefined];
+import { HasMemberConstraintArguments } from './has-member-constraint-arguments.type';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -16,7 +15,7 @@ export class HasMemberConstraint implements ValidatorConstraintInterface {
 
   async validate(
     classroomId: number,
-    validationArguments: ValidationArguments<Constraints>,
+    validationArguments: ValidationArguments<HasMemberConstraintArguments>,
   ) {
     const userId = this.getUserId(validationArguments);
     const { user } = validationArguments.object._context;
@@ -31,7 +30,9 @@ export class HasMemberConstraint implements ValidatorConstraintInterface {
     }
   }
 
-  defaultMessage(validationArguments: ValidationArguments<Constraints>) {
+  defaultMessage(
+    validationArguments: ValidationArguments<HasMemberConstraintArguments>,
+  ) {
     const userId = this.getUserId(validationArguments);
     return `The classroom must have a member with user ID ${userId}`;
   }
@@ -42,7 +43,7 @@ export class HasMemberConstraint implements ValidatorConstraintInterface {
       ...object
     },
     constraints: [userField],
-  }: ValidationArguments<Constraints>) {
+  }: ValidationArguments<HasMemberConstraintArguments>) {
     return userField ? (object[userField] as number) : user.id;
   }
 }

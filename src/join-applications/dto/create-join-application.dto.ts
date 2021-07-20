@@ -11,7 +11,7 @@ import { Role } from 'src/memberships/role.enum';
 import { ApplicationStatus } from '../application-status.enum';
 
 export class CreateJoinApplicationDto {
-  @NotHasApplication(ApplicationStatus.Pending)
+  @NotHasApplication([ApplicationStatus.Pending])
   @NotHasMember()
   @IsInt()
   classroom: number;
