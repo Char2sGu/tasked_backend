@@ -7,4 +7,4 @@ import { HasApplicationConstraint } from './has-application.constraint';
   providers: [HasApplicationConstraint],
   exports: [HasApplicationConstraint],
 })
-export class HasApplicationModule {}
+export class HasApplicationConstraintModule {}

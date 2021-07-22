@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { HasApplicationModule } from '../has-application/has-application.module.';
+import { HasApplicationConstraintModule } from '../has-application/has-application-constraint.module.';
 import { NotHasApplicationConstraint } from './not-has-application.constraint';
 
 @Module({
-  imports: [HasApplicationModule],
+  imports: [HasApplicationConstraintModule],
   providers: [NotHasApplicationConstraint],
   exports: [NotHasApplicationConstraint],
 })
-export class NotHasApplicationModule {}
+export class NotHasApplicationConstraintModule {}

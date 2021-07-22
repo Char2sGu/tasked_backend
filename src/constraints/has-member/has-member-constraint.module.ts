@@ -7,4 +7,4 @@ import { HasMemberConstraint } from './has-member.constraint';
   providers: [HasMemberConstraint],
   exports: [HasMemberConstraint],
 })
-export class HasMemberModule {}
+export class HasMemberConstraintModule {}

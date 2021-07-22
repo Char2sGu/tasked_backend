@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { HasMemberModule } from '../has-member/has-member.module';
+import { HasMemberConstraintModule } from '../has-member/has-member-constraint.module';
 import { NotHasMemberConstraint } from './not-has-member.constraint';
 
 @Module({
-  imports: [HasMemberModule],
+  imports: [HasMemberConstraintModule],
   providers: [NotHasMemberConstraint],
   exports: [NotHasMemberConstraint],
 })
-export class NotHasMemberModule {}
+export class NotHasMemberConstraintModule {}
