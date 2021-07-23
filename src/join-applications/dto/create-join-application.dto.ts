@@ -24,6 +24,9 @@ export class CreateJoinApplicationDto extends BodyContextAttached {
       classroom: classroomId,
       status: ApplicationStatus.Pending,
     }),
+    {
+      message: 'classroom must not have a pending application sent by you',
+    },
   )
   @Meets<Membership>(
     'not-exists',
@@ -32,6 +35,9 @@ export class CreateJoinApplicationDto extends BodyContextAttached {
       owner: user,
       classroom: classroomId,
     }),
+    {
+      message: 'classroom must not have a membership of you',
+    },
   )
   @IsInt()
   classroom: number;
