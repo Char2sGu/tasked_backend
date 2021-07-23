@@ -8,7 +8,7 @@ import {
 import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
 
-@ValidatorConstraint()
+@ValidatorConstraint({ async: true })
 @Injectable()
 export class ExistenceConstraint implements ValidatorConstraintInterface {
   @Inject()
