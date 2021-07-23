@@ -1,7 +1,6 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { Type } from '@nestjs/common';
-import { ValidatorOptions } from '@nestjs/common/interfaces/external/validator-options.interface';
-import { registerDecorator } from 'class-validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 import { MikroCrudService } from 'nest-mikro-crud';
 import { MeetsConstraint } from './meets.constraint';
 import { User } from './users/entities/user.entity';
@@ -14,7 +13,7 @@ export const Meets = <Entity>(
     user: User,
     object: unknown,
   ) => FilterQuery<Entity>,
-  options?: ValidatorOptions,
+  options?: ValidationOptions,
 ): PropertyDecorator => ({ constructor: target }, propertyName: string) =>
   registerDecorator({
     constraints: [type, serviceType, getConditions],
