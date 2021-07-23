@@ -53,12 +53,9 @@ export class MembershipsAccessPolicy
   asMorePowerful: AccessPolicyCondition<ActionName, Request> = async ({
     req,
   }) => {
-    const ownMembership = await this.getOwnMembership(req);
-    const targetMembership = await this.getEntity(req);
-    return (
-      (await this.membershipsService.getWeight(ownMembership)) >
-      (await this.membershipsService.getWeight(targetMembership))
-    );
+    const ownWeight = await (await this.getOwnMembership(req)).getWeight();
+    const targetWeight = await (await this.getEntity(req)).getWeight();
+    return ownWeight > targetWeight;
   };
 
   statements: AccessPolicyStatement<ActionName, Request>[] = [

@@ -29,4 +29,11 @@ export class Membership extends BaseEntity<Membership> {
 
   @Property()
   role: Role;
+
+  async getWeight() {
+    await this.classroom.init();
+    if (this.owner == this.classroom.creator) return 3;
+    if (this.role == Role.Teacher) return 2;
+    return 1;
+  }
 }
