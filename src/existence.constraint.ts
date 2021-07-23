@@ -5,12 +5,12 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { Meets } from './meets.decorator';
+import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
 
 @ValidatorConstraint()
 @Injectable()
-export class MeetsConstraint implements ValidatorConstraintInterface {
+export class ExistenceConstraint implements ValidatorConstraintInterface {
   @Inject()
   moduleRef: ModuleRef;
 
@@ -21,18 +21,17 @@ export class MeetsConstraint implements ValidatorConstraintInterface {
         _context: { user },
         ...object
       },
-      constraints: [type, serviceType, getConditions],
-    }: ValidationArguments<Parameters<typeof Meets>>,
+      constraints: [shouldExist, serviceType, getConditions],
+    }: ValidationArguments<Parameters<typeof Existence>>,
   ) {
-    const resultIfExists = type == 'exists' ? true : false;
     const service = this.moduleRef.get(serviceType(), { strict: false });
     const conditions = getConditions(value, user, object);
     try {
       await service.retrieve({ conditions, user });
-      return resultIfExists;
+      return shouldExist;
     } catch (error) {
       if (!(error instanceof NotFoundError)) throw error;
-      return !resultIfExists;
+      return !shouldExist;
     }
   }
 }

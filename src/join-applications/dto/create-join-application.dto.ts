@@ -6,7 +6,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { BodyContextAttached } from 'src/body-context-attached.dto';
-import { Meets } from 'src/meets.decorator';
+import { Existence } from 'src/existence.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { Role } from 'src/memberships/role.enum';
@@ -16,8 +16,8 @@ import { JoinApplication } from '../entities/join-application.entity';
 import { JoinApplicationsService } from '../join-applications.service';
 
 export class CreateJoinApplicationDto extends BodyContextAttached {
-  @Meets<JoinApplication>(
-    'not-exists',
+  @Existence<JoinApplication>(
+    false,
     () => JoinApplicationsService,
     (classroomId: number, user) => ({
       owner: user,
@@ -28,8 +28,8 @@ export class CreateJoinApplicationDto extends BodyContextAttached {
       message: 'classroom must not have a pending application sent by you',
     },
   )
-  @Meets<Membership>(
-    'not-exists',
+  @Existence<Membership>(
+    false,
     () => MembershipsService,
     (classroomId: number, user: User) => ({
       owner: user,
