@@ -2,8 +2,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { AccessPolicyModule } from 'nest-access-policy';
 import { AuthModule } from 'src/auth/auth.module';
-import { NotHasApplicationConstraintModule } from 'src/constraints/not-has-application/not-has-application.constraint.module';
-import { NotHasMemberConstraintModule } from 'src/constraints/not-has-member/not-has-member.constraint.module';
+import { MeetsConstraint } from 'src/meets.constraint';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsAccessPolicy } from './join-applications.access-policy';
@@ -16,11 +15,13 @@ import { JoinApplicationsService } from './join-applications.service';
     AccessPolicyModule,
     AuthModule,
     MembershipsModule,
-    NotHasMemberConstraintModule,
-    NotHasApplicationConstraintModule,
   ],
   controllers: [JoinApplicationsController],
-  providers: [JoinApplicationsService, JoinApplicationsAccessPolicy],
+  providers: [
+    JoinApplicationsService,
+    JoinApplicationsAccessPolicy,
+    MeetsConstraint,
+  ],
   exports: [JoinApplicationsService],
 })
 export class JoinApplicationsModule {}
