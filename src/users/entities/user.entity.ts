@@ -9,10 +9,12 @@ import {
 } from '@mikro-orm/core';
 import { hash } from 'bcryptjs';
 import dayjs from 'dayjs';
+import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/base-entity.entity';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { Task } from 'src/tasks/entities/task.entity';
 import { Gender } from '../gender.enum';
 
 @Entity()
@@ -54,6 +56,20 @@ export class User extends BaseEntity<User> {
     hidden: true,
   })
   memberships = new Collection<Membership>(this);
+
+  @OneToMany({
+    entity: () => Task,
+    mappedBy: (task) => task.creator,
+    hidden: true,
+  })
+  tasks = new Collection<Task>(this);
+
+  @OneToMany({
+    entity: () => Assignment,
+    mappedBy: (assignment) => assignment.recipient,
+    hidden: true,
+  })
+  assignments = new Collection<Assignment>(this);
 
   get isUpdatedRecently() {
     const DAYS = 3;
