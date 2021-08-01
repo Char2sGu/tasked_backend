@@ -30,19 +30,19 @@ describe(url(''), () => {
     await repository.flush();
   });
 
-  describe('/ (POST)', () => {
+  describe('/ (PUT)', () => {
     describe('Legal Data', () => {
       beforeEach(async () => {
         const data: ObtainTokenDto = {
           username: 'username1',
           password: 'password1',
         };
-        response = await requester.post(url('/')).send(data);
+        response = await requester.put(url('/')).send(data);
         authInfo = response.body;
       });
 
-      it('should return status 201', () => {
-        expect(response.status).toBe(201);
+      it('should return status 200', () => {
+        expect(response.status).toBe(200);
       });
 
       it('should return a token', () => {
@@ -53,7 +53,7 @@ describe(url(''), () => {
 
     describe('Illegal Data', () => {
       beforeEach(async () => {
-        response = await requester.post(url('/')).send({
+        response = await requester.put(url('/')).send({
           username: 'username1',
           password: 'wrong',
         });

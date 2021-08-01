@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Inject,
-  Post,
+  Put,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthInfo } from './auth-info.interface';
@@ -14,7 +14,7 @@ export class AuthController {
   @Inject()
   private readonly authService: AuthService;
 
-  @Post()
+  @Put()
   async obtainToken(@Body() obtainTokenDto: ObtainTokenDto): Promise<AuthInfo> {
     const token = await this.authService.obtainJwt(
       obtainTokenDto.username,
