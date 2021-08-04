@@ -148,9 +148,7 @@ describe(url(''), () => {
   describe('/:username/ (GET)', () => {
     describe('Basic', () => {
       beforeEach(async () => {
-        response = await requester
-          .get(url('/username1/'))
-          .auth(token, { type: 'bearer' });
+        response = await requester.get(url('/username1/'));
       });
 
       it(`should return status ${HttpStatus.OK}`, () => {
@@ -162,21 +160,9 @@ describe(url(''), () => {
       });
     });
 
-    describe('Unauthorized', () => {
-      beforeEach(async () => {
-        response = await requester.get(url('/username1/'));
-      });
-
-      it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      });
-    });
-
     describe('Illegal Lookup', () => {
       beforeEach(async () => {
-        response = await requester
-          .get(url('/asldfj/'))
-          .auth(token, { type: 'bearer' });
+        response = await requester.get(url('/asldfj/'));
       });
 
       it('should return 404', () => {

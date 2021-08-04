@@ -25,6 +25,5 @@ export class UsersController extends new MikroCrudControllerFactory<UsersService
   },
 )
   .applyMethodDecorators('list', UseGuards(JwtAuthGuard, AccessPolicyGuard))
-  .applyMethodDecorators('retrieve', UseGuards(JwtAuthGuard, AccessPolicyGuard))
   .applyMethodDecorators('update', UseGuards(JwtAuthGuard, AccessPolicyGuard))
   .product {}

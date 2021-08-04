@@ -34,7 +34,7 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
 
   statements: AccessPolicyStatement<ActionName, Request>[] = [
     {
-      actions: ['list', 'retrieve', 'update'],
+      actions: ['list', 'update'],
       effect: Effect.Allow,
     },
     {
