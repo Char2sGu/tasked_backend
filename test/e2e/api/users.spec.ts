@@ -123,6 +123,17 @@ describe(url(''), () => {
       });
     });
 
+    describe('Duplicate', () => {
+      beforeEach(async () => {
+        createDto = { username: 'username1', password: 'password' };
+        response = await requester.post(url('/')).send(createDto);
+      });
+
+      it('should return status 400', () => {
+        expect(response.status).toBe(400);
+      });
+    });
+
     describe('Illegal Data', () => {
       beforeEach(async () => {
         response = await requester.post(url('/')).send({});
