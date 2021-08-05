@@ -6,8 +6,10 @@ import {
   AccessPolicyStatement,
   Effect,
 } from 'nest-access-policy';
-import { ActionName } from 'nest-mikro-crud';
+import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+
+type ActionName = keyof UsersController;
 
 @Injectable()
 export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
@@ -34,7 +36,7 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
 
   statements: AccessPolicyStatement<ActionName, Request>[] = [
     {
-      actions: ['list', 'update'],
+      actions: ['list', 'update', 'current'],
       effect: Effect.Allow,
     },
     {

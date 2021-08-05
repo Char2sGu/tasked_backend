@@ -1,11 +1,21 @@
-import { Controller, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  applyDecorators,
+  Controller,
+  Get,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
+import { ReqUser } from 'nest-mikro-crud/lib/decorators/req-user.decorator';
 import { BodyContextInterceptor } from 'src/body-context.interceptor';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
 import { User } from './entities/user.entity';
 import { UsersAccessPolicy } from './users.access-policy';
 import { UsersService } from './users.service';
+
+const Protected = () =>
+  applyDecorators(UseGuards(JwtAuthGuard, AccessPolicyGuard));
 
 @UseAccessPolicies(UsersAccessPolicy)
 @UseInterceptors(BodyContextInterceptor)
@@ -24,6 +34,11 @@ export class UsersController extends new MikroCrudControllerFactory<UsersService
     },
   },
 )
-  .applyMethodDecorators('list', UseGuards(JwtAuthGuard, AccessPolicyGuard))
-  .applyMethodDecorators('update', UseGuards(JwtAuthGuard, AccessPolicyGuard))
-  .product {}
+  .applyMethodDecorators('list', Protected())
+  .applyMethodDecorators('update', Protected()).product {
+  @Protected()
+  @Get('~current')
+  current(@ReqUser() user: User) {
+    return user;
+  }
+}

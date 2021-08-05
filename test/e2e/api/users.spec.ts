@@ -145,6 +145,24 @@ describe(url(''), () => {
     });
   });
 
+  describe('/~current/ (GET)', () => {
+    describe('Authorized', () => {
+      beforeEach(async () => {
+        response = await requester
+          .get(url('/~current/'))
+          .auth(token, { type: 'bearer' });
+      });
+
+      it('should return status 200', () => {
+        expect(response.status).toBe(200);
+      });
+
+      it('should return the current user entity', () => {
+        assertSerializedUser(response.body, { id: 1 });
+      });
+    });
+  });
+
   describe('/:username/ (GET)', () => {
     describe('Basic', () => {
       beforeEach(async () => {
