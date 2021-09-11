@@ -1,8 +1,11 @@
-import { IsString, Length, NotContains } from 'class-validator';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsOptional, Length, NotContains } from 'class-validator';
 
-export class UpdateMembershipDto {
+@InputType()
+export class MembershipUpdateInput {
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @NotContains(' ')
   @Length(1, 15)
-  @IsString()
   displayName?: string;
 }

@@ -1,12 +1,15 @@
-import { IsEnum, IsOptional, IsString, Length, Matches } from 'class-validator';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsOptional, Length, Matches } from 'class-validator';
 import { BodyContextAttached } from 'src/body-context-attached.dto';
 import { Existence } from 'src/existence.decorator';
+import { Gender } from 'src/users/gender.enum';
 
 import { User } from '../entities/user.entity';
-import { Gender } from '../gender.enum';
 import { UsersService } from '../users.service';
 
+@InputType()
 export class UserCreateInput extends BodyContextAttached {
+  @Field(() => String)
   @Existence<User>(
     false,
     () => UsersService,
@@ -14,19 +17,18 @@ export class UserCreateInput extends BodyContextAttached {
   )
   @Matches(/^([a-zA-Z0-9_-])+$/)
   @Length(1, 15)
-  @IsString()
   username: string;
 
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @Length(1, 15)
-  @IsString()
   nickname?: string;
 
+  @Field(() => String)
   @Length(6, 20)
-  @IsString()
   password: string;
 
+  @Field(() => Gender, { nullable: true })
   @IsOptional()
-  @IsEnum(Gender)
   gender?: Gender;
 }

@@ -1,5 +1,5 @@
-import { Type } from 'class-transformer';
-import { IsBoolean, IsInt, IsOptional, Validate } from 'class-validator';
+import { Field, ID, InputType } from '@nestjs/graphql';
+import { IsInt, IsOptional, Validate } from 'class-validator';
 import { BodyContextAttached } from 'src/body-context-attached.dto';
 import { Existence } from 'src/existence.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
@@ -9,8 +9,9 @@ import { TasksService } from 'src/tasks/tasks.service';
 
 import { IsInferiorMemberConstraint } from './is-inferior-member.constraint';
 
+@InputType()
 export class AssignmentCreateInput extends BodyContextAttached {
-  @Type()
+  @Field(() => ID)
   @Existence<Membership>(
     true,
     () => MembershipsService,
@@ -22,10 +23,9 @@ export class AssignmentCreateInput extends BodyContextAttached {
       message: 'classroom must the ID of a classroom having your membership',
     },
   )
-  @IsInt()
   classroom: number;
 
-  @Type()
+  @Field(() => ID)
   @Validate(IsInferiorMemberConstraint, {
     message:
       'owner must be the ID of a user which is an inferior member in the clasroom',
@@ -33,6 +33,7 @@ export class AssignmentCreateInput extends BodyContextAttached {
   @IsInt()
   recipient: number;
 
+  @Field(() => ID)
   @Existence<Task>(
     true,
     () => TasksService,
@@ -44,12 +45,9 @@ export class AssignmentCreateInput extends BodyContextAttached {
       message: 'task must be the ID of a task which is created by you',
     },
   )
-  @Type()
-  @IsInt()
   task: number;
 
-  @Type()
+  @Field(() => Boolean, { nullable: true })
   @IsOptional()
-  @IsBoolean()
   isPublic?: boolean;
 }

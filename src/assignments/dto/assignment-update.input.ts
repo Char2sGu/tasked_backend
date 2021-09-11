@@ -1,4 +1,4 @@
-import { PartialType, PickType } from '@nestjs/mapped-types';
+import { PartialType, PickType } from '@nestjs/graphql';
 
 import { AssignmentCreateInput } from './assignment-create.input';
 
