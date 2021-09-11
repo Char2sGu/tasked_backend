@@ -7,6 +7,7 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcryptjs';
 import dayjs from 'dayjs';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
@@ -15,60 +16,61 @@ import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Task } from 'src/tasks/entities/task.entity';
+import { Gender } from 'src/users/gender.enum';
 
-import { Gender } from '../gender.enum';
-
+@ObjectType()
 @Entity()
 export class User extends BaseEntity<User> {
+  @Field(() => String)
   @Property()
   @Unique()
   username: string;
 
+  @Field(() => String, { nullable: true })
   @Property({
     nullable: true,
   })
   nickname?: string;
 
-  @Property({
-    hidden: true,
-  })
+  @Property({})
   password: string;
 
+  @Field(() => Gender)
   @Property()
   gender: Gender = Gender.Unknown;
 
+  @Field(() => [Classroom])
   @OneToMany({
     entity: () => Classroom,
     mappedBy: (classroom) => classroom.creator,
-    hidden: true,
   })
   classrooms = new Collection<Classroom>(this);
 
+  @Field(() => [JoinApplication])
   @OneToMany({
     entity: () => JoinApplication,
     mappedBy: (application) => application.owner,
-    hidden: true,
   })
   joinApplications = new Collection<JoinApplication>(this);
 
+  @Field(() => [Membership])
   @OneToMany({
     entity: () => Membership,
     mappedBy: (memberships) => memberships.owner,
-    hidden: true,
   })
   memberships = new Collection<Membership>(this);
 
+  @Field(() => [Task])
   @OneToMany({
     entity: () => Task,
     mappedBy: (task) => task.creator,
-    hidden: true,
   })
   tasks = new Collection<Task>(this);
 
+  @Field(() => [Assignment])
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.recipient,
-    hidden: true,
   })
   assignments = new Collection<Assignment>(this);
 

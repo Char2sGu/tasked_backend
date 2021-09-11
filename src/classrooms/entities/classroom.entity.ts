@@ -6,12 +6,14 @@ import {
   OneToMany,
   Property,
 } from '@mikro-orm/core';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Affair } from 'src/affairs/entities/affair.entity';
 import { BaseEntity } from 'src/base-entity.entity';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { User } from 'src/users/entities/user.entity';
 
+@ObjectType()
 @Filter<Classroom>({
   name: 'exclude-soft-deleted',
   cond: { deletedAt: null },
@@ -25,14 +27,17 @@ import { User } from 'src/users/entities/user.entity';
 })
 @Entity()
 export class Classroom extends BaseEntity<Classroom> {
+  @Field(() => String)
   @Property()
   name: string;
 
+  @Field(() => User)
   @ManyToOne({
     entity: () => User,
   })
   creator: User;
 
+  @Field(() => [JoinApplication])
   @OneToMany({
     entity: () => JoinApplication,
     mappedBy: (application) => application.classroom,
@@ -40,6 +45,7 @@ export class Classroom extends BaseEntity<Classroom> {
   })
   joinApplications = new Collection<JoinApplication>(this);
 
+  @Field(() => [Membership])
   @OneToMany({
     entity: () => Membership,
     mappedBy: (membership) => membership.classroom,
@@ -47,6 +53,7 @@ export class Classroom extends BaseEntity<Classroom> {
   })
   memberships = new Collection<Membership>(this);
 
+  @Field(() => [Affair])
   @OneToMany({
     entity: () => Affair,
     mappedBy: (item) => item.classroom,
@@ -54,6 +61,7 @@ export class Classroom extends BaseEntity<Classroom> {
   })
   affairs = new Collection<Affair>(this);
 
+  @Field(() => Date, { nullable: true })
   @Property({
     hidden: true,
     nullable: true,

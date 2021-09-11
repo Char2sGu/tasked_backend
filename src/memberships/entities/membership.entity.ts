@@ -1,10 +1,12 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/base-entity.entity';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { Role } from '../role.enum';
 
+@ObjectType()
 @Filter<Membership>({
   name: 'crud',
   cond: ({ user }: { user: User }) => ({
@@ -13,21 +15,25 @@ import { Role } from '../role.enum';
 })
 @Entity()
 export class Membership extends BaseEntity<Membership> {
+  @Field(() => User)
   @ManyToOne({
     entity: () => User,
   })
   owner: User;
 
+  @Field(() => Classroom)
   @ManyToOne({
     entity: () => Classroom,
   })
   classroom: Classroom;
 
+  @Field(() => String, { nullable: true })
   @Property({
     nullable: true,
   })
   displayName?: string;
 
+  @Field(() => Role)
   @Property()
   role: Role;
 

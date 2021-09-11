@@ -6,10 +6,12 @@ import {
   OneToMany,
   Property,
 } from '@mikro-orm/core';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/base-entity.entity';
 import { User } from 'src/users/entities/user.entity';
 
+@ObjectType()
 @Filter<Task>({
   name: 'crud',
   cond: ({ user }: { user: User }) => ({
@@ -18,23 +20,26 @@ import { User } from 'src/users/entities/user.entity';
 })
 @Entity()
 export class Task extends BaseEntity<Task> {
+  @Field(() => User)
   @ManyToOne({
     entity: () => User,
   })
   creator: User;
 
+  @Field(() => String)
   @Property()
   title: string;
 
+  @Field(() => String, { nullable: true })
   @Property({
     nullable: true,
   })
   description?: string;
 
+  @Field(() => [Assignment])
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.task,
-    hidden: true,
   })
   assignments = new Collection<Assignment>(this);
 }
