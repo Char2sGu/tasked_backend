@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { AuthInfo } from './auth-info.interface';
 import { AuthArgs } from './dto/auth.args';
+import { AuthResult } from './dto/auth-result.dto';
 
 @Controller()
 export class AuthController {
@@ -16,7 +16,7 @@ export class AuthController {
   private readonly authService: AuthService;
 
   @Put()
-  async obtainToken(@Body() obtainTokenDto: AuthArgs): Promise<AuthInfo> {
+  async obtainToken(@Body() obtainTokenDto: AuthArgs): Promise<AuthResult> {
     const token = await this.authService.obtainJwt(
       obtainTokenDto.username,
       obtainTokenDto.password,

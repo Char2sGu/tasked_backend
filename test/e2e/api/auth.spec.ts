@@ -1,8 +1,8 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { TestingModule } from '@nestjs/testing';
-import { AuthInfo } from 'src/auth/auth-info.interface';
 import { AuthArgs } from 'src/auth/dto/auth.args';
+import { AuthResult } from 'src/auth/dto/auth-result.dto';
 import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
@@ -15,7 +15,7 @@ describe(url(''), () => {
   let requester: supertest.SuperTest<supertest.Test>;
   let repository: EntityRepository<User>;
   let response: Response;
-  let authInfo: AuthInfo;
+  let authInfo: AuthResult;
 
   beforeEach(async () => {
     ({ module, requester } = await prepareE2E());
