@@ -12,7 +12,8 @@ import { ClassroomsService } from './classrooms.service';
 
 @Injectable()
 export class ClassroomsAccessPolicy
-  implements AccessPolicy<ActionName, Request> {
+  implements AccessPolicy<ActionName, Request>
+{
   @Inject()
   classroomsService: ClassroomsService;
 

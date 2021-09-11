@@ -24,15 +24,8 @@ describe(url(''), () => {
     user: User,
     data: Partial<Record<keyof User, unknown>> = {},
   ) {
-    const {
-      id,
-      username,
-      nickname,
-      gender,
-      updatedAt,
-      createdAt,
-      ...rest
-    } = user;
+    const { id, username, nickname, gender, updatedAt, createdAt, ...rest } =
+      user;
 
     expect(id).toBeDefined();
     expect(username).toBeDefined();

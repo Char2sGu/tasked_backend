@@ -22,15 +22,8 @@ describe(url(''), () => {
   let token: string;
 
   function assertEntity(entity: Task, data: EntityData<Task> = {}) {
-    const {
-      id,
-      creator,
-      title,
-      description,
-      updatedAt,
-      createdAt,
-      ...rest
-    } = entity;
+    const { id, creator, title, description, updatedAt, createdAt, ...rest } =
+      entity;
     expect(id).toBeDefined();
     expect(creator).toBeDefined();
     expect(title).toBeDefined();

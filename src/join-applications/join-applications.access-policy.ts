@@ -13,7 +13,8 @@ import { JoinApplicationsService } from './join-applications.service';
 
 @Injectable()
 export class JoinApplicationsAccessPolicy
-  implements AccessPolicy<ActionName, Request> {
+  implements AccessPolicy<ActionName, Request>
+{
   @Inject()
   applicationService: JoinApplicationsService;
 

@@ -12,7 +12,8 @@ import { CreateAssignmentDto } from './create-assignment.dto';
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class IsInferiorMemberConstraint
-  implements ValidatorConstraintInterface {
+  implements ValidatorConstraintInterface
+{
   @Inject()
   membershipsService: MembershipsService;
 

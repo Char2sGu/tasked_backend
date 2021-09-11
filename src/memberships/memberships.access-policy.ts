@@ -12,7 +12,8 @@ import { MembershipsService } from './memberships.service';
 
 @Injectable()
 export class MembershipsAccessPolicy
-  implements AccessPolicy<ActionName, Request> {
+  implements AccessPolicy<ActionName, Request>
+{
   @Inject()
   membershipsService: MembershipsService;
 
