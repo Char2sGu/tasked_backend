@@ -29,7 +29,7 @@ export class Task extends BaseEntity<Task> {
   @Property({
     nullable: true,
   })
-  description: string | null;
+  description?: string;
 
   @OneToMany({
     entity: () => Assignment,

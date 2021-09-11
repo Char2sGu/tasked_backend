@@ -26,7 +26,7 @@ export class Membership extends BaseEntity<Membership> {
   @Property({
     nullable: true,
   })
-  displayName: string | null;
+  displayName?: string;
 
   @Property()
   role: Role;

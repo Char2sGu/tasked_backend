@@ -28,7 +28,7 @@ export class Affair extends BaseEntity<Affair> {
   @Property({
     nullable: true,
   })
-  remark: string | null;
+  remark?: string;
 
   @Property({
     default: true,

@@ -30,7 +30,7 @@ export class JoinApplication extends BaseEntity<JoinApplication> {
   @Property({
     nullable: true,
   })
-  message: string | null;
+  message?: string;
 
   @Property()
   status: ApplicationStatus;

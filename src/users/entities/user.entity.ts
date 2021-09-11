@@ -27,7 +27,7 @@ export class User extends BaseEntity<User> {
   @Property({
     nullable: true,
   })
-  nickname: string | null;
+  nickname?: string;
 
   @Property({
     hidden: true,

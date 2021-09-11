@@ -58,5 +58,5 @@ export class Classroom extends BaseEntity<Classroom> {
     hidden: true,
     nullable: true,
   })
-  deletedAt: Date | null;
+  deletedAt?: Date;
 }

@@ -18,6 +18,7 @@ import { UsersModule } from './users/users.module';
       type: 'sqlite',
       dbName: DB_PATH,
       autoLoadEntities: true,
+      forceUndefined: true,
     }),
     RouterModule.register([
       {
