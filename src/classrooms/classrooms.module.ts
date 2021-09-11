@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { AccessPolicyModule } from 'nest-access-policy';
 import { AuthModule } from 'src/auth/auth.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
+
 import { ClassroomsAccessPolicy } from './classrooms.access-policy';
 import { ClassroomsController } from './classrooms.controller';
 import { ClassroomsService } from './classrooms.service';

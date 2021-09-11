@@ -2,6 +2,7 @@ import { Controller, UseGuards } from '@nestjs/common';
 import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { JwtAuthGuard } from 'src/jwt-auth.guard';
+
 import { AffairsAccessPolicy } from './affairs.access-policy';
 import { AffairsService } from './affairs.service';
 import { Affair } from './entities/affair.entity';

@@ -6,6 +6,7 @@ import {
   AccessPolicyStatement,
   Effect,
 } from 'nest-access-policy';
+
 import { AssignmentsController } from './assignments.controller';
 import { AssignmentsService } from './assignments.service';
 

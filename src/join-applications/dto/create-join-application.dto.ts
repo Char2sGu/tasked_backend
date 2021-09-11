@@ -11,6 +11,7 @@ import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { Role } from 'src/memberships/role.enum';
 import { User } from 'src/users/entities/user.entity';
+
 import { ApplicationStatus } from '../application-status.enum';
 import { JoinApplication } from '../entities/join-application.entity';
 import { JoinApplicationsService } from '../join-applications.service';

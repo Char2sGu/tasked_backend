@@ -1,5 +1,6 @@
 import { PartialType, PickType } from '@nestjs/mapped-types';
 import { IsIn, IsOptional } from 'class-validator';
+
 import { ApplicationStatus } from '../application-status.enum';
 import { CreateJoinApplicationDto } from './create-join-application.dto';
 

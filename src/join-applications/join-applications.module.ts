@@ -4,6 +4,7 @@ import { AccessPolicyModule } from 'nest-access-policy';
 import { AuthModule } from 'src/auth/auth.module';
 import { ExistenceConstraint } from 'src/existence.constraint';
 import { MembershipsModule } from 'src/memberships/memberships.module';
+
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsAccessPolicy } from './join-applications.access-policy';
 import { JoinApplicationsController } from './join-applications.controller';

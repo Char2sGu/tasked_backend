@@ -3,6 +3,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { User } from 'src/users/entities/user.entity';
+
 import { CreateAffairDto } from './dto/create-affair.dto';
 import { UpdateAffairDto } from './dto/update-affair.dto';
 import { Affair } from './entities/affair.entity';
