@@ -4,8 +4,8 @@ import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { ApplicationStatus } from 'src/join-applications/application-status.enum';
-import { JoinApplicationCreateInput } from 'src/join-applications/dto/create-join-application.dto';
-import { UpdateJoinApplicationDto } from 'src/join-applications/dto/update-join-application.dto';
+import { JoinApplicationCreateInput } from 'src/join-applications/dto/join-application-create.input';
+import { JoinApplicationUpdateInput } from 'src/join-applications/dto/join-application-update.input';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/role.enum';
@@ -29,7 +29,7 @@ describe(url(''), () => {
   >;
   let applications: JoinApplication[];
   let createDto: JoinApplicationCreateInput;
-  let updateDto: UpdateJoinApplicationDto;
+  let updateDto: JoinApplicationUpdateInput;
 
   function assertSerializedApplication(
     application: JoinApplication,
