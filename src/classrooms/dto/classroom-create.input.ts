@@ -1,6 +1,6 @@
 import { IsString, Length } from 'class-validator';
 
-export class CreateClassroomDto {
+export class ClassroomCreateInput {
   @Length(1, 15)
   @IsString()
   name: string;

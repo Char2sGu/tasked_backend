@@ -1,6 +1,6 @@
 import { IsOptional, IsString, Length, MaxLength } from 'class-validator';
 
-export class CreateTaskDto {
+export class TaskCreateInput {
   @IsString()
   @Length(1, 30)
   title: string;

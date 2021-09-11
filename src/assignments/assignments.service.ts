@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 
-import { CreateAssignmentDto } from './dto/create-assignment.dto';
-import { UpdateAssignmentDto } from './dto/update-assignment.dto';
+import { AssignmentCreateInput } from './dto/assignment-create.input';
+import { AssignmentUpdateInput } from './dto/assignment-update.input';
 import { Assignment } from './entities/assignment.entity';
 
 @Injectable()
 export class AssignmentsService extends new MikroCrudServiceFactory({
   entityClass: Assignment,
-  dtoClasses: { create: CreateAssignmentDto, update: UpdateAssignmentDto },
+  dtoClasses: { create: AssignmentCreateInput, update: AssignmentUpdateInput },
 }).product {}

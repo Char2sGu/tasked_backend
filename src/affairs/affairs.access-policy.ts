@@ -15,7 +15,7 @@ import { ActionName } from 'nest-mikro-crud';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 
 import { AffairsService } from './affairs.service';
-import { CreateAffairDto } from './dto/create-affair.dto';
+import { AffairCreateInput } from './dto/affair-create.input';
 
 @Injectable()
 export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
@@ -38,7 +38,7 @@ export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
   }
 
   async getClassroomWhenCreating({ body, user }: Request) {
-    const { classroom: id }: CreateAffairDto = body;
+    const { classroom: id }: AffairCreateInput = body;
     return await this.classroomsService
       .retrieve({
         conditions: { id: +id },

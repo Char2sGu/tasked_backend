@@ -7,7 +7,7 @@ import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { ValidationArguments } from 'src/validation-arguments.interface';
 
-import { CreateAssignmentDto } from './create-assignment.dto';
+import { AssignmentCreateInput } from './assignment-create.input';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -24,7 +24,7 @@ export class IsInferiorMemberConstraint
         _context: { user },
         classroom: classroomId,
       },
-    }: ValidationArguments<[], CreateAssignmentDto>,
+    }: ValidationArguments<[], AssignmentCreateInput>,
   ) {
     let ownMembership: Membership;
     let targetMembership: Membership;

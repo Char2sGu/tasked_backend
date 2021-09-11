@@ -7,8 +7,8 @@ import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/role.enum';
-import { CreateTaskDto } from 'src/tasks/dto/create-task.dto';
-import { UpdateTaskDto } from 'src/tasks/dto/update-task.dto';
+import { TaskCreateInput } from 'src/tasks/dto/task-create.input';
+import { TaskUpdateInput } from 'src/tasks/dto/task-update.input';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import supertest from 'supertest';
@@ -112,8 +112,8 @@ describe(url(''), () => {
   });
 
   let response: supertest.Response;
-  let createDto: CreateTaskDto;
-  let updateDto: UpdateTaskDto;
+  let createDto: TaskCreateInput;
+  let updateDto: TaskUpdateInput;
 
   describe('/ (GET)', () => {
     describe('Basic', () => {

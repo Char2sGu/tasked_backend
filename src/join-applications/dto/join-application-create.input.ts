@@ -16,7 +16,7 @@ import { ApplicationStatus } from '../application-status.enum';
 import { JoinApplication } from '../entities/join-application.entity';
 import { JoinApplicationsService } from '../join-applications.service';
 
-export class CreateJoinApplicationDto extends BodyContextAttached {
+export class JoinApplicationCreateInput extends BodyContextAttached {
   @Existence<JoinApplication>(
     false,
     () => JoinApplicationsService,

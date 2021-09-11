@@ -1,4 +1,4 @@
-export class ObtainTokenDto {
+export class AuthInput {
   username: string;
   password: string;
 }

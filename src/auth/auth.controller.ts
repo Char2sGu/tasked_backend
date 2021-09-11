@@ -8,7 +8,7 @@ import {
 
 import { AuthService } from './auth.service';
 import { AuthInfo } from './auth-info.interface';
-import { ObtainTokenDto } from './dto/obtain-token.dto';
+import { AuthInput } from './dto/auth.input';
 
 @Controller()
 export class AuthController {
@@ -16,7 +16,7 @@ export class AuthController {
   private readonly authService: AuthService;
 
   @Put()
-  async obtainToken(@Body() obtainTokenDto: ObtainTokenDto): Promise<AuthInfo> {
+  async obtainToken(@Body() obtainTokenDto: AuthInput): Promise<AuthInfo> {
     const token = await this.authService.obtainJwt(
       obtainTokenDto.username,
       obtainTokenDto.password,

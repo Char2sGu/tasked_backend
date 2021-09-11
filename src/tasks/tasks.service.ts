@@ -4,14 +4,14 @@ import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskCreateInput } from './dto/task-create.input';
+import { TaskUpdateInput } from './dto/task-update.input';
 import { Task } from './entities/task.entity';
 
 @Injectable()
 export class TasksService extends new MikroCrudServiceFactory({
   entityClass: Task,
-  dtoClasses: { create: CreateTaskDto, update: UpdateTaskDto },
+  dtoClasses: { create: TaskCreateInput, update: TaskUpdateInput },
 }).product {
   @Inject()
   membershipsService: MembershipsService;
@@ -20,7 +20,7 @@ export class TasksService extends new MikroCrudServiceFactory({
     data,
     user,
   }: {
-    data: CreateTaskDto | EntityData<Task>;
+    data: TaskCreateInput | EntityData<Task>;
     user: User;
   }) {
     return await super.create({ data: { ...data, creator: user }, user });

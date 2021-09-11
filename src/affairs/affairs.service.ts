@@ -4,14 +4,14 @@ import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { User } from 'src/users/entities/user.entity';
 
-import { CreateAffairDto } from './dto/create-affair.dto';
-import { UpdateAffairDto } from './dto/update-affair.dto';
+import { AffairCreateInput } from './dto/affair-create.input';
+import { AffairUpdateInput } from './dto/affair-update.input';
 import { Affair } from './entities/affair.entity';
 
 @Injectable()
 export class AffairsService extends new MikroCrudServiceFactory({
   entityClass: Affair,
-  dtoClasses: { create: CreateAffairDto, update: UpdateAffairDto },
+  dtoClasses: { create: AffairCreateInput, update: AffairUpdateInput },
 }).product {
   @Inject()
   classroomsService: ClassroomsService;
@@ -20,7 +20,7 @@ export class AffairsService extends new MikroCrudServiceFactory({
     data,
     user,
   }: {
-    data: CreateAffairDto | EntityData<Affair>;
+    data: AffairCreateInput | EntityData<Affair>;
     user: User;
   }) {
     await this.validate({ data });
@@ -33,7 +33,7 @@ export class AffairsService extends new MikroCrudServiceFactory({
     user,
   }: {
     entity: Affair;
-    data: UpdateAffairDto | EntityData<Affair>;
+    data: AffairUpdateInput | EntityData<Affair>;
     user: User;
   }) {
     await super.update({ entity: affair, data, user });

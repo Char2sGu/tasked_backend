@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 import { User } from 'src/users/entities/user.entity';
 
-import { CreateMembershipDto } from './dto/create-membership.dto';
-import { UpdateMembershipDto } from './dto/update-membership.dto';
+import { CreateMembershipDto } from './dto/membership-create.input';
+import { UpdateMembershipDto } from './dto/membership-update.input';
 import { Membership } from './entities/membership.entity';
 
 @Injectable()

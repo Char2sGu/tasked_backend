@@ -5,16 +5,16 @@ import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { ApplicationStatus } from './application-status.enum';
-import { CreateJoinApplicationDto } from './dto/create-join-application.dto';
-import { UpdateJoinApplicationDto } from './dto/update-join-application.dto';
+import { JoinApplicationCreateInput } from './dto/join-application-create.input';
+import { JoinApplicationUpdateInput } from './dto/join-application-update.input';
 import { JoinApplication } from './entities/join-application.entity';
 
 @Injectable()
 export class JoinApplicationsService extends new MikroCrudServiceFactory({
   entityClass: JoinApplication,
   dtoClasses: {
-    create: CreateJoinApplicationDto,
-    update: UpdateJoinApplicationDto,
+    create: JoinApplicationCreateInput,
+    update: JoinApplicationUpdateInput,
   },
 }).product {
   @Inject()
@@ -24,7 +24,7 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
     data,
     user,
   }: {
-    data: CreateJoinApplicationDto | EntityData<JoinApplication>;
+    data: JoinApplicationCreateInput | EntityData<JoinApplication>;
     user: User;
   }) {
     return await super.create({
@@ -42,7 +42,7 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
     entity: application,
     user,
   }: {
-    data: UpdateJoinApplicationDto;
+    data: JoinApplicationUpdateInput;
     entity: JoinApplication;
     user: User;
   }) {

@@ -2,8 +2,8 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { HttpStatus } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
-import { CreateClassroomDto } from 'src/classrooms/dto/create-classroom.dto';
-import { UpdateClassroomDto } from 'src/classrooms/dto/update-classroom.dto';
+import { ClassroomCreateInput } from 'src/classrooms/dto/create-classroom.dto';
+import { ClassroomUpdateInput } from 'src/classrooms/dto/update-classroom.dto';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { ApplicationStatus } from 'src/join-applications/application-status.enum';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
@@ -25,8 +25,8 @@ describe(url(''), () => {
   let classrooms: Classroom[];
   let memberships: Membership[];
   let applications: JoinApplication[];
-  let createDto: CreateClassroomDto;
-  let updateDto: UpdateClassroomDto;
+  let createDto: ClassroomCreateInput;
+  let updateDto: ClassroomUpdateInput;
 
   function assertSerializedClassroom(
     classroom: Classroom,

@@ -9,7 +9,7 @@ import { TasksService } from 'src/tasks/tasks.service';
 
 import { IsInferiorMemberConstraint } from './is-inferior-member.constraint';
 
-export class CreateAssignmentDto extends BodyContextAttached {
+export class AssignmentCreateInput extends BodyContextAttached {
   @Type()
   @Existence<Membership>(
     true,

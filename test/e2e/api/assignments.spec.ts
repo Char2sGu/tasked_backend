@@ -1,8 +1,8 @@
 import { EntityData } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/sqlite';
 import { TestingModule } from '@nestjs/testing';
-import { CreateAssignmentDto } from 'src/assignments/dto/create-assignment.dto';
-import { UpdateAssignmentDto } from 'src/assignments/dto/update-assignment.dto';
+import { AssignmentCreateInput } from 'src/assignments/dto/assignment-create.input';
+import { AssignmentUpdateInput } from 'src/assignments/dto/assignment-update.input';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
@@ -43,8 +43,8 @@ describe(url(''), () => {
   });
 
   let response: supertest.Response;
-  let createDto: CreateAssignmentDto;
-  let updateDto: UpdateAssignmentDto;
+  let createDto: AssignmentCreateInput;
+  let updateDto: AssignmentUpdateInput;
 
   function assertEntity(entity: Assignment, data: EntityData<Assignment> = {}) {
     const {

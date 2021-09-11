@@ -2,8 +2,8 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { HttpStatus } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { UserCreateInput } from 'src/users/dto/user-create.input';
+import { UserUpdateInput } from 'src/users/dto/user-update.input';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
 import { prepareE2E, urlBuilder } from 'test/utils';
@@ -16,8 +16,8 @@ describe(url(''), () => {
   let entityManager: EntityManager;
   let token: string;
   let response: Response;
-  let createDto: CreateUserDto;
-  let updateDto: UpdateUserDto;
+  let createDto: UserCreateInput;
+  let updateDto: UserUpdateInput;
   let users: User[];
 
   function assertSerializedUser(

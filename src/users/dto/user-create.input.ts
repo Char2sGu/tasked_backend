@@ -6,7 +6,7 @@ import { User } from '../entities/user.entity';
 import { Gender } from '../gender.enum';
 import { UsersService } from '../users.service';
 
-export class CreateUserDto extends BodyContextAttached {
+export class UserCreateInput extends BodyContextAttached {
   @Existence<User>(
     false,
     () => UsersService,

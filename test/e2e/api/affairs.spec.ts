@@ -2,8 +2,8 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { HttpStatus } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import dayjs from 'dayjs';
-import { CreateAffairDto } from 'src/affairs/dto/create-affair.dto';
-import { UpdateAffairDto } from 'src/affairs/dto/update-affair.dto';
+import { CreateAffairDto } from 'src/affairs/dto/affair-create.input';
+import { AffairUpdateInput } from 'src/affairs/dto/affair-update.input';
 import { Affair } from 'src/affairs/entities/affair.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
@@ -26,7 +26,7 @@ describe(url(''), () => {
   let memberships: Record<'own' | 'student' | 'unrelated', Membership>;
   let affairs: Record<'own' | 'unrelated', Affair>;
   let createDto: CreateAffairDto;
-  let updateDto: UpdateAffairDto;
+  let updateDto: AffairUpdateInput;
 
   function assertTransformedAffair(
     affair: Affair,

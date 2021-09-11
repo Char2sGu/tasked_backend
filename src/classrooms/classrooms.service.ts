@@ -4,19 +4,19 @@ import { MembershipsService } from 'src/memberships/memberships.service';
 import { Role } from 'src/memberships/role.enum';
 import { User } from 'src/users/entities/user.entity';
 
-import { CreateClassroomDto } from './dto/create-classroom.dto';
-import { UpdateClassroomDto } from './dto/update-classroom.dto';
+import { ClassroomCreateInput } from './dto/classroom-create.input';
+import { ClassroomUpdateInput } from './dto/classroom-update.input';
 import { Classroom } from './entities/classroom.entity';
 
 @Injectable()
 export class ClassroomsService extends new MikroCrudServiceFactory({
   entityClass: Classroom,
-  dtoClasses: { create: CreateClassroomDto, update: UpdateClassroomDto },
+  dtoClasses: { create: ClassroomCreateInput, update: ClassroomUpdateInput },
 }).product {
   @Inject()
   membershipsService: MembershipsService;
 
-  async create({ data, user }: { data: CreateClassroomDto; user: User }) {
+  async create({ data, user }: { data: ClassroomCreateInput; user: User }) {
     const classroom = await super.create({
       data: { ...data, creator: user },
       user,

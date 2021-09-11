@@ -2,7 +2,7 @@ import { EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { TestingModule } from '@nestjs/testing';
 import { AuthInfo } from 'src/auth/auth-info.interface';
-import { ObtainTokenDto } from 'src/auth/dto/obtain-token.dto';
+import { AuthInput } from 'src/auth/dto/auth.input';
 import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
@@ -33,7 +33,7 @@ describe(url(''), () => {
   describe('/ (PUT)', () => {
     describe('Legal Data', () => {
       beforeEach(async () => {
-        const data: ObtainTokenDto = {
+        const data: AuthInput = {
           username: 'username1',
           password: 'password1',
         };
