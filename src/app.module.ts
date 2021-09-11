@@ -1,6 +1,6 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { RouterModule } from 'nest-router';
+import { RouterModule } from '@nestjs/core';
 
 import { AffairsModule } from './affairs/affairs.module';
 import { AssignmentsModule } from './assignments/assignments.module';
@@ -19,7 +19,7 @@ import { UsersModule } from './users/users.module';
       dbName: DB_PATH,
       autoLoadEntities: true,
     }),
-    RouterModule.forRoutes([
+    RouterModule.register([
       {
         path: '/api',
         children: [
