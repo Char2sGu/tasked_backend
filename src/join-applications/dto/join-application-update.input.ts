@@ -1,5 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { PartialType, PickType } from '@nestjs/mapped-types';
+import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
 import { IsIn, IsOptional } from 'class-validator';
 
 import { ApplicationStatus } from '../application-status.enum';

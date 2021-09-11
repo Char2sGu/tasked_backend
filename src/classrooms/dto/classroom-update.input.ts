@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/graphql';
 
 import { ClassroomCreateInput } from './classroom-create.input';
 
