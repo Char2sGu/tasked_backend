@@ -35,17 +35,22 @@ describe('Auth', () => {
     let token: string;
 
     it('should return the token with legal arguments', async () => {
-      await request('username1', 'password1');
+      await request(`username: "username1", password: "password1"`);
       expect(token).toHaveLength(TOKEN_LENGTH);
     });
 
-    it('should throws an error with illegal arguments', async () => {
-      await expect(request('', '')).rejects.toThrowError(ClientError);
+    it.each`
+      desc             | args
+      ${'wrong value'} | ${'username: "", password: ""'}
+      ${'wrong type'}  | ${'username: 1, password: 1'}
+      ${'no args'}     | ${''}
+    `('should throws an error with illegal arguments: $desc', async (args) => {
+      await expect(request(args)).rejects.toThrowError(ClientError);
     });
 
-    async function request(username: string, password: string) {
+    async function request(args: string) {
       const result = await client.request<{ obtainToken: AuthResult }>(
-        `mutation { obtainToken(username: "${username}", password: "${password}") { token } }`,
+        `mutation { obtainToken(${args}) { token } }`,
       );
       token = result.obtainToken.token;
     }
