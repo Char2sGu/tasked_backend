@@ -3,9 +3,9 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import { ValidationArguments } from 'src/common/validation-arguments.interface';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { ValidationArguments } from 'src/validation-arguments.interface';
 
 import { AssignmentCreateInput } from './assignment-create.input';
 

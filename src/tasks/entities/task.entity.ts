@@ -8,7 +8,7 @@ import {
 } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
-import { BaseEntity } from 'src/base-entity.entity';
+import { BaseEntity } from 'src/common/base-entity.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()

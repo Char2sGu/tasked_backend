@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { SetService } from 'src/set.service';
+import { SetService } from 'src/common/set.service';
 import { buildKeyChecker } from 'test/utils';
 
 const d = buildKeyChecker<SetService>();

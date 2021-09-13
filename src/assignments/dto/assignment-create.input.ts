@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsInt, IsOptional, Validate } from 'class-validator';
-import { BodyContextAttached } from 'src/body-context-attached.dto';
-import { Existence } from 'src/existence.decorator';
+import { BodyContextAttached } from 'src/common/body-context-attached.dto';
+import { Existence } from 'src/common/existence.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { Task } from 'src/tasks/entities/task.entity';
