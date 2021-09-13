@@ -17,13 +17,16 @@ export class UsersResolver {
   constructor(private readonly service: UsersService) {}
 
   @Query(() => UsersPaginated, { name: 'users' })
-  async queryUsers(@Args() { limit, offset }: UsersQueryArgs) {
-    return this.service.list({ limit, offset });
+  async queryUsers(
+    @ReqUser() user: User,
+    @Args() { limit, offset }: UsersQueryArgs,
+  ) {
+    return this.service.list({ limit, offset, user });
   }
 
   @Query(() => User, { name: 'user' })
-  async queryUser(@Args() { id }: UserQueryArgs) {
-    return this.service.retrieve({ conditions: id });
+  async queryUser(@ReqUser() user: User, @Args() { id }: UserQueryArgs) {
+    return this.service.retrieve({ conditions: id, user });
   }
 
   @Query(() => User, { name: 'current' })
@@ -32,15 +35,18 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  async createUser(@Args() { data }: UserCreateArgs) {
-    const entity = await this.service.create({ data });
+  async createUser(@ReqUser() user: User, @Args() { data }: UserCreateArgs) {
+    const entity = await this.service.create({ data, user });
     await this.service.save();
     return entity;
   }
 
   @Mutation(() => User)
-  async updateUser(@Args() { id, data }: UserUpdateArgs) {
-    const entity = await this.service.retrieve({ conditions: id });
+  async updateUser(
+    @ReqUser() user: User,
+    @Args() { id, data }: UserUpdateArgs,
+  ) {
+    const entity = await this.service.retrieve({ conditions: id, user });
     await this.service.update({ entity, data });
     await this.service.save();
     return entity;
