@@ -6,7 +6,7 @@ export class QueryManyArgs {
   @Field(() => Int, { nullable: true })
   @Max(100)
   @Min(1)
-  limit?: number;
+  limit = 50;
 
   @Field(() => Int, { nullable: true })
   @Max(2000)

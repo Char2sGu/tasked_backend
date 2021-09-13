@@ -9,6 +9,9 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      transformOptions: {
+        exposeDefaultValues: true,
+      },
       whitelist: true,
     }),
   );
