@@ -9,6 +9,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 
 import { AuthService } from '../auth/auth.service';
+import { SKIP_AUTH } from './skip-auth.symbol';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -17,12 +18,19 @@ export class JwtAuthGuard implements CanActivate {
 
   async canActivate(_: ExecutionContext) {
     const context = GqlExecutionContext.create(_);
-    const request = context.getContext<ExpressContext>().req;
-    const token = this.authService.getJwtFromHeaders(request.headers);
-    if (!token) throw new UnauthorizedException();
-    const user = await this.authService.verifyJwt(token);
-    if (!user) throw new UnauthorizedException();
-    request.user = user;
+
+    const skipAuth: true | undefined = Reflect.getMetadata(
+      SKIP_AUTH,
+      context.getHandler(),
+    );
+    if (!skipAuth) {
+      const request = context.getContext<ExpressContext>().req;
+      const token = this.authService.getJwtFromHeaders(request.headers);
+      if (!token) throw new UnauthorizedException();
+      const user = await this.authService.verifyJwt(token);
+      if (!user) throw new UnauthorizedException();
+      request.user = user;
+    }
     return true;
   }
 }

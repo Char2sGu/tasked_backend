@@ -1,25 +1,18 @@
-import {
-  applyDecorators,
-  Controller,
-  Get,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { ReqUser } from 'nest-mikro-crud/lib/decorators/req-user.decorator';
 import { BodyContextInterceptor } from 'src/common/body-context.interceptor';
 import { JwtAuthGuard } from 'src/common/jwt-auth.guard';
+import { SkipAuth } from 'src/common/skip-auth.decorator';
 
 import { User } from './entities/user.entity';
 import { UsersAccessPolicy } from './users.access-policy';
 import { UsersService } from './users.service';
 
-const Protected = () =>
-  applyDecorators(UseGuards(JwtAuthGuard, AccessPolicyGuard));
-
 @UseAccessPolicies(UsersAccessPolicy)
 @UseInterceptors(BodyContextInterceptor)
+@UseGuards(JwtAuthGuard, AccessPolicyGuard)
 @Controller()
 export class UsersController extends new MikroCrudControllerFactory<UsersService>(
   {
@@ -34,10 +27,7 @@ export class UsersController extends new MikroCrudControllerFactory<UsersService
       whitelist: true,
     },
   },
-)
-  .applyMethodDecorators('list', Protected())
-  .applyMethodDecorators('update', Protected()).product {
-  @Protected()
+).applyMethodDecorators('create', SkipAuth()).product {
   @Get('~current')
   current(@ReqUser() user: User) {
     return user;
