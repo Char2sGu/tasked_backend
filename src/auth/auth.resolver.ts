@@ -1,5 +1,5 @@
 import { Inject, UnauthorizedException } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { AuthService } from './auth.service';
 import { AuthArgs } from './dto/auth.args';
@@ -9,11 +9,6 @@ import { AuthResult } from './dto/auth-result.dto';
 export class AuthResolver {
   @Inject()
   private readonly authService: AuthService;
-
-  @Query(() => AuthResult)
-  async test(): Promise<AuthResult> {
-    return { token: 'asfa' };
-  }
 
   @Mutation(() => AuthResult)
   async obtainToken(
