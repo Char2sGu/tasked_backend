@@ -28,7 +28,6 @@ import { UsersModule } from './users/users.module';
       {
         path: '/api',
         children: [
-          { path: '/users', module: UsersModule },
           { path: '/classrooms', module: ClassroomsModule },
           { path: '/memberships', module: MembershipsModule },
           { path: '/join-applications', module: JoinApplicationsModule },

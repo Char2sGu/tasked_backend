@@ -1,259 +1,195 @@
-import { EntityManager } from '@mikro-orm/sqlite';
-import { HttpStatus } from '@nestjs/common';
+import { EntityRepository } from '@mikro-orm/core';
+import { NonFunctionPropertyNames } from '@mikro-orm/core/typings';
+import { getRepositoryToken } from '@mikro-orm/nestjs';
+import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
+import { ClientError, GraphQLClient } from 'graphql-request';
 import { AuthService } from 'src/auth/auth.service';
-import { UserCreateInput } from 'src/users/dto/user-create.input';
-import { UserUpdateInput } from 'src/users/dto/user-update.input';
+import { UsersPaginated } from 'src/users/dto/users-paginated.dto';
 import { User } from 'src/users/entities/user.entity';
-import supertest, { Response } from 'supertest';
-import { prepareE2E, urlBuilder } from 'test/utils';
+import { prepareE2E } from 'test/utils';
 
-const url = urlBuilder('/api/users');
-
-describe(url(''), () => {
+describe('Users', () => {
+  let app: INestApplication;
   let module: TestingModule;
-  let requester: supertest.SuperTest<supertest.Test>;
-  let entityManager: EntityManager;
+  let client: GraphQLClient;
+  let repo: EntityRepository<User>;
   let token: string;
-  let response: Response;
-  let createDto: UserCreateInput;
-  let updateDto: UserUpdateInput;
-  let users: User[];
-
-  function assertSerializedUser(
-    user: User,
-    data: Partial<Record<keyof User, unknown>> = {},
-  ) {
-    const { id, username, nickname, gender, updatedAt, createdAt, ...rest } =
-      user;
-
-    expect(id).toBeDefined();
-    expect(username).toBeDefined();
-    expect(nickname).toBeDefined();
-    expect(gender).toBeDefined();
-    expect(updatedAt).toBeDefined();
-    expect(createdAt).toBeDefined();
-    expect(rest).toEqual({});
-
-    for (const k in data) expect(user[k]).toEqual(data[k]);
-  }
 
   beforeEach(async () => {
-    ({ module, requester } = await prepareE2E());
+    ({ app, module, client } = await prepareE2E());
+    repo = module.get(getRepositoryToken(User));
 
-    entityManager = module.get(EntityManager);
+    await repo
+      .persist([
+        repo.create({
+          username: 'username',
+          password: 'password',
+        }),
+      ])
+      .flush();
 
-    const HASHED_PASSWORD = // "password"
-      '$2a$10$a50UJxxNGkLOoLfuB.g6be2EKZDrYvrYWVFbpNTCkqgHi/eMA0IDm';
+    token = await module.get(AuthService).obtainJwt('username', 'password');
+    client.setHeader('authorization', `Bearer ${token}`);
+  });
 
-    users = [
-      entityManager.create(User, {
-        username: 'username1',
-        password: HASHED_PASSWORD,
-      }),
-      entityManager.create(User, {
-        username: 'username2',
-        password: HASHED_PASSWORD,
-      }),
+  afterEach(async () => {
+    await app.close();
+  });
+
+  describe('queryUser', () => {
+    const fields: NonFunctionPropertyNames<User>[] = [
+      'id',
+      'username',
+      'nickname',
+      'gender',
+      'createdAt',
+      'updatedAt',
     ];
-    entityManager.persist(users);
 
-    await entityManager.flush();
+    let user: User;
 
-    if (!token)
-      token = await module.get(AuthService).obtainJwt('username1', 'password');
+    it('should return the data', async () => {
+      await request();
+      fields.forEach((field) => {
+        expect(user[field]).toBeDefined();
+      });
+    });
+
+    it('should return an error when not authorized', async () => {
+      removeToken();
+      await expect(request()).rejects.toThrowError(ClientError);
+    });
+
+    async function request(id = 1) {
+      const result = await client.request<{ user: User }>(
+        `query { user(id: ${id}) { ${fields.join(', ')} } }`,
+      );
+      user = result.user;
+    }
   });
 
-  describe('/ (GET)', () => {
-    let response: Omit<Response, 'body'> & {
-      body: { total: number; results: User[] };
-    };
+  describe('queryUsers', () => {
+    let users: UsersPaginated;
 
-    describe('Basic', () => {
-      beforeEach(async () => {
-        response = await requester
-          .get(url('/'))
-          .auth(token, { type: 'bearer' });
-      });
-
-      it(`should return status ${HttpStatus.OK}`, () => {
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-
-      it('should return the total as 2', () => {
-        expect(response.body.total).toBe(2);
-      });
-
-      it('should return the results as user entities', () => {
-        response.body.results.forEach((entity) => assertSerializedUser(entity));
-      });
+    it('should return the paginated users when no arguments are provided', async () => {
+      await request('');
+      expect(users.total).toBe(1);
+      expect(users.results).toBeInstanceOf(Array);
+      expect(users.results).toHaveLength(1);
     });
 
-    describe('Unauthorized', () => {
-      beforeEach(async () => {
-        response = await requester.get(url('/'));
-      });
-
-      it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      });
+    it('should return an error when not authorized', async () => {
+      removeToken();
+      await expect(request('')).rejects.toThrowError(ClientError);
     });
+
+    it('should return the requested range when limit and offset are specified', async () => {
+      await insert(2);
+      await request('(limit: 1, offset: 1)');
+      expect(users.results).toHaveLength(1);
+      expect(users.results[0].id).toBe('2');
+    });
+
+    async function request(args: string) {
+      const result = await client.request<{ users: UsersPaginated }>(
+        `query { users${args} { total, results { id } } }`,
+      );
+      users = result.users;
+    }
   });
 
-  describe('/ (POST)', () => {
-    describe('Basic', () => {
-      beforeEach(async () => {
-        createDto = { username: 'username', password: 'password' };
-        response = await requester.post(url('/')).send(createDto);
-      });
+  describe('queryCurrent', () => {
+    let user: User;
 
-      it(`should return status ${HttpStatus.CREATED}`, () => {
-        expect(response.status).toBe(HttpStatus.CREATED);
-      });
-
-      it('should return a user entity', () => {
-        assertSerializedUser(response.body);
-      });
+    it('should return the current user', async () => {
+      await request();
+      expect(user.id).toBe('1');
     });
 
-    describe('Duplicate', () => {
-      beforeEach(async () => {
-        createDto = { username: 'username1', password: 'password' };
-        response = await requester.post(url('/')).send(createDto);
-      });
-
-      it('should return status 400', () => {
-        expect(response.status).toBe(400);
-      });
+    it('should return an error when not authorized', async () => {
+      removeToken();
+      await expect(request()).rejects.toThrowError(ClientError);
     });
 
-    describe('Illegal Data', () => {
-      beforeEach(async () => {
-        response = await requester.post(url('/')).send({});
-      });
-
-      it(`should return status ${HttpStatus.BAD_REQUEST}`, () => {
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      });
-    });
+    async function request() {
+      const result = await client.request<{ current: User }>(
+        `query { current { id } }`,
+      );
+      user = result.current;
+    }
   });
 
-  describe('/~current/ (GET)', () => {
-    describe('Authorized', () => {
-      beforeEach(async () => {
-        response = await requester
-          .get(url('/~current/'))
-          .auth(token, { type: 'bearer' });
-      });
+  describe('createUser', () => {
+    let user: User;
 
-      it('should return status 200', () => {
-        expect(response.status).toBe(200);
-      });
-
-      it('should return the current user entity', () => {
-        assertSerializedUser(response.body, { id: 1 });
-      });
+    it('should return the created user', async () => {
+      await request();
+      expect(user).toBeDefined();
+      expect(user.username).toBe('username_');
     });
+
+    it('should return an error when not authorized', async () => {
+      removeToken();
+      await expect(request()).rejects.toThrowError(ClientError);
+    });
+
+    it.each`
+      desc                    | args
+      ${'duplicate username'} | ${'{ username: "username" }'}
+    `(
+      'should return an error when data is not valid: $desc',
+      async ({ data }) => {
+        const args = `(data: ${data})`;
+        await expect(request(args)).rejects.toThrowError(ClientError);
+      },
+    );
+
+    async function request(
+      args = '(data: { username: "username_", password: "password" })',
+    ) {
+      const result = await client.request<{ createUser: User }>(
+        `mutation { createUser${args} { username } }`,
+      );
+      user = result.createUser;
+    }
   });
 
-  describe('/:username/ (GET)', () => {
-    describe('Basic', () => {
-      beforeEach(async () => {
-        response = await requester.get(url('/username1/'));
-      });
+  describe('updateUser', () => {
+    let user: User;
 
-      it(`should return status ${HttpStatus.OK}`, () => {
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-
-      it('should return the target user entity', () => {
-        assertSerializedUser(response.body, { username: 'username1' });
-      });
+    it('should return the updated user', async () => {
+      await request(
+        '(id: 1, data: { nickname: "new-nickname" })',
+        '{ nickname }',
+      );
+      expect(user.nickname).toBe('new-nickname');
     });
 
-    describe('Illegal Lookup', () => {
-      beforeEach(async () => {
-        response = await requester.get(url('/asldfj/'));
-      });
-
-      it('should return 404', () => {
-        expect(response.status).toBe(HttpStatus.NOT_FOUND);
-      });
+    it('should return an error when not authorized', async () => {
+      removeToken();
+      await expect(request('(id: 1, data: {})', '{ id }')).rejects.toThrowError(
+        ClientError,
+      );
     });
+
+    async function request(args: string, fields: string) {
+      const result = await client.request<{ updateUser: User }>(
+        `mutation { updateUser${args} ${fields} }`,
+      );
+      user = result.updateUser;
+    }
   });
 
-  describe('/:username/ (PATCH)', () => {
-    beforeEach(() => {
-      updateDto = { username: 'newusername' };
-    });
+  async function insert(count = 1) {
+    for (let i = 1; i <= count; i++)
+      repo.persist(
+        repo.create({ username: `username${i}`, password: 'password' }),
+      );
+    await repo.flush();
+  }
 
-    describe('Basic', () => {
-      beforeEach(async () => {
-        jest
-          .spyOn(User.prototype, 'isUpdatedRecently', 'get')
-          .mockReturnValueOnce(false);
-        response = await requester
-          .patch(url('/username1/'))
-          .auth(token, { type: 'bearer' })
-          .send(updateDto);
-      });
-
-      it(`should return status ${HttpStatus.OK}`, () => {
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-
-      it('should return the updated user entity', () => {
-        assertSerializedUser(response.body, updateDto);
-      });
-    });
-
-    describe('Illegal Lookup', () => {
-      beforeEach(async () => {
-        response = await requester
-          .patch(url('/asdfasdf/'))
-          .auth(token, { type: 'bearer' })
-          .send(updateDto);
-      });
-
-      it('should return 404', () => {
-        expect(response.status).toBe(HttpStatus.NOT_FOUND);
-      });
-    });
-
-    describe('Unauthorized', () => {
-      beforeEach(async () => {
-        response = await requester.patch(url('/username1/'));
-      });
-
-      it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      });
-    });
-
-    describe('Wrong Target', () => {
-      beforeEach(async () => {
-        response = await requester
-          .patch(url('/username2/'))
-          .auth(token, { type: 'bearer' })
-          .send(updateDto);
-      });
-
-      it(`should return status ${HttpStatus.FORBIDDEN}`, () => {
-        expect(response.status).toBe(HttpStatus.FORBIDDEN);
-      });
-    });
-
-    describe('Too Frequently', () => {
-      beforeEach(async () => {
-        response = await requester
-          .patch(url('/username1/'))
-          .auth(token, { type: 'bearer' })
-          .send(updateDto);
-      });
-
-      it(`should return status ${HttpStatus.FORBIDDEN}`, () => {
-        expect(response.status).toBe(HttpStatus.FORBIDDEN);
-      });
-    });
-  });
+  function removeToken() {
+    client.setHeader('authorization', '');
+  }
 });

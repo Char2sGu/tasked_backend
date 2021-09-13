@@ -5,7 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 
 import { User } from './entities/user.entity';
 import { UsersAccessPolicy } from './users.access-policy';
-import { UsersController } from './users.controller';
+import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
@@ -14,8 +14,7 @@ import { UsersService } from './users.service';
     AccessPolicyModule,
     forwardRef(() => AuthModule),
   ],
-  controllers: [UsersController],
-  providers: [UsersService, UsersAccessPolicy],
+  providers: [UsersResolver, UsersService, UsersAccessPolicy],
   exports: [UsersService],
 })
 export class UsersModule {}
