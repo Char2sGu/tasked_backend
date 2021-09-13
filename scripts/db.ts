@@ -3,6 +3,7 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import path from 'path';
+
 import { AppModule } from '../src/app.module';
 
 main();
