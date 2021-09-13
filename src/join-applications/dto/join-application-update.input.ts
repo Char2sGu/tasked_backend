@@ -1,7 +1,7 @@
 import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
 import { IsIn, IsOptional } from 'class-validator';
 
-import { ApplicationStatus } from '../application-status.enum';
+import { ApplicationStatus } from '../entities/application-status.enum';
 import { JoinApplicationCreateInput } from './join-application-create.input';
 
 @InputType()

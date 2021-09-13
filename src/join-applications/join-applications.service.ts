@@ -4,9 +4,9 @@ import { MikroCrudServiceFactory } from 'nest-mikro-crud';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
-import { ApplicationStatus } from './application-status.enum';
 import { JoinApplicationCreateInput } from './dto/join-application-create.input';
 import { JoinApplicationUpdateInput } from './dto/join-application-update.input';
+import { ApplicationStatus } from './entities/application-status.enum';
 import { JoinApplication } from './entities/join-application.entity';
 
 @Injectable()

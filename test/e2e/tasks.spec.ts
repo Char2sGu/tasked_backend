@@ -6,7 +6,7 @@ import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
-import { Role } from 'src/memberships/role.enum';
+import { Role } from 'src/memberships/entities/role.enum';
 import { TaskCreateInput } from 'src/tasks/dto/task-create.input';
 import { TaskUpdateInput } from 'src/tasks/dto/task-update.input';
 import { Task } from 'src/tasks/entities/task.entity';

@@ -3,11 +3,11 @@ import { IsOptional, MaxLength } from 'class-validator';
 import { BodyContextAttached } from 'src/common/body-context-attached.dto';
 import { Existence } from 'src/common/existence.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { Role } from 'src/memberships/role.enum';
 import { User } from 'src/users/entities/user.entity';
 
-import { ApplicationStatus } from '../application-status.enum';
+import { ApplicationStatus } from '../entities/application-status.enum';
 import { JoinApplication } from '../entities/join-application.entity';
 import { JoinApplicationsService } from '../join-applications.service';
 

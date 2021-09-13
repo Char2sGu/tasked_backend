@@ -16,7 +16,7 @@ import { BaseEntity } from 'src/common/base-entity.entity';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Task } from 'src/tasks/entities/task.entity';
-import { Gender } from 'src/users/gender.enum';
+import { Gender } from 'src/users/entities/gender.enum';
 
 @ObjectType()
 @Entity()

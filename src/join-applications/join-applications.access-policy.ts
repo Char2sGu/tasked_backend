@@ -8,7 +8,7 @@ import {
 } from 'nest-access-policy';
 import { ActionName } from 'nest-mikro-crud';
 
-import { ApplicationStatus } from './application-status.enum';
+import { ApplicationStatus } from './entities/application-status.enum';
 import { JoinApplicationsService } from './join-applications.service';
 
 @Injectable()

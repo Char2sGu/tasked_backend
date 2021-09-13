@@ -4,7 +4,7 @@ import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { User } from 'src/users/entities/user.entity';
 
-import { Role } from '../role.enum';
+import { Role } from './role.enum';
 
 @ObjectType()
 @Filter<Membership>({

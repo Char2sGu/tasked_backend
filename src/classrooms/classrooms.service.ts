@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { MikroCrudServiceFactory } from 'nest-mikro-crud';
+import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { Role } from 'src/memberships/role.enum';
 import { User } from 'src/users/entities/user.entity';
 
 import { ClassroomCreateInput } from './dto/classroom-create.input';

@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { Length, Matches } from 'class-validator';
 import { BodyContextAttached } from 'src/common/body-context-attached.dto';
 import { Existence } from 'src/common/existence.decorator';
-import { Gender } from 'src/users/gender.enum';
+import { Gender } from 'src/users/entities/gender.enum';
 
 import { User } from '../entities/user.entity';
 import { UsersService } from '../users.service';
