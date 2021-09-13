@@ -1,24 +1,21 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
+import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
-import { AuthArgs } from 'src/auth/dto/auth.args';
+import { ClientError, GraphQLClient } from 'graphql-request';
 import { AuthResult } from 'src/auth/dto/auth-result.dto';
 import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
-import supertest, { Response } from 'supertest';
-import { prepareE2E, urlBuilder } from 'test/utils';
+import { prepareE2E } from 'test/utils';
 
-const url = urlBuilder('/api/auth');
-
-describe(url(''), () => {
+describe('Auth', () => {
+  let app: INestApplication;
   let module: TestingModule;
-  let requester: supertest.SuperTest<supertest.Test>;
+  let client: GraphQLClient;
   let repository: EntityRepository<User>;
-  let response: Response;
-  let authInfo: AuthResult;
 
   beforeEach(async () => {
-    ({ module, requester } = await prepareE2E());
+    ({ app, module, client } = await prepareE2E());
     repository = module.get<EntityRepository<User>>(getRepositoryToken(User));
 
     repository.persist(
@@ -30,38 +27,27 @@ describe(url(''), () => {
     await repository.flush();
   });
 
-  describe('/ (PUT)', () => {
-    describe('Legal Data', () => {
-      beforeEach(async () => {
-        const data: AuthArgs = {
-          username: 'username1',
-          password: 'password1',
-        };
-        response = await requester.put(url('/')).send(data);
-        authInfo = response.body;
-      });
+  afterEach(async () => {
+    await app.close();
+  });
 
-      it('should return status 200', () => {
-        expect(response.status).toBe(200);
-      });
+  describe('obtainToken', () => {
+    let token: string;
 
-      it('should return a token', () => {
-        expect(authInfo.token).toBeDefined();
-        expect(authInfo.token).toHaveLength(TOKEN_LENGTH);
-      });
+    it('should return the token with legal arguments', async () => {
+      await request('username1', 'password1');
+      expect(token).toHaveLength(TOKEN_LENGTH);
     });
 
-    describe('Illegal Data', () => {
-      beforeEach(async () => {
-        response = await requester.put(url('/')).send({
-          username: 'username1',
-          password: 'wrong',
-        });
-      });
-
-      it('should return status 401', () => {
-        expect(response.status).toBe(401);
-      });
+    it('should throws an error with illegal arguments', async () => {
+      await expect(request('', '')).rejects.toThrowError(ClientError);
     });
+
+    async function request(username: string, password: string) {
+      const result = await client.request<{ obtainToken: AuthResult }>(
+        `mutation { obtainToken(username: "${username}", password: "${password}") { token } }`,
+      );
+      token = result.obtainToken.token;
+    }
   });
 });

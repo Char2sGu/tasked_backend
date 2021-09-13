@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { SECRET_KEY } from 'src/constants';
 import { UsersModule } from 'src/users/users.module';
 
-import { AuthController } from './auth.controller';
+import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 
 @Module({
@@ -14,8 +14,7 @@ import { AuthService } from './auth.service';
     }),
     forwardRef(() => UsersModule),
   ],
-  controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthResolver, AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}

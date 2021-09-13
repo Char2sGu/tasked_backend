@@ -1,6 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
 
 import { AffairsModule } from './affairs/affairs.module';
 import { AssignmentsModule } from './assignments/assignments.module';
@@ -20,11 +21,13 @@ import { UsersModule } from './users/users.module';
       autoLoadEntities: true,
       forceUndefined: true,
     }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+    }),
     RouterModule.register([
       {
         path: '/api',
         children: [
-          { path: '/auth', module: AuthModule },
           { path: '/users', module: UsersModule },
           { path: '/classrooms', module: ClassroomsModule },
           { path: '/memberships', module: MembershipsModule },
