@@ -1,7 +1,5 @@
-import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { ArgsType } from '@nestjs/graphql';
+import { QueryOneArgs } from 'src/common/dto/query-one.args';
 
 @ArgsType()
-export class UserQueryArgs {
-  @Field(() => ID)
-  id: number;
-}
+export class UserQueryArgs extends QueryOneArgs {}

@@ -1,12 +1,10 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { PaginatedDto } from 'src/common/dto/paginated.dto';
 
 import { User } from '../entities/user.entity';
 
 @ObjectType()
-export class UsersPaginated {
-  @Field(() => Int)
-  total: number;
-
+export class UsersPaginated extends PaginatedDto {
   @Field(() => [User])
   results: User[];
 }
