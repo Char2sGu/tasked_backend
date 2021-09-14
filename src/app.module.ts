@@ -1,6 +1,6 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
+import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_PIPE, RouterModule } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AffairsModule } from './affairs/affairs.module';
@@ -45,6 +45,18 @@ import { UsersModule } from './users/users.module';
     AffairsModule,
     TasksModule,
     AssignmentsModule,
+  ],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        transform: true,
+        transformOptions: {
+          exposeDefaultValues: true,
+        },
+        whitelist: true,
+      }),
+    },
   ],
 })
 export class AppModule {}
