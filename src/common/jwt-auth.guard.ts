@@ -5,6 +5,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 
@@ -16,10 +17,13 @@ export class JwtAuthGuard implements CanActivate {
   @Inject()
   authService: AuthService;
 
+  @Inject()
+  reflector: Reflector;
+
   async canActivate(_: ExecutionContext) {
     const context = GqlExecutionContext.create(_);
 
-    const skipAuth: true | undefined = Reflect.getMetadata(
+    const skipAuth = this.reflector.get<true | undefined>(
       SKIP_AUTH,
       context.getHandler(),
     );
