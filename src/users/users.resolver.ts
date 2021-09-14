@@ -1,4 +1,3 @@
-import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   Args,
@@ -16,7 +15,6 @@ import { PaginatedDto } from 'src/common/dto/paginated.dto';
 import { QueryManyArgs } from 'src/common/dto/query-many.args';
 import { QueryOneArgs } from 'src/common/dto/query-one.args';
 import { UpdateOneArgs } from 'src/common/dto/update-one.args';
-import { DbFlusher } from 'src/common/flush-db/db-flusher.decorator';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { FlushDbInterceptor } from 'src/common/flush-db/flush-db.interceptor';
 import { GqlAccessPolicyGuard } from 'src/common/gql-access-policy.guard';
@@ -39,7 +37,6 @@ class CreateUserArgs extends CreateOneArgs.of(UserCreateInput) {}
 @ArgsType()
 class UpdateUserArgs extends UpdateOneArgs.of(UserUpdateInput) {}
 
-@DbFlusher(getRepositoryToken(User))
 @UseInterceptors(FlushDbInterceptor)
 @UseAccessPolicies(UsersAccessPolicy)
 @UseGuards(JwtAuthGuard, GqlAccessPolicyGuard)
