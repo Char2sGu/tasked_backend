@@ -1,4 +1,4 @@
-import { UseGuards, UseInterceptors } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   ArgsType,
@@ -16,7 +16,6 @@ import { QueryManyArgs } from 'src/common/dto/query-many.args';
 import { QueryOneArgs } from 'src/common/dto/query-one.args';
 import { UpdateOneArgs } from 'src/common/dto/update-one.args';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
-import { FlushDbInterceptor } from 'src/common/flush-db/flush-db.interceptor';
 import { GqlAccessPolicyGuard } from 'src/common/gql-access-policy.guard';
 import { ReqUser } from 'src/common/req-user.decorator';
 
@@ -37,7 +36,6 @@ class CreateUserArgs extends CreateOneArgs.of(UserCreateInput) {}
 @ArgsType()
 class UpdateUserArgs extends UpdateOneArgs.of(UserUpdateInput) {}
 
-@UseInterceptors(FlushDbInterceptor)
 @UseAccessPolicies(UsersAccessPolicy)
 @UseGuards(JwtAuthGuard, GqlAccessPolicyGuard)
 @Resolver(() => User)

@@ -1,12 +1,13 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module, ValidationPipe } from '@nestjs/common';
-import { APP_PIPE, RouterModule } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE, RouterModule } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AffairsModule } from './affairs/affairs.module';
 import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
+import { FlushDbInterceptor } from './common/flush-db/flush-db.interceptor';
 import { DB_PATH } from './constants';
 import { JoinApplicationsModule } from './join-applications/join-applications.module';
 import { MembershipsModule } from './memberships/memberships.module';
@@ -56,6 +57,10 @@ import { UsersModule } from './users/users.module';
         },
         whitelist: true,
       }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: FlushDbInterceptor,
     },
   ],
 })
