@@ -129,6 +129,11 @@ describe('Users', () => {
       expect(user.username).toBe('username_');
     });
 
+    it('should save the user', async () => {
+      await request();
+      expect(await repo.count()).toBe(2);
+    });
+
     it.each`
       desc                    | args
       ${'duplicate username'} | ${'{ username: "username" }'}

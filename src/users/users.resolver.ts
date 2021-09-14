@@ -1,4 +1,5 @@
-import { UseGuards } from '@nestjs/common';
+import { getRepositoryToken } from '@mikro-orm/nestjs';
+import { UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   Args,
   ArgsType,
@@ -15,6 +16,9 @@ import { PaginatedDto } from 'src/common/dto/paginated.dto';
 import { QueryManyArgs } from 'src/common/dto/query-many.args';
 import { QueryOneArgs } from 'src/common/dto/query-one.args';
 import { UpdateOneArgs } from 'src/common/dto/update-one.args';
+import { DbFlusher } from 'src/common/flush-db/db-flusher.decorator';
+import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
+import { FlushDbInterceptor } from 'src/common/flush-db/flush-db.interceptor';
 import { GqlAccessPolicyGuard } from 'src/common/gql-access-policy.guard';
 import { ReqUser } from 'src/common/req-user.decorator';
 
@@ -35,6 +39,8 @@ class CreateUserArgs extends CreateOneArgs.of(UserCreateInput) {}
 @ArgsType()
 class UpdateUserArgs extends UpdateOneArgs.of(UserUpdateInput) {}
 
+@DbFlusher(getRepositoryToken(User))
+@UseInterceptors(FlushDbInterceptor)
 @UseAccessPolicies(UsersAccessPolicy)
 @UseGuards(JwtAuthGuard, GqlAccessPolicyGuard)
 @Resolver(() => User)
@@ -59,14 +65,15 @@ export class UsersResolver {
     return user;
   }
 
+  @FlushDb()
   @SkipAuth()
   @Mutation(() => User)
   async createUser(@ReqUser() user: User, @Args() { data }: CreateUserArgs) {
     const entity = await this.service.create({ data, user });
-    await this.service.save();
     return entity;
   }
 
+  @FlushDb()
   @Mutation(() => User)
   async updateUser(
     @ReqUser() user: User,
@@ -74,7 +81,6 @@ export class UsersResolver {
   ) {
     const entity = await this.service.retrieve({ conditions: id, user });
     await this.service.update({ entity, data });
-    await this.service.save();
     return entity;
   }
 }
