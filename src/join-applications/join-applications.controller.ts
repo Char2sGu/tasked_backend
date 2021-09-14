@@ -1,8 +1,8 @@
 import { Controller, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
-import { BodyContextInterceptor } from 'src/common/body-context.interceptor';
-import { JwtAuthGuard } from 'src/common/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
+import { BodyContextInterceptor } from 'src/common/validation/body-context.interceptor';
 
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsAccessPolicy } from './join-applications.access-policy';

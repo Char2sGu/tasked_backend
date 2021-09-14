@@ -3,7 +3,7 @@ import { Type } from '@nestjs/common';
 import { registerDecorator, ValidationOptions } from 'class-validator';
 import { MikroCrudService } from 'nest-mikro-crud';
 
-import { User } from '../users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { ExistenceConstraint } from './existence.constraint';
 
 export const Existence =

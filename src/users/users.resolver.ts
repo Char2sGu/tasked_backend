@@ -1,10 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseAccessPolicies } from 'nest-access-policy';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
+import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
 import { GqlAccessPolicyGuard } from 'src/common/gql-access-policy.guard';
-import { JwtAuthGuard } from 'src/common/jwt-auth.guard';
 import { ReqUser } from 'src/common/req-user.decorator';
-import { SkipAuth } from 'src/common/skip-auth.decorator';
 
 import { UserCreateArgs } from './dto/user-create.args';
 import { UserQueryArgs } from './dto/user-query.args';

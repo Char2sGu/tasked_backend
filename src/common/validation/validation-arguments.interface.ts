@@ -1,5 +1,5 @@
 import { ValidationArguments as BaseValidationArguments } from 'class-validator';
-import { BodyContextAttached } from 'src/common/body-context-attached.dto';
+import { BodyContextAttached } from 'src/common/validation/body-context-attached.dto';
 
 export interface ValidationArguments<
   Constraints extends unknown[] = [],

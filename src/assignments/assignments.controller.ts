@@ -10,8 +10,8 @@ import {
 import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { ReqUser } from 'nest-mikro-crud/lib/decorators/req-user.decorator';
-import { BodyContextInterceptor } from 'src/common/body-context.interceptor';
-import { JwtAuthGuard } from 'src/common/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
+import { BodyContextInterceptor } from 'src/common/validation/body-context.interceptor';
 import { User } from 'src/users/entities/user.entity';
 
 import { AssignmentsAccessPolicy } from './assignments.access-policy';

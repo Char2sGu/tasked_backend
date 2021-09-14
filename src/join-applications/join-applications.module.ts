@@ -2,7 +2,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { AccessPolicyModule } from 'nest-access-policy';
 import { AuthModule } from 'src/auth/auth.module';
-import { ExistenceConstraint } from 'src/common/existence.constraint';
+import { ExistenceConstraint } from 'src/common/validation/existence.constraint';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 
 import { JoinApplication } from './entities/join-application.entity';

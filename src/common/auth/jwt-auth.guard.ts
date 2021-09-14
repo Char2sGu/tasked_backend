@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { SKIP_AUTH } from './skip-auth.symbol';
 
 @Injectable()

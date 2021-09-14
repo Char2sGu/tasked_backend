@@ -1,7 +1,7 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
-import { JwtAuthGuard } from 'src/common/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
 
 import { ClassroomsAccessPolicy } from './classrooms.access-policy';
 import { ClassroomsService } from './classrooms.service';

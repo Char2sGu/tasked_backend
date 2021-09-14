@@ -3,7 +3,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { ValidationArguments } from 'src/common/validation-arguments.interface';
+import { ValidationArguments } from 'src/common/validation/validation-arguments.interface';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 
