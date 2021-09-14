@@ -14,6 +14,7 @@ export class UserCreateInput extends BodyContextAttached {
     false,
     () => UsersService,
     (username: string) => ({ username }),
+    { message: 'Cannot specify a duplicate username' },
   )
   @Matches(/^([a-zA-Z0-9_-])+$/)
   @Length(1, 15)
