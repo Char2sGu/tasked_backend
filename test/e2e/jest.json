@@ -4,6 +4,8 @@
   "modulePaths": ["../../"],
   "globalSetup": "../setup.ts",
   "testRegex": ".*\\.spec\\.ts$",
+  "clearMocks": true,
+  "restoreMocks": true,
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
