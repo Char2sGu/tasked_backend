@@ -7,50 +7,57 @@ import {
   Effect,
 } from 'nest-access-policy';
 
-import { UsersController } from './users.controller';
+import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
-type ActionName = keyof UsersController;
+type ActionName = keyof UsersResolver;
+type Condition = AccessPolicyCondition<ActionName, Request>;
 
 @Injectable()
 export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
   @Inject()
   usersService: UsersService;
 
-  async getEntity({ params: { username }, user }: Request) {
+  get statements(): AccessPolicyStatement<ActionName, Request>[] {
+    return [
+      {
+        actions: [
+          'queryUsers',
+          'queryUser',
+          'queryCurrent',
+          'updateUser',
+          'createUser',
+        ],
+        effect: Effect.Allow,
+      },
+      {
+        actions: ['updateUser'],
+        effect: Effect.Allow,
+        conditions: [this.isSelf],
+        reason: 'Cannot update other users',
+      },
+      {
+        actions: ['updateUser'],
+        effect: Effect.Forbid,
+        conditions: [this.isUpdatedRecently],
+        reason: 'Cannot update again within 3 days',
+      },
+    ];
+  }
+
+  isSelf: Condition = async ({ req }) =>
+    (await this.getEntity(req)) == req.user;
+
+  isUpdatedRecently: Condition = async ({ req }) => req.user.isUpdatedRecently;
+
+  async getEntity({ params: { id }, user }: Request) {
     try {
       return await this.usersService.retrieve({
-        conditions: { username },
+        conditions: +id,
         user,
       });
     } catch {
       throw new NotFoundException();
     }
   }
-
-  isSelf: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
-    (await this.getEntity(req)) == req.user;
-
-  isUpdatedRecently: AccessPolicyCondition<ActionName, Request> = async ({
-    req,
-  }) => req.user.isUpdatedRecently;
-
-  statements: AccessPolicyStatement<ActionName, Request>[] = [
-    {
-      actions: ['list', 'update', 'current'],
-      effect: Effect.Allow,
-    },
-    {
-      actions: ['update'],
-      effect: Effect.Allow,
-      conditions: [this.isSelf],
-      reason: 'Updating other users is forbidden',
-    },
-    {
-      actions: ['update'],
-      effect: Effect.Forbid,
-      conditions: [this.isUpdatedRecently],
-      reason: 'Updating is forbidden within 3 days',
-    },
-  ];
 }

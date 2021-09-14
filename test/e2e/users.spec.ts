@@ -154,6 +154,7 @@ describe('Users', () => {
     let user: User;
 
     it('should return the updated user', async () => {
+      disableFrequentUpdateInspection();
       await request(
         '(id: 1, data: { nickname: "new-nickname" })',
         '{ nickname }',
@@ -162,8 +163,21 @@ describe('Users', () => {
     });
 
     it('should return an error when not authorized', async () => {
+      disableFrequentUpdateInspection();
       removeToken();
       await expect(request('(id: 1, data: {})', '{ id }')).rejects.toThrowError(
+        ClientError,
+      );
+    });
+
+    it('should return an error when updating too frequently', async () => {
+      await expect(request('(id: 1, data: {})', '{ id }')).rejects.toThrowError(
+        ClientError,
+      );
+    });
+
+    it('should return an error when updating other users', async () => {
+      await expect(request('(id: 2, data: {})', '{ id }')).rejects.toThrowError(
         ClientError,
       );
     });
@@ -173,6 +187,12 @@ describe('Users', () => {
         `mutation { updateUser${args} ${fields} }`,
       );
       user = result.updateUser;
+    }
+
+    function disableFrequentUpdateInspection() {
+      jest
+        .spyOn(User.prototype, 'isUpdatedRecently', 'get')
+        .mockReturnValue(false);
     }
   });
 
