@@ -129,11 +129,6 @@ describe('Users', () => {
       expect(user.username).toBe('username_');
     });
 
-    it('should return an error when not authorized', async () => {
-      removeToken();
-      await expect(request()).rejects.toThrowError(ClientError);
-    });
-
     it.each`
       desc                    | args
       ${'duplicate username'} | ${'{ username: "username" }'}

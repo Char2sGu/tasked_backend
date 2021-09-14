@@ -34,6 +34,7 @@ export class UsersResolver {
     return user;
   }
 
+  @SkipAuth()
   @Mutation(() => User)
   async createUser(@ReqUser() user: User, @Args() { data }: UserCreateArgs) {
     const entity = await this.service.create({ data, user });
