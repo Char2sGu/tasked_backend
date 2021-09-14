@@ -137,6 +137,7 @@ describe('Users', () => {
     it.each`
       desc                    | args
       ${'duplicate username'} | ${'{ username: "username" }'}
+      ${'illegal enum value'} | ${'{ gender: "wrong" }'}
     `(
       'should return an error when data is not valid: $desc',
       async ({ data }) => {

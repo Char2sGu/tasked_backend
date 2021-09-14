@@ -1,5 +1,6 @@
 import { Type } from '@nestjs/common';
 import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { Allow } from 'class-validator';
 
 @ArgsType()
 export class UpdateOneArgs<Input> {
@@ -14,7 +15,9 @@ export class UpdateOneArgs<Input> {
   }
 
   @Field(() => ID)
+  @Allow()
   id: number;
 
+  @Allow()
   data: Input;
 }

@@ -1,5 +1,6 @@
 import { Type } from '@nestjs/common';
 import { ArgsType, Field } from '@nestjs/graphql';
+import { Allow } from 'class-validator';
 
 @ArgsType()
 export class CreateOneArgs<Input> {
@@ -13,5 +14,6 @@ export class CreateOneArgs<Input> {
     return Args;
   }
 
+  @Allow()
   data: Input;
 }
