@@ -9,7 +9,6 @@ import {
 } from '@nestjs/graphql';
 import { UseAccessPolicies } from 'nest-access-policy';
 import { AccessPolicyGuard } from 'src/common/access-policy.guard';
-import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
 import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
 import { CreateOneArgs } from 'src/common/dto/create-one.args';
 import { PaginatedDto } from 'src/common/dto/paginated.dto';
@@ -37,7 +36,7 @@ class CreateUserArgs extends CreateOneArgs.of(UserCreateInput) {}
 class UpdateUserArgs extends UpdateOneArgs.of(UserUpdateInput) {}
 
 @UseAccessPolicies(UsersAccessPolicy)
-@UseGuards(JwtAuthGuard, AccessPolicyGuard)
+@UseGuards(AccessPolicyGuard)
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly service: UsersService) {}
