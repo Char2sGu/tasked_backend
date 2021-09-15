@@ -1,9 +1,9 @@
 import { ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
-import { AccessPolicyGuard } from 'nest-access-policy';
+import { AccessPolicyGuard as BaseAccessPolicyGuard } from 'nest-access-policy';
 
-export class GqlAccessPolicyGuard extends AccessPolicyGuard {
+export class AccessPolicyGuard extends BaseAccessPolicyGuard {
   async canActivate(context: ExecutionContext) {
     const gqlContext = GqlExecutionContext.create(context);
 
