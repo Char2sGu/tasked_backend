@@ -22,22 +22,22 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
     return [
       {
         actions: [
-          'queryUsers',
-          'queryUser',
+          'queryMany',
+          'queryOne',
           'queryCurrent',
-          'updateUser',
-          'createUser',
+          'updateOne',
+          'createOne',
         ],
         effect: Effect.Allow,
       },
       {
-        actions: ['updateUser'],
+        actions: ['updateOne'],
         effect: Effect.Allow,
         conditions: [this.isSelf],
         reason: 'Cannot update other users',
       },
       {
-        actions: ['updateUser'],
+        actions: ['updateOne'],
         effect: Effect.Forbid,
         conditions: [this.isUpdatedRecently],
         reason: 'Cannot update again within 3 days',

@@ -42,7 +42,7 @@ export class UsersResolver {
   constructor(private readonly service: UsersService) {}
 
   @Query(() => PaginatedUsers, { name: 'users' })
-  async queryUsers(
+  async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryUsersArgs,
   ) {
@@ -50,7 +50,7 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'user' })
-  async queryUser(@ReqUser() user: User, @Args() { id }: QueryUserArgs) {
+  async queryOne(@ReqUser() user: User, @Args() { id }: QueryUserArgs) {
     return this.service.retrieve({ conditions: id, user });
   }
 
@@ -61,18 +61,15 @@ export class UsersResolver {
 
   @FlushDb()
   @SkipAuth()
-  @Mutation(() => User)
-  async createUser(@ReqUser() user: User, @Args() { data }: CreateUserArgs) {
+  @Mutation(() => User, { name: 'createUser' })
+  async createOne(@ReqUser() user: User, @Args() { data }: CreateUserArgs) {
     const entity = await this.service.create({ data, user });
     return entity;
   }
 
   @FlushDb()
-  @Mutation(() => User)
-  async updateUser(
-    @ReqUser() user: User,
-    @Args() { id, data }: UpdateUserArgs,
-  ) {
+  @Mutation(() => User, { name: 'updateUser' })
+  async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateUserArgs) {
     const entity = await this.service.retrieve({ conditions: id, user });
     await this.service.update({ entity, data });
     return entity;
