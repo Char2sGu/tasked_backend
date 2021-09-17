@@ -18,7 +18,7 @@ type Condition = AccessPolicyCondition<ActionName, Request>;
 @Injectable()
 export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
   @Inject()
-  usersService: UsersService;
+  service: UsersService;
 
   @Inject(CRUD_FILTERS)
   filters: CrudFilters;
@@ -56,12 +56,9 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
   isUpdatedRecently: Condition = async ({ req }) => req.user.isUpdatedRecently;
 
   async getEntity({ params: { id }, user }: Request) {
-    try {
-      return await this.usersService.retrieve(+id, {
-        filters: this.filters(user),
-      });
-    } catch {
-      throw new NotFoundException();
-    }
+    return await this.service.retrieve(+id, {
+      filters: this.filters(user),
+      failHandler: () => new NotFoundException(),
+    });
   }
 }
