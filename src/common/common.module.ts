@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 
 import { CRUD_FILTERS } from './crud-filters.token';
 import { CrudFilters } from './crud-filters.type';
 
+@Global()
 @Module({
   providers: [
     {
