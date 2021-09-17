@@ -33,11 +33,13 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
   ) {
     const service = this.moduleRef.get(serviceType(), { strict: false });
     const conditions = getConditions(value, user, object);
+
+    if (service instanceof CrudService)
+      return await service.exists(conditions, { filters: this.filters(user) });
+
+    // TODO: deprecate nest-mikro-crud
     try {
-      // TODO: deprecate nest-mikro-crud
-      if (service instanceof CrudService)
-        await service.retrieve(conditions, { filters: this.filters(user) });
-      else await service.retrieve({ conditions, user });
+      await service.retrieve({ conditions, user });
       return shouldExist;
     } catch (error) {
       if (!(error instanceof NotFoundError)) throw error;

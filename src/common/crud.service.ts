@@ -3,6 +3,7 @@ import {
   FilterQuery,
   FindOneOrFailOptions,
   FindOptions,
+  NotFoundError,
 } from '@mikro-orm/core';
 import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
@@ -56,6 +57,19 @@ export abstract class CrudService<Entity> {
     const entity = await this.retrieve(where, options);
     this.repo.remove(entity);
     return entity;
+  }
+
+  async exists(
+    where: FilterQuery<Entity>,
+    options: FindOneOrFailOptions<Entity>,
+  ) {
+    try {
+      await this.retrieve(where, options);
+      return true;
+    } catch (error) {
+      if (error instanceof NotFoundError) return false;
+      throw error;
+    }
   }
 
   protected preprocessOptions(
