@@ -71,7 +71,7 @@ export class UsersResolver {
   @FlushDb()
   @SkipAuth()
   @Mutation(() => User, { name: 'createUser' })
-  async createOne(@ReqUser() user: User, @Args() { data }: CreateUserArgs) {
+  async createOne(@Args() { data }: CreateUserArgs) {
     return this.service.create(data);
   }
 
