@@ -16,9 +16,7 @@ export class AuthService {
 
   async obtainJwt(username: string, password: string) {
     try {
-      const user = await this.usersService.retrieve({
-        conditions: { username },
-      });
+      const user = await this.usersService.retrieve({ username });
       if (await compare(password, user.password))
         return await this.jwtService.signAsync({ username });
     } catch (error) {
@@ -32,7 +30,7 @@ export class AuthService {
       const { username } = await this.jwtService.verifyAsync<{
         username: string;
       }>(token);
-      return await this.usersService.retrieve({ conditions: { username } });
+      return await this.usersService.retrieve({ username });
     } catch (error) {
       return;
     }

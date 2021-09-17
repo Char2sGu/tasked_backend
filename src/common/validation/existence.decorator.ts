@@ -4,12 +4,13 @@ import { registerDecorator, ValidationOptions } from 'class-validator';
 import { MikroCrudService } from 'nest-mikro-crud';
 
 import { User } from '../../users/entities/user.entity';
+import { CrudService } from '../crud.service';
 import { ExistenceConstraint } from './existence.constraint';
 
 export const Existence =
   <Entity>(
     shouldExist: boolean,
-    serviceType: () => Type<MikroCrudService<Entity>>,
+    serviceType: () => Type<MikroCrudService<Entity> | CrudService<Entity>>,
     getConditions: (
       value: unknown,
       user: User,

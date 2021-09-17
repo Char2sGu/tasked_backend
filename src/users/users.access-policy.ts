@@ -6,6 +6,8 @@ import {
   AccessPolicyStatement,
   Effect,
 } from 'nest-access-policy';
+import { CRUD_FILTERS } from 'src/common/crud-filters.token';
+import { CrudFilters } from 'src/common/crud-filters.type';
 
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
@@ -17,6 +19,9 @@ type Condition = AccessPolicyCondition<ActionName, Request>;
 export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
   @Inject()
   usersService: UsersService;
+
+  @Inject(CRUD_FILTERS)
+  filters: CrudFilters;
 
   get statements(): AccessPolicyStatement<ActionName, Request>[] {
     return [
@@ -52,9 +57,8 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
 
   async getEntity({ params: { id }, user }: Request) {
     try {
-      return await this.usersService.retrieve({
-        conditions: +id,
-        user,
+      return await this.usersService.retrieve(+id, {
+        filters: this.filters(user),
       });
     } catch {
       throw new NotFoundException();

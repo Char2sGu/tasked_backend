@@ -1,5 +1,3 @@
-import { EntityRepository } from '@mikro-orm/knex';
-import { InjectRepository } from '@mikro-orm/nestjs';
 import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -26,6 +24,7 @@ import { UserCreateInput } from './dto/user-create.input';
 import { UserUpdateInput } from './dto/user-update.input';
 import { User } from './entities/user.entity';
 import { UsersAccessPolicy } from './users.access-policy';
+import { UsersService } from './users.service';
 
 @ObjectType()
 class PaginatedUsers extends PaginatedDto.of(User) {}
@@ -42,8 +41,8 @@ class UpdateUserArgs extends UpdateOneArgs.of(UserUpdateInput) {}
 @UseGuards(AccessPolicyGuard)
 @Resolver(() => User)
 export class UsersResolver {
-  @InjectRepository(User)
-  private readonly repo: EntityRepository<User>;
+  @Inject()
+  private readonly service: UsersService;
 
   @Inject(CRUD_FILTERS)
   private readonly filters: CrudFilters;
@@ -53,16 +52,15 @@ export class UsersResolver {
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryUsersArgs,
   ) {
-    const [results, total] = await this.repo.findAndCount(
+    return this.service.list(
       {},
       { limit, offset, filters: this.filters(user) },
     );
-    return { total, results };
   }
 
   @Query(() => User, { name: 'user' })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryUserArgs) {
-    return this.repo.findOneOrFail(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: this.filters(user) });
   }
 
   @Query(() => User, { name: 'current' })
@@ -74,17 +72,12 @@ export class UsersResolver {
   @SkipAuth()
   @Mutation(() => User, { name: 'createUser' })
   async createOne(@ReqUser() user: User, @Args() { data }: CreateUserArgs) {
-    const entity = this.repo.create(data);
-    this.repo.persist(entity);
-    return entity;
+    return this.service.create(data);
   }
 
   @FlushDb()
   @Mutation(() => User, { name: 'updateUser' })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateUserArgs) {
-    const entity = await this.repo.findOneOrFail(id, {
-      filters: this.filters(user),
-    });
-    return entity.assign(data);
+    return this.service.update(id, data, { filters: this.filters(user) });
   }
 }

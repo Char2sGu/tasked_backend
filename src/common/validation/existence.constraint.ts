@@ -6,6 +6,9 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
+import { CrudService } from '../crud.service';
+import { CRUD_FILTERS } from '../crud-filters.token';
+import { CrudFilters } from '../crud-filters.type';
 import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
 
@@ -14,6 +17,9 @@ import { ValidationArguments } from './validation-arguments.interface';
 export class ExistenceConstraint implements ValidatorConstraintInterface {
   @Inject()
   moduleRef: ModuleRef;
+
+  @Inject(CRUD_FILTERS)
+  filters: CrudFilters;
 
   async validate(
     value: unknown,
@@ -28,7 +34,10 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     const service = this.moduleRef.get(serviceType(), { strict: false });
     const conditions = getConditions(value, user, object);
     try {
-      await service.retrieve({ conditions, user });
+      // TODO: deprecate nest-mikro-crud
+      if (service instanceof CrudService)
+        await service.retrieve(conditions, { filters: this.filters(user) });
+      else await service.retrieve({ conditions, user });
       return shouldExist;
     } catch (error) {
       if (!(error instanceof NotFoundError)) throw error;
