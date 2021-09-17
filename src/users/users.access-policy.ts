@@ -6,8 +6,8 @@ import {
   AccessPolicyStatement,
   Effect,
 } from 'nest-access-policy';
-import { CRUD_FILTERS } from 'src/common/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters.type';
+import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
+import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';

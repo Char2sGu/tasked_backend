@@ -6,9 +6,9 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-import { CrudService } from '../crud.service';
-import { CRUD_FILTERS } from '../crud-filters.token';
-import { CrudFilters } from '../crud-filters.type';
+import { CrudService } from '../crud/crud.service';
+import { CRUD_FILTERS } from '../crud-filters/crud-filters.token';
+import { CrudFilters } from '../crud-filters/crud-filters.type';
 import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
 

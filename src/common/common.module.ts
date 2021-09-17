@@ -1,16 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 
-import { CRUD_FILTERS } from './crud-filters.token';
-import { CrudFilters } from './crud-filters.type';
+import { crudFilters } from './crud-filters/crud-filters.provider';
+import { CRUD_FILTERS } from './crud-filters/crud-filters.token';
 
 @Global()
 @Module({
-  providers: [
-    {
-      provide: CRUD_FILTERS,
-      useValue: ((user) => ({ crud: { user } })) as CrudFilters,
-    },
-  ],
+  providers: [crudFilters],
   exports: [CRUD_FILTERS],
 })
 export class CommonModule {}

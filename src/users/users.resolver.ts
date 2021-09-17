@@ -8,10 +8,10 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { UseAccessPolicies } from 'nest-access-policy';
-import { AccessPolicyGuard } from 'src/common/access-policy.guard';
+import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
-import { CRUD_FILTERS } from 'src/common/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters.type';
+import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
+import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { CreateOneArgs } from 'src/common/dto/create-one.args';
 import { PaginatedDto } from 'src/common/dto/paginated.dto';
 import { QueryManyArgs } from 'src/common/dto/query-many.args';
