@@ -37,7 +37,7 @@ describe('Users', () => {
     await app.close();
   });
 
-  describe('queryUser', () => {
+  describe('user', () => {
     const fields: NonFunctionPropertyNames<User>[] = [
       'id',
       'username',
@@ -69,7 +69,7 @@ describe('Users', () => {
     }
   });
 
-  describe('queryUsers', () => {
+  describe('users', () => {
     let users: PaginatedDto<User>;
 
     it('should return the paginated users when no arguments are provided', async () => {
@@ -99,7 +99,7 @@ describe('Users', () => {
     }
   });
 
-  describe('queryCurrent', () => {
+  describe('current', () => {
     let user: User;
 
     it('should return the current user', async () => {
