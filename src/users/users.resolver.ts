@@ -1,41 +1,21 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import {
-  Args,
-  ArgsType,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseAccessPolicies } from 'nest-access-policy';
 import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
-import { CreateOneArgs } from 'src/common/dto/create-one.args';
-import { PaginatedDto } from 'src/common/dto/paginated.dto';
-import { QueryManyArgs } from 'src/common/dto/query-many.args';
-import { QueryOneArgs } from 'src/common/dto/query-one.args';
-import { UpdateOneArgs } from 'src/common/dto/update-one.args';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 
-import { UserCreateInput } from './dto/user-create.input';
-import { UserUpdateInput } from './dto/user-update.input';
+import { CreateUserArgs } from './dto/create-user.args';
+import { PaginatedUsers } from './dto/paginated-users.dto';
+import { QueryUserArgs } from './dto/query-user.args';
+import { QueryUsersArgs } from './dto/query-users.args';
+import { UpdateUserArgs } from './dto/update-user.args';
 import { User } from './entities/user.entity';
 import { UsersAccessPolicy } from './users.access-policy';
 import { UsersService } from './users.service';
-
-@ObjectType()
-class PaginatedUsers extends PaginatedDto.of(User) {}
-@ArgsType()
-class QueryUsersArgs extends QueryManyArgs {}
-@ArgsType()
-class QueryUserArgs extends QueryOneArgs {}
-@ArgsType()
-class CreateUserArgs extends CreateOneArgs.of(UserCreateInput) {}
-@ArgsType()
-class UpdateUserArgs extends UpdateOneArgs.of(UserUpdateInput) {}
 
 @UseAccessPolicies(UsersAccessPolicy)
 @UseGuards(AccessPolicyGuard)
