@@ -16,10 +16,10 @@ import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import supertest from 'supertest';
 
-export async function prepareE2E(
-  metadata: ModuleMetadata = {},
-  debug?: boolean,
-) {
+export async function prepareE2E({
+  debug,
+  ...metadata
+}: PrepareE2EOptions = {}) {
   const module = await Test.createTestingModule({
     imports: [
       MikroOrmModule.forRoot({
@@ -34,8 +34,8 @@ export async function prepareE2E(
           Task,
           Assignment,
         ],
-        debug,
         forceUndefined: true,
+        debug,
       }),
       ...(Reflect.getMetadata('imports', AppModule) as any[]).slice(1),
       ...(metadata.imports ?? []),
@@ -63,4 +63,8 @@ export async function prepareE2E(
   useContainer(app, { fallbackOnErrors: true });
 
   return { module, app, server, address, requester, client };
+}
+
+interface PrepareE2EOptions extends ModuleMetadata {
+  debug?: boolean;
 }
