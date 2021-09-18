@@ -7,7 +7,9 @@ import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { User } from 'src/users/entities/user.entity';
 import supertest, { Response } from 'supertest';
-import { prepareE2E, urlBuilder } from 'test/utils';
+
+import { prepareE2E } from './utils/prepare-e2e';
+import { urlBuilder } from './utils/url-builder';
 
 const url = urlBuilder('/api/memberships');
 

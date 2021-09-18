@@ -7,7 +7,8 @@ import { ClientError, GraphQLClient } from 'graphql-request';
 import { AuthService } from 'src/auth/auth.service';
 import { PaginatedUsers } from 'src/users/dto/paginated-users.dto';
 import { User } from 'src/users/entities/user.entity';
-import { prepareE2E } from 'test/utils';
+
+import { prepareE2E } from './utils/prepare-e2e';
 
 describe('Users', () => {
   let app: INestApplication;

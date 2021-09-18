@@ -6,7 +6,8 @@ import { ClientError, GraphQLClient } from 'graphql-request';
 import { AuthResult } from 'src/auth/dto/auth-result.dto';
 import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
-import { prepareE2E } from 'test/utils';
+
+import { prepareE2E } from './utils/prepare-e2e';
 
 describe('Auth', () => {
   let app: INestApplication;

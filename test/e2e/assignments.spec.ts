@@ -11,7 +11,9 @@ import { Role } from 'src/memberships/entities/role.enum';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import supertest from 'supertest';
-import { prepareE2E, urlBuilder } from 'test/utils';
+
+import { prepareE2E } from './utils/prepare-e2e';
+import { urlBuilder } from './utils/url-builder';
 
 const url = urlBuilder('/api/assignments');
 
