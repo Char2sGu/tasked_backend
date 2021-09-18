@@ -3,13 +3,13 @@ import { NonFunctionPropertyNames } from '@mikro-orm/core/typings';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
-import { ClientError, GraphQLClient } from 'graphql-request';
+import { ClientError } from 'graphql-request';
 import { AuthService } from 'src/auth/auth.service';
 import { PaginatedUsers } from 'src/users/dto/paginated-users.dto';
 import { User } from 'src/users/entities/user.entity';
 
+import { GraphQLClient } from './utils/graphql-client.class';
 import { prepareE2E } from './utils/prepare-e2e';
-import { removeToken } from './utils/remove-token.func';
 
 describe('Users', () => {
   let app: INestApplication;
@@ -32,7 +32,7 @@ describe('Users', () => {
       .flush();
 
     token = await module.get(AuthService).obtainJwt('username', 'password');
-    client.setHeader('authorization', `Bearer ${token}`);
+    client.setToken(token);
   });
 
   afterEach(async () => {
@@ -59,7 +59,7 @@ describe('Users', () => {
     });
 
     it('should return an error when not authorized', async () => {
-      removeToken(client);
+      client.setToken();
       await expect(request()).rejects.toThrowError(ClientError);
     });
 
@@ -82,7 +82,7 @@ describe('Users', () => {
     });
 
     it('should return an error when not authorized', async () => {
-      removeToken(client);
+      client.setToken();
       await expect(request('')).rejects.toThrowError(ClientError);
     });
 
@@ -110,7 +110,7 @@ describe('Users', () => {
     });
 
     it('should return an error when not authorized', async () => {
-      removeToken(client);
+      client.setToken();
       await expect(request()).rejects.toThrowError(ClientError);
     });
 
@@ -172,7 +172,7 @@ describe('Users', () => {
 
     it('should return an error when not authorized', async () => {
       disableFrequentUpdateInspection();
-      removeToken(client);
+      client.setToken();
       await expect(request('(id: 1, data: {})', '{ id }')).rejects.toThrowError(
         ClientError,
       );
