@@ -9,6 +9,7 @@ import { PaginatedUsers } from 'src/users/dto/paginated-users.dto';
 import { User } from 'src/users/entities/user.entity';
 
 import { prepareE2E } from './utils/prepare-e2e';
+import { removeToken } from './utils/remove-token.func';
 
 describe('Users', () => {
   let app: INestApplication;
@@ -58,7 +59,7 @@ describe('Users', () => {
     });
 
     it('should return an error when not authorized', async () => {
-      removeToken();
+      removeToken(client);
       await expect(request()).rejects.toThrowError(ClientError);
     });
 
@@ -81,7 +82,7 @@ describe('Users', () => {
     });
 
     it('should return an error when not authorized', async () => {
-      removeToken();
+      removeToken(client);
       await expect(request('')).rejects.toThrowError(ClientError);
     });
 
@@ -109,7 +110,7 @@ describe('Users', () => {
     });
 
     it('should return an error when not authorized', async () => {
-      removeToken();
+      removeToken(client);
       await expect(request()).rejects.toThrowError(ClientError);
     });
 
@@ -171,7 +172,7 @@ describe('Users', () => {
 
     it('should return an error when not authorized', async () => {
       disableFrequentUpdateInspection();
-      removeToken();
+      removeToken(client);
       await expect(request('(id: 1, data: {})', '{ id }')).rejects.toThrowError(
         ClientError,
       );
@@ -209,9 +210,5 @@ describe('Users', () => {
         repo.create({ username: `username${i}`, password: 'password' }),
       );
     await repo.flush();
-  }
-
-  function removeToken() {
-    client.setHeader('authorization', '');
   }
 });
