@@ -7,7 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Type } from '@nestjs/common';
+import { NotFoundException, Type } from '@nestjs/common';
 
 export abstract class CrudService<Entity> {
   static of<Entity>(type: Type<Entity>): Type<CrudService<Entity>> {
@@ -21,7 +21,6 @@ export abstract class CrudService<Entity> {
   protected readonly repo: EntityRepository<Entity>;
 
   async list(where: FilterQuery<Entity>, options: FindOptions<Entity>) {
-    options = this.preprocessOptions(options);
     const [results, total] = await this.repo.findAndCount(where, options);
     return { total, results };
   }
@@ -36,8 +35,10 @@ export abstract class CrudService<Entity> {
     where: FilterQuery<Entity>,
     options?: FindOneOrFailOptions<Entity>,
   ) {
-    options = this.preprocessOptions(options);
-    return await this.repo.findOneOrFail(where, options);
+    return await this.repo.findOneOrFail(where, {
+      ...options,
+      failHandler: options?.failHandler ?? (() => new NotFoundException()),
+    });
   }
 
   async update(
@@ -70,11 +71,5 @@ export abstract class CrudService<Entity> {
       if (error instanceof NotFoundError) return false;
       throw error;
     }
-  }
-
-  protected preprocessOptions(
-    options: FindOptions<Entity>,
-  ): FindOptions<Entity> {
-    return options;
   }
 }

@@ -58,7 +58,11 @@ describe('Users', () => {
       });
     });
 
-    it('should return an error when not authorized', async () => {
+    it('should throw an error when the target not exists', async () => {
+      await expect(request(999)).rejects.toThrowError(ClientError);
+    });
+
+    it('should return an error when not authenticated', async () => {
       client.setToken();
       await expect(request()).rejects.toThrowError(ClientError);
     });
@@ -81,7 +85,7 @@ describe('Users', () => {
       expect(users.results).toHaveLength(1);
     });
 
-    it('should return an error when not authorized', async () => {
+    it('should return an error when not authenticated', async () => {
       client.setToken();
       await expect(request('')).rejects.toThrowError(ClientError);
     });
@@ -109,7 +113,7 @@ describe('Users', () => {
       expect(user.id).toBe('1');
     });
 
-    it('should return an error when not authorized', async () => {
+    it('should return an error when not authenticated', async () => {
       client.setToken();
       await expect(request()).rejects.toThrowError(ClientError);
     });
@@ -170,7 +174,7 @@ describe('Users', () => {
       expect(user.nickname).toBe('new-nickname');
     });
 
-    it('should return an error when not authorized', async () => {
+    it('should return an error when not authenticated', async () => {
       disableFrequentUpdateInspection();
       client.setToken();
       await expect(request('(id: 1, data: {})', '{ id }')).rejects.toThrowError(
