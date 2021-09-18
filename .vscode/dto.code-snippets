@@ -1,7 +1,7 @@
 {
   "DTO:Arguments": {
     "scope": "typescript",
-    "prefix": "dto:args",
+    "prefix": "dto-args",
     "body": [
       "import { ArgsType } from '@nestjs/graphql';",
       "",
@@ -11,7 +11,7 @@
   },
   "DTO:Object": {
     "scope": "typescript",
-    "prefix": "dto:obj",
+    "prefix": "dto-obj",
     "body": [
       "import { ObjectType } from '@nestjs/graphql';",
       "",
