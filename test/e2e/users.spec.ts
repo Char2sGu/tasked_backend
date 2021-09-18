@@ -5,7 +5,7 @@ import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { ClientError, GraphQLClient } from 'graphql-request';
 import { AuthService } from 'src/auth/auth.service';
-import { PaginatedDto } from 'src/common/dto/paginated.dto';
+import { PaginatedUsers } from 'src/users/dto/paginated-users.dto';
 import { User } from 'src/users/entities/user.entity';
 import { prepareE2E } from 'test/utils';
 
@@ -70,7 +70,7 @@ describe('Users', () => {
   });
 
   describe('users', () => {
-    let users: PaginatedDto<User>;
+    let users: PaginatedUsers;
 
     it('should return the paginated users when no arguments are provided', async () => {
       await request('');
@@ -92,7 +92,7 @@ describe('Users', () => {
     });
 
     async function request(args: string) {
-      const result = await client.request<{ users: PaginatedDto<User> }>(
+      const result = await client.request<{ users: PaginatedUsers }>(
         `query { users${args} { total, results { id } } }`,
       );
       users = result.users;
