@@ -1,7 +1,8 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { ID, InputType } from '@nestjs/graphql';
 import { IsOptional, MaxLength } from 'class-validator';
-import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
+import { Field } from 'src/common/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
+import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';

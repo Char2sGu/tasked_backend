@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { ObjectType } from '@nestjs/graphql';
+import { Field } from 'src/common/field.decorator';
 
 @ObjectType()
 export class AuthResult {

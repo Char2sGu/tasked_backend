@@ -1,5 +1,6 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType } from '@nestjs/graphql';
 import { Allow } from 'class-validator';
+import { Field } from 'src/common/field.decorator';
 
 @ArgsType()
 export class AuthArgs {

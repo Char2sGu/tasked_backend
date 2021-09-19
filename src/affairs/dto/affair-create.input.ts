@@ -1,5 +1,6 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { InputType, Int } from '@nestjs/graphql';
 import { IsOptional, Length } from 'class-validator';
+import { Field } from 'src/common/field.decorator';
 
 @InputType()
 export class AffairCreateInput {

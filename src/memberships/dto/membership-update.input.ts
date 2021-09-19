@@ -1,5 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { InputType } from '@nestjs/graphql';
 import { IsOptional, Length, NotContains } from 'class-validator';
+import { Field } from 'src/common/field.decorator';
 
 @InputType()
 export class MembershipUpdateInput {

@@ -1,7 +1,8 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { Allow, IsOptional, Length, Matches } from 'class-validator';
-import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
+import { InputType } from '@nestjs/graphql';
+import { Length, Matches } from 'class-validator';
+import { Field } from 'src/common/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
+import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Gender } from 'src/users/entities/gender.enum';
 
 import { User } from '../entities/user.entity';
@@ -22,7 +23,6 @@ export class UserCreateInput extends ValidationContextAttached {
 
   @Field(() => String, { nullable: true })
   @Length(1, 15)
-  @IsOptional()
   nickname?: string;
 
   @Field(() => String)
@@ -30,6 +30,5 @@ export class UserCreateInput extends ValidationContextAttached {
   password: string;
 
   @Field(() => Gender, { nullable: true })
-  @Allow()
   gender?: Gender;
 }

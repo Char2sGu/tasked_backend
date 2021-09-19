@@ -1,12 +1,13 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { NonFunctionPropertyNames } from '@mikro-orm/core/typings';
-import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { INestApplication } from '@nestjs/common';
+import { getRepositoryToken, UseRequestContext } from '@mikro-orm/nestjs';
+import { Controller, INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { ClientError } from 'graphql-request';
 import { AuthService } from 'src/auth/auth.service';
 import { PaginatedUsers } from 'src/users/dto/paginated-users.dto';
 import { User } from 'src/users/entities/user.entity';
+import { UsersResolver } from 'src/users/users.resolver';
 
 import { GraphQLClient } from './utils/graphql-client.class';
 import { prepareE2E } from './utils/prepare-e2e';

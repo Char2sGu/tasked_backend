@@ -1,5 +1,7 @@
 import { Type } from '@nestjs/common';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Int, ObjectType } from '@nestjs/graphql';
+
+import { Field } from '../field.decorator';
 
 @ObjectType()
 export abstract class PaginatedDto<Entity> {

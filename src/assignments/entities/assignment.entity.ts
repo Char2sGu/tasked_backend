@@ -1,7 +1,8 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { ObjectType } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
+import { Field } from 'src/common/field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 

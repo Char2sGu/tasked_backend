@@ -6,9 +6,10 @@ import {
   OneToMany,
   Property,
 } from '@mikro-orm/core';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { ObjectType } from '@nestjs/graphql';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
+import { Field } from 'src/common/field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()

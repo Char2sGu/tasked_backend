@@ -63,6 +63,7 @@ import { UsersModule } from './users/users.module';
         transform: true,
         transformOptions: {
           exposeDefaultValues: true,
+          exposeUnsetFields: false, // if `true`, update actions will unexpectedly assign an `undefined` value to the entity fields and cause error
         },
         whitelist: true,
       }),

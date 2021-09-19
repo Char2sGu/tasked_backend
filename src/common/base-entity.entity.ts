@@ -1,5 +1,7 @@
 import { BaseEntity as Base, PrimaryKey, Property } from '@mikro-orm/core';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ID, ObjectType } from '@nestjs/graphql';
+
+import { Field } from './field.decorator';
 
 @ObjectType()
 export class BaseEntity<T extends BaseEntity<T>> extends Base<T, 'id'> {

@@ -1,9 +1,9 @@
-import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { Allow } from 'class-validator';
+import { ArgsType, ID } from '@nestjs/graphql';
+
+import { Field } from '../field.decorator';
 
 @ArgsType()
 export class QueryOneArgs {
   @Field(() => ID)
-  @Allow()
   id: number;
 }
