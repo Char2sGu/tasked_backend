@@ -4,8 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
-import { ExpressContext } from 'apollo-server-express';
+import { Request } from 'express';
 
 import { BodyContext } from './body-context.type';
 
@@ -16,16 +15,10 @@ import { BodyContext } from './body-context.type';
 @Injectable()
 export class BodyContextInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler) {
-    const request = this.getRequest(context);
+    const request = context.switchToHttp().getRequest<Request>();
     const { user } = request;
     const bodyContext: BodyContext = { user };
     request.body._context = bodyContext;
     return next.handle();
-  }
-
-  private getRequest(context: ExecutionContext) {
-    return context.getType<GqlContextType>() == 'graphql'
-      ? GqlExecutionContext.create(context).getContext<ExpressContext>().req
-      : context.switchToHttp().getRequest();
   }
 }
