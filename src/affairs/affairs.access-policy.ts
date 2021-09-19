@@ -13,6 +13,8 @@ import {
 } from 'nest-access-policy';
 import { ActionName } from 'nest-mikro-crud';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
+import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
+import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 
 import { AffairsService } from './affairs.service';
 import { AffairCreateInput } from './dto/affair-create.input';
@@ -24,6 +26,9 @@ export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
 
   @Inject()
   classroomsService: ClassroomsService;
+
+  @Inject(CRUD_FILTERS)
+  filters: CrudFilters;
 
   async getEntity({ params: { id }, user }: Request) {
     try {
@@ -39,14 +44,10 @@ export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
 
   async getClassroomWhenCreating({ body, user }: Request) {
     const { classroom: id }: AffairCreateInput = body;
-    return await this.classroomsService
-      .retrieve({
-        conditions: { id: +id },
-        user,
-      })
-      .catch(() => {
-        throw new BadRequestException('Classroom not found');
-      });
+    return await this.classroomsService.retrieve(+id, {
+      filters: this.filters(user),
+      failHandler: () => new BadRequestException('Classroom not found'),
+    });
   }
   asCreator: AccessPolicyCondition<ActionName, Request> = async ({
     action,
