@@ -1,6 +1,7 @@
 import { Type } from '@nestjs/common';
 import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { Allow } from 'class-validator';
+import { Type as TransformType } from 'class-transformer';
+import { Allow, ValidateNested } from 'class-validator';
 
 @ArgsType()
 export class UpdateOneArgs<Input> {
@@ -8,6 +9,7 @@ export class UpdateOneArgs<Input> {
     @ArgsType()
     class Args extends UpdateOneArgs<Input> {
       @Field(() => type)
+      @TransformType(() => type)
       data: Input;
     }
 
@@ -18,6 +20,6 @@ export class UpdateOneArgs<Input> {
   @Allow()
   id: number;
 
-  @Allow()
+  @ValidateNested()
   data: Input;
 }

@@ -130,31 +130,26 @@ describe('Users', () => {
     let user: User;
 
     it('should return the created user', async () => {
-      await request();
+      await request('(data: { username: "username_", password: "password" })');
       expect(user).toBeDefined();
       expect(user.username).toBe('username_');
-    });
-
-    it('should save the user', async () => {
-      await request();
       expect(await repo.count()).toBe(2);
     });
 
     it.each`
-      desc                    | args
-      ${'duplicate username'} | ${'{ username: "username" }'}
-      ${'illegal enum value'} | ${'{ gender: "wrong" }'}
+      desc                     | data
+      ${'username duplicated'} | ${'{ username: "username", password: "password" }'}
+      ${'username too short'}  | ${'{ username: "",  password: "password" }'}
     `(
       'should return an error when data is not valid: $desc',
       async ({ data }) => {
-        const args = `(data: ${data})`;
-        await expect(request(args)).rejects.toThrowError(ClientError);
+        await expect(request(`(data: ${data})`)).rejects.toThrowError(
+          ClientError,
+        );
       },
     );
 
-    async function request(
-      args = '(data: { username: "username_", password: "password" })',
-    ) {
+    async function request(args: string) {
       const result = await client.request<{ createUser: User }>(
         `mutation { createUser${args} { username } }`,
       );
