@@ -68,7 +68,7 @@ export abstract class CrudService<Entity> {
       await this.retrieve(where, options);
       return true;
     } catch (error) {
-      if (error instanceof NotFoundError) return false;
+      if (error instanceof NotFoundException) return false;
       throw error;
     }
   }
