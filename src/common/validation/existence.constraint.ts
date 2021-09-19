@@ -35,7 +35,9 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     const conditions = getConditions(value, user, object);
 
     if (service instanceof CrudService)
-      return await service.exists(conditions, { filters: this.filters(user) });
+      return (await service.exists(conditions, { filters: this.filters(user) }))
+        ? shouldExist
+        : !shouldExist;
 
     // TODO: deprecate nest-mikro-crud
     try {
