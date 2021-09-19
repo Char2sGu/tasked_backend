@@ -11,7 +11,7 @@ import { AccessPolicyGuard, UseAccessPolicies } from 'nest-access-policy';
 import { MikroCrudControllerFactory, QueryDtoFactory } from 'nest-mikro-crud';
 import { ReqUser } from 'nest-mikro-crud/lib/decorators/req-user.decorator';
 import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
-import { BodyContextInterceptor } from 'src/common/validation/body-context.interceptor';
+import { ValidationContextInterceptor } from 'src/common/validation/validation-context.interceptor';
 import { User } from 'src/users/entities/user.entity';
 
 import { AssignmentsAccessPolicy } from './assignments.access-policy';
@@ -20,7 +20,7 @@ import { Assignment } from './entities/assignment.entity';
 
 @UseAccessPolicies(AssignmentsAccessPolicy)
 @UseGuards(JwtAuthGuard, AccessPolicyGuard)
-@UseInterceptors(BodyContextInterceptor)
+@UseInterceptors(ValidationContextInterceptor)
 @Controller()
 export class AssignmentsController extends new MikroCrudControllerFactory({
   serviceClass: AssignmentsService,

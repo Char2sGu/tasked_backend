@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsInt, IsOptional, Validate } from 'class-validator';
-import { BodyContextAttached } from 'src/common/validation/body-context-attached.dto';
+import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
@@ -10,7 +10,7 @@ import { TasksService } from 'src/tasks/tasks.service';
 import { IsInferiorMemberConstraint } from './is-inferior-member.constraint';
 
 @InputType()
-export class AssignmentCreateInput extends BodyContextAttached {
+export class AssignmentCreateInput extends ValidationContextAttached {
   @Field(() => ID)
   @Existence<Membership>(
     true,

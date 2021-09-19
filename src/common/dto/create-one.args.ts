@@ -3,10 +3,10 @@ import { ArgsType, Field } from '@nestjs/graphql';
 import { Type as TransformType } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 
-import { BodyContextAttached } from '../validation/body-context-attached.dto';
+import { ValidationContextAttached } from '../validation/validation-context-attached.dto';
 
 @ArgsType()
-export class CreateOneArgs<Input> extends BodyContextAttached {
+export class CreateOneArgs<Input> extends ValidationContextAttached {
   static of<Input>(type: Type<Input>): Type<CreateOneArgs<Input>> {
     @ArgsType()
     class Args extends this<Input> {

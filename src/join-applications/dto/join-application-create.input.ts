@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsOptional, MaxLength } from 'class-validator';
-import { BodyContextAttached } from 'src/common/validation/body-context-attached.dto';
+import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
@@ -12,7 +12,7 @@ import { JoinApplication } from '../entities/join-application.entity';
 import { JoinApplicationsService } from '../join-applications.service';
 
 @InputType()
-export class JoinApplicationCreateInput extends BodyContextAttached {
+export class JoinApplicationCreateInput extends ValidationContextAttached {
   @Field(() => ID)
   @Existence<JoinApplication>(
     false,

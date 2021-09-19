@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Allow, IsOptional, Length, Matches } from 'class-validator';
-import { BodyContextAttached } from 'src/common/validation/body-context-attached.dto';
+import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { Gender } from 'src/users/entities/gender.enum';
 
@@ -8,7 +8,7 @@ import { User } from '../entities/user.entity';
 import { UsersService } from '../users.service';
 
 @InputType()
-export class UserCreateInput extends BodyContextAttached {
+export class UserCreateInput extends ValidationContextAttached {
   @Field(() => String)
   @Existence<User>(
     false,

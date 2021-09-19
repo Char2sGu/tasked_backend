@@ -15,7 +15,7 @@ import { ClassroomsModule } from './classrooms/classrooms.module';
 import { JwtAuthGuard } from './common/auth/jwt-auth.guard';
 import { CommonModule } from './common/common.module';
 import { FlushDbInterceptor } from './common/flush-db/flush-db.interceptor';
-import { BodyContextInterceptor } from './common/validation/body-context.interceptor';
+import { ValidationContextInterceptor } from './common/validation/validation-context.interceptor';
 import { DB_PATH } from './constants';
 import { JoinApplicationsModule } from './join-applications/join-applications.module';
 import { MembershipsModule } from './memberships/memberships.module';
@@ -73,7 +73,7 @@ import { UsersModule } from './users/users.module';
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: BodyContextInterceptor,
+      useClass: ValidationContextInterceptor,
     },
     {
       provide: APP_GUARD,

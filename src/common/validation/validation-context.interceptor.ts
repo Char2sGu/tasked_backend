@@ -9,8 +9,8 @@ import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 import { Request } from 'express';
 
-import { BodyContext } from './body-context.type';
-import { BodyContextAttached } from './body-context-attached.dto';
+import { ValidationContext } from './validation-context.interface';
+import { ValidationContextAttached } from './validation-context-attached.dto';
 
 /**
  * Attach context to `request.body._context` or `context.args.data._context`
@@ -19,7 +19,7 @@ import { BodyContextAttached } from './body-context-attached.dto';
  * > https://github.com/nestjs/nest/issues/528#issuecomment-497020970
  */
 @Injectable()
-export class BodyContextInterceptor implements NestInterceptor {
+export class ValidationContextInterceptor implements NestInterceptor {
   intercept(originalContext: ExecutionContext, next: CallHandler) {
     const context = this.getContext(originalContext);
 
@@ -27,7 +27,7 @@ export class BodyContextInterceptor implements NestInterceptor {
     if (!data) return next.handle();
 
     const request = this.getRequest(context);
-    const validationContext: BodyContext = { user: request.user };
+    const validationContext: ValidationContext = { user: request.user };
     data._context = validationContext;
 
     return next.handle();
@@ -43,7 +43,7 @@ export class BodyContextInterceptor implements NestInterceptor {
 
   getData(
     context: GqlExecutionContext | HttpArgumentsHost,
-  ): BodyContextAttached | undefined {
+  ): ValidationContextAttached | undefined {
     return context instanceof GqlExecutionContext
       ? context.getArgs().data
       : context.getRequest<Request>().body;
