@@ -14,6 +14,7 @@ import { Membership } from 'src/memberships/entities/membership.entity';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import supertest from 'supertest';
+
 import { GraphQLClient } from './graphql-client.class';
 
 export async function prepareE2E({

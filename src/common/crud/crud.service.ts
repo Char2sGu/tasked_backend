@@ -3,7 +3,6 @@ import {
   FilterQuery,
   FindOneOrFailOptions,
   FindOptions,
-  NotFoundError,
 } from '@mikro-orm/core';
 import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
