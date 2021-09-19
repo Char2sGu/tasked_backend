@@ -41,7 +41,6 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => JoinApplication,
     mappedBy: (application) => application.classroom,
-    hidden: true,
   })
   joinApplications = new Collection<JoinApplication>(this);
 
@@ -49,7 +48,6 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (membership) => membership.classroom,
-    hidden: true,
   })
   memberships = new Collection<Membership>(this);
 
@@ -57,13 +55,11 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => Affair,
     mappedBy: (item) => item.classroom,
-    hidden: true,
   })
   affairs = new Collection<Affair>(this);
 
   @Field(() => Date, { nullable: true })
   @Property({
-    hidden: true,
     nullable: true,
   })
   deletedAt?: Date;
