@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Allow, Length, Matches } from 'class-validator';
+import { Allow, IsOptional, Length, Matches } from 'class-validator';
 import { BodyContextAttached } from 'src/common/validation/body-context-attached.dto';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { Gender } from 'src/users/entities/gender.enum';
@@ -22,6 +22,7 @@ export class UserCreateInput extends BodyContextAttached {
 
   @Field(() => String, { nullable: true })
   @Length(1, 15)
+  @IsOptional()
   nickname?: string;
 
   @Field(() => String)
