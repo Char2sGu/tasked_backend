@@ -24,11 +24,12 @@ export class BodyContextInterceptor implements NestInterceptor {
     const context = this.getContext(originalContext);
 
     const data = this.getData(context);
-    if (!data) return;
+    if (!data) return next.handle();
 
     const request = this.getRequest(context);
     const validationContext: BodyContext = { user: request.user };
     data._context = validationContext;
+
     return next.handle();
   }
 
