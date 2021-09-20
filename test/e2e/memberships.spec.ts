@@ -1,297 +1,145 @@
+import { EntityData } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/sqlite';
-import { HttpStatus } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
+import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { User } from 'src/users/entities/user.entity';
-import supertest, { Response } from 'supertest';
 
+import { GraphQLClient } from './utils/graphql-client.class';
 import { prepareE2E } from './utils/prepare-e2e';
-import { urlBuilder } from './utils/url-builder';
 
-const url = urlBuilder('/api/memberships');
-
-describe(url(''), () => {
-  enum Id {
-    CreatorA = 1,
-    TeacherA1,
-    TeacherA2,
-    StudentA1,
-    StudentA2,
-    CreatorB,
-  }
-
+describe('Memberships', () => {
+  let app: INestApplication;
   let module: TestingModule;
-  let requester: supertest.SuperTest<supertest.Test>;
-  let entityManager: EntityManager;
-  let tokenCreatorA: string;
-  let tokenTeacherA1: string;
-  let tokenStudentA1: string;
-  let response: Response;
-
-  function assertSerializedMembership(
-    membership: Membership,
-    data: Partial<Record<keyof Membership, unknown>> = {},
-  ) {
-    const {
-      id,
-      owner,
-      classroom,
-      displayName,
-      role,
-      updatedAt,
-      createdAt,
-      ...rest
-    } = membership;
-
-    expect(id).toBeDefined();
-    expect(owner).toBeDefined();
-    expect(classroom).toBeDefined();
-    expect(displayName).toBeDefined();
-    expect(role).toBeDefined();
-    expect(updatedAt).toBeDefined();
-    expect(createdAt).toBeDefined();
-    expect(rest).toEqual({});
-
-    for (const k in data) expect(membership[k]).toEqual(data[k]);
-  }
+  let client: GraphQLClient;
+  let em: EntityManager;
 
   beforeEach(async () => {
-    console.time('init');
-    ({ module, requester } = await prepareE2E());
+    ({ app, module, client } = await prepareE2E());
+    em = module.get(EntityManager);
+  });
 
-    entityManager = module.get(EntityManager);
+  beforeEach(async () => {
+    await em
+      .persist(em.create(User, { username: 'username', password: 'password' }))
+      .flush();
 
-    const HASHED_PASSWORD = // "password"
-      '$2a$10$a50UJxxNGkLOoLfuB.g6be2EKZDrYvrYWVFbpNTCkqgHi/eMA0IDm';
+    const token = await module
+      .get(AuthService)
+      .obtainJwt('username', 'password');
 
-    const users = [
-      entityManager.create(User, {
-        username: 'creator',
-        password: HASHED_PASSWORD,
-      }),
-      entityManager.create(User, {
-        username: 'teacher1',
-        password: HASHED_PASSWORD,
-      }),
-      entityManager.create(User, {
-        username: 'teacher2',
-        password: HASHED_PASSWORD,
-      }),
-      entityManager.create(User, {
-        username: 'student1',
-        password: HASHED_PASSWORD,
-      }),
-      entityManager.create(User, {
-        username: 'student2',
-        password: HASHED_PASSWORD,
-      }),
-      entityManager.create(User, {
-        username: 'someone',
-        password: HASHED_PASSWORD,
-      }),
-    ];
-    entityManager.persist(users);
+    client.setToken(token);
+  });
 
-    const classrooms = [
-      entityManager.create(Classroom, {
-        name: 'classroom-A',
-        creator: users[0],
-      }),
-      entityManager.create(Classroom, {
-        name: 'classroom-B',
-        creator: users[1],
-      }),
-    ];
-    entityManager.persist(classrooms);
+  afterEach(async () => {
+    await app.close();
+  });
 
-    const memberships = [
-      entityManager.create(Membership, {
-        id: Id.CreatorA,
-        owner: users[0],
-        classroom: classrooms[0],
-        displayName: 'creator-of-A',
-        role: Role.Teacher,
-      }),
-      entityManager.create(Membership, {
-        id: Id.TeacherA1,
-        owner: users[1],
-        classroom: classrooms[0],
-        displayName: 'teacher-of-A-1',
-        role: Role.Teacher,
-      }),
-      entityManager.create(Membership, {
-        id: Id.TeacherA2,
-        owner: users[2],
-        classroom: classrooms[0],
-        displayName: 'teacher-of-A-2',
-        role: Role.Teacher,
-      }),
-      entityManager.create(Membership, {
-        id: Id.StudentA1,
-        owner: users[3],
-        classroom: classrooms[0],
-        displayName: 'student-of-A-1',
-        role: Role.Student,
-      }),
-      entityManager.create(Membership, {
-        id: Id.StudentA2,
-        owner: users[4],
-        classroom: classrooms[0],
-        displayName: 'student-of-A-2',
-        role: Role.Student,
-      }),
-      entityManager.create(Membership, {
-        id: Id.CreatorB,
-        owner: users[5],
-        classroom: classrooms[1],
-        displayName: 'creator-of-B',
-        role: Role.Teacher,
-      }),
-    ];
-    entityManager.persist(memberships);
+  describe('membership', () => {
+    let result: Membership;
 
-    await entityManager.flush();
+    beforeEach(async () => {
+      await em.persist(create()).flush();
+    });
 
-    const authService = module.get(AuthService);
-    if (!tokenCreatorA) {
-      tokenCreatorA = await authService.obtainJwt('creator', 'password');
-      tokenTeacherA1 = await authService.obtainJwt('teacher1', 'password');
-      tokenStudentA1 = await authService.obtainJwt('student1', 'password');
+    it('should return the data', async () => {
+      await request(`(id: 1)`, `{ id, displayName, role }`);
+      expect(result).toEqual({
+        id: '1',
+        displayName: null,
+        role: 'Teacher',
+      });
+    });
+
+    it('should return an error when unauthenticated', async () => {
+      client.setToken();
+      const promise = request(`(id: 1)`, `{ id }`);
+      await expect(promise).rejects.toThrow('Unauthorized');
+    });
+
+    async function request(args: string, fields: string) {
+      const content = await client.request(
+        `query { membership${args} ${fields} }`,
+      );
+      result = content.membership;
     }
   });
 
-  describe('/ (GET)', () => {
-    describe.each`
-      token
-      ${() => tokenCreatorA}
-      ${() => tokenTeacherA1}
-      ${() => tokenStudentA1}
-    `('Common', ({ token }) => {
-      beforeEach(async () => {
-        response = await requester
-          .get(url('/'))
-          .auth(token(), { type: 'bearer' });
-      });
+  describe('memberships', () => {
+    let result: PaginatedMemberships;
 
-      it(`should return status ${HttpStatus.OK}`, () => {
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-
-      it('should return only the memberships of the classrooms the user has joined in', () => {
-        const memberships: Membership[] = response.body.results;
-        expect(memberships).toHaveLength(5);
-        memberships.forEach((membership) =>
-          assertSerializedMembership(membership, { classroom: 1 }),
-        );
-      });
+    it('should return the data', async () => {
+      await em.persist([create()]).flush();
+      await request(``, `{ id }`);
+      expect(result).toEqual({ total: 1, results: [{ id: '1' }] });
     });
 
-    describe('Unauthorized', () => {
-      beforeEach(async () => {
-        response = await requester.get(url('/'));
-      });
-
-      it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      });
+    it('should return the data when paginated', async () => {
+      await em.persist([create(), create(), create()]).flush();
+      await request(`(limit: 1, offset: 1)`, `{ id }`);
+      expect(result.total).toBe(3);
+      expect(result.results[0]).toEqual({ id: '2' });
     });
+
+    it('should return an error when unauthenticated', async () => {
+      client.setToken();
+      const promise = request(``, `{ id }`);
+      await expect(promise).rejects.toThrow('Unauthorized');
+    });
+
+    async function request(args: string, fields: string) {
+      const content = await client.request(
+        `query { memberships${args} { total, results ${fields} } }`,
+      );
+      result = content.memberships;
+    }
   });
 
-  describe('/:id/ (GET)', () => {
-    describe('Basic', () => {
-      beforeEach(async () => {
-        response = await requester
-          .get(url('/1/'))
-          .auth(tokenCreatorA, { type: 'bearer' });
-      });
+  describe('deleteMembership', () => {
+    let result: Membership;
 
-      it(`should return status ${HttpStatus.OK}`, () => {
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-
-      it('should return ths target membership entity', () => {
-        assertSerializedMembership(response.body, { id: 1 });
-      });
+    it('should delete and return the entity', async () => {
+      await em.persist(create(2)).flush();
+      await request(`(id: 1)`, `{ id }`);
+      expect(result).toEqual({ id: '1' });
+      expect(await em.count(Membership)).toBe(0);
     });
 
-    describe('Unauthorized', () => {
-      beforeEach(async () => {
-        response = await requester.get(url('/1/'));
-      });
+    it.each`
+      data                                                         | error
+      ${() => [create()]}                                          | ${'Cannot delete the membership of the creator'}
+      ${() => [create(3, [[2, Role.Teacher], [1, Role.Student]])]} | ${'Cannot delete superior members'}
+    `(
+      'should return an error when unauthorized: $error',
+      async ({ data, error }) => {
+        await em.persist(data()).flush();
+        const promise = request(`(id: 1)`, `{ id }`);
+        await expect(promise).rejects.toThrow(error);
+      },
+    );
 
-      it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      });
-    });
-
-    describe('Wrong Target', () => {
-      beforeEach(async () => {
-        response = await requester
-          .get(url('/6/'))
-          .auth(tokenCreatorA, { type: 'bearer' });
-      });
-
-      it(`should return status ${HttpStatus.NOT_FOUND}`, () => {
-        expect(response.status).toBe(HttpStatus.NOT_FOUND);
-      });
-    });
+    async function request(args: string, fields: string) {
+      const content = await client.request(
+        `mutation { deleteMembership${args} ${fields} }`,
+      );
+      result = content.deleteMembership;
+    }
   });
 
-  describe('/:id/ (DELETE)', () => {
-    describe.each`
-      description                   | id              | token
-      ${'creator deleting teacher'} | ${Id.TeacherA1} | ${() => tokenCreatorA}
-      ${'creator deleting student'} | ${Id.StudentA1} | ${() => tokenCreatorA}
-      ${'teacher deleting self'}    | ${Id.TeacherA1} | ${() => tokenTeacherA1}
-      ${'teacher deleting student'} | ${Id.StudentA1} | ${() => tokenTeacherA1}
-      ${'student deleting self'}    | ${Id.StudentA1} | ${() => tokenStudentA1}
-    `('Allowed Target: $description', ({ id, token }) => {
-      beforeEach(async () => {
-        response = await requester
-          .delete(url(`/${id}/`))
-          .auth(token(), { type: 'bearer' });
-      });
-
-      it(`should return status ${HttpStatus.NO_CONTENT}`, () => {
-        expect(response.status).toBe(HttpStatus.NO_CONTENT);
-      });
-
-      it('should return nothing', () => {
-        expect(response.body).toEqual({});
-      });
+  function create(
+    creator: unknown = 1,
+    members: [unknown, Role][] = [[1, Role.Teacher]],
+  ) {
+    return em.create(Classroom, {
+      name: 'name',
+      creator,
+      memberships: members.map(
+        ([owner, role]) => ({ owner, role } as EntityData<Membership>),
+      ),
     });
-
-    describe.each`
-      description                   | id              | token
-      ${'creator deleting self'}    | ${Id.CreatorA}  | ${() => tokenCreatorA}
-      ${'student deleting creator'} | ${Id.CreatorA}  | ${() => tokenStudentA1}
-      ${'student deleting student'} | ${Id.StudentA2} | ${() => tokenStudentA1}
-      ${'student deleting teacher'} | ${Id.TeacherA1} | ${() => tokenStudentA1}
-      ${'teacher deleting creator'} | ${Id.CreatorA}  | ${() => tokenTeacherA1}
-      ${'teacher deleting teacher'} | ${Id.TeacherA2} | ${() => tokenTeacherA1}
-    `('Forbidden Target: $description', ({ id, token }) => {
-      beforeEach(async () => {
-        response = await requester
-          .delete(url(`/${id}/`))
-          .auth(token(), { type: 'bearer' });
-      });
-
-      it(`should return status ${HttpStatus.FORBIDDEN}`, () => {
-        expect(response.status).toBe(HttpStatus.FORBIDDEN);
-      });
-    });
-
-    describe('Unauthorized', () => {
-      beforeEach(async () => {
-        response = await requester.delete(url('/1/'));
-      });
-
-      it(`should return status ${HttpStatus.UNAUTHORIZED}`, () => {
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      });
-    });
-  });
+  }
 });
