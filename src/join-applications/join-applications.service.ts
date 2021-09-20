@@ -49,11 +49,8 @@ export class JoinApplicationsService extends new MikroCrudServiceFactory({
     application = await super.update({ data, entity: application, user });
 
     if (data.status == ApplicationStatus.Accepted) {
-      const { classroom, role, owner } = application;
-      await this.membershipsService.create({
-        data: { classroom, role },
-        user: owner,
-      });
+      const { classroom, role } = application;
+      await this.membershipsService.create({ classroom, role });
     }
 
     return application;

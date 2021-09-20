@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import {
   AccessPolicy,
@@ -58,7 +58,6 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
   async getEntity({ params: { id }, user }: Request) {
     return await this.service.retrieve(+id, {
       filters: this.filters(user),
-      failHandler: () => new NotFoundException(),
     });
   }
 }
