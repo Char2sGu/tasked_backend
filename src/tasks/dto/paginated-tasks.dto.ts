@@ -4,4 +4,4 @@ import { PaginatedDto } from 'src/common/dto/paginated.dto';
 import { Task } from '../entities/task.entity';
 
 @ObjectType()
-export class PaginatedTasks extends PaginatedDto.of(Task) {}
+export class PaginatedTasks extends PaginatedDto.for(Task) {}

@@ -4,7 +4,7 @@ import { Max, Min } from 'class-validator';
 import { Field } from '../field.decorator';
 
 @ArgsType()
-export class QueryManyArgs {
+export class PaginationArgs {
   @Field(() => Int, { defaultValue: 50 })
   @Max(100)
   @Min(1)

@@ -5,16 +5,16 @@ import { Field } from '../field.decorator';
 import { ValidationContextAttached } from '../validation/validation-context-attached.dto';
 
 @ArgsType()
-export class CreateOneArgs<Input> extends ValidationContextAttached {
-  static of<Input>(type: Type<Input>): Type<CreateOneArgs<Input>> {
+export class HasDataArgs<Data> extends ValidationContextAttached {
+  static for<Data>(type: Type<Data>): Type<HasDataArgs<Data>> {
     @ArgsType()
-    class Args extends this<Input> {
+    class Args extends this<Data> {
       @Field(() => type, { nested: true })
-      data: Input;
+      data: Data;
     }
 
     return Args;
   }
 
-  data: Input;
+  data: Data;
 }

@@ -5,7 +5,7 @@ import { Field } from '../field.decorator';
 
 @ObjectType()
 export abstract class PaginatedDto<Entity> {
-  static of<Entity>(type: Type<Entity>): Type<PaginatedDto<Entity>> {
+  static for<Entity>(type: Type<Entity>): Type<PaginatedDto<Entity>> {
     @ObjectType()
     class Paginated extends this<Entity> {
       @Field(() => [type])

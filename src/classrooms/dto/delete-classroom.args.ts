@@ -1,5 +1,5 @@
 import { ArgsType } from '@nestjs/graphql';
-import { DeleteOneArgs } from 'src/common/dto/delete-one.args';
+import { TargetedArgs } from 'src/common/dto/targeted.args';
 
 @ArgsType()
-export class DeleteClassroomArgs extends DeleteOneArgs {}
+export class DeleteClassroomArgs extends TargetedArgs {}

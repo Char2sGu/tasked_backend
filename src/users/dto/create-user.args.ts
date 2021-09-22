@@ -1,7 +1,7 @@
 import { ArgsType } from '@nestjs/graphql';
-import { CreateOneArgs } from 'src/common/dto/create-one.args';
+import { HasDataArgs } from 'src/common/dto/has-data.args';
 
 import { UserCreateInput } from './user-create.input';
 
 @ArgsType()
-export class CreateUserArgs extends CreateOneArgs.of(UserCreateInput) {}
+export class CreateUserArgs extends HasDataArgs.for(UserCreateInput) {}

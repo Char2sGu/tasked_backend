@@ -1,5 +1,5 @@
 import { ArgsType } from '@nestjs/graphql';
-import { QueryManyArgs } from 'src/common/dto/query-many.args';
+import { PaginationArgs } from 'src/common/dto/pagination.args';
 
 @ArgsType()
-export class QueryMembershipsArgs extends QueryManyArgs {}
+export class QueryMembershipsArgs extends PaginationArgs {}

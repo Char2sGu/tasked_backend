@@ -56,9 +56,12 @@ describe.only('Classrooms', () => {
       args
       ${'(id: 999)'}
       ${'(id: 0)'}
-    `('should return an error when the target not found', async ({ args }) => {
-      await expect(request(args)).rejects.toThrow('Not Found');
-    });
+    `(
+      'should return an error when the target cannot be found',
+      async ({ args }) => {
+        await expect(request(args)).rejects.toThrow('Not Found');
+      },
+    );
 
     it('should return an error when not authenticated', async () => {
       client.setToken();
