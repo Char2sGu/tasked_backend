@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import {
   AccessPolicy,
@@ -6,39 +6,50 @@ import {
   AccessPolicyStatement,
   Effect,
 } from 'nest-access-policy';
-import { ActionName } from 'nest-mikro-crud';
+import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
+import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 
+import { TasksResolver } from './tasks.resolver';
 import { TasksService } from './tasks.service';
+
+type ActionName = keyof TasksResolver;
+type Condition = AccessPolicyCondition<ActionName, Request>;
 
 @Injectable()
 export class TasksAccessPolicy implements AccessPolicy<ActionName, Request> {
-  isOwn: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
+  @Inject()
+  service: TasksService;
+
+  @Inject(CRUD_FILTERS)
+  filters: CrudFilters;
+
+  get statements(): AccessPolicyStatement<ActionName, Request>[] {
+    return [
+      {
+        actions: [
+          'queryMany',
+          'createOne',
+          'queryOne',
+          'updateOne',
+          'deleteOne',
+        ],
+        effect: Effect.Allow,
+      },
+      {
+        actions: ['updateOne', 'deleteOne'],
+        effect: Effect.Allow,
+        conditions: [this.isOwn],
+        reason: 'Cannot manage tasks created by others',
+      },
+    ];
+  }
+
+  isOwn: Condition = async ({ req }) =>
     (await this.getEntity(req)).creator == req.user;
 
-  statements: AccessPolicyStatement<ActionName, Request>[] = [
-    {
-      actions: ['list', 'create', 'retrieve', 'update', 'destroy'],
-      effect: Effect.Allow,
-    },
-    {
-      actions: ['update', 'destroy'],
-      effect: Effect.Allow,
-      conditions: [this.isOwn],
-      reason: 'Only the tasks created by yourself can be managed',
-    },
-  ];
-
-  @Inject()
-  tasksService: TasksService;
-
   async getEntity({ params: { id }, user }: Request) {
-    try {
-      return await this.tasksService.retrieve({
-        conditions: { id: +id },
-        user,
-      });
-    } catch {
-      throw new NotFoundException();
-    }
+    return await this.service.retrieve(+id, {
+      filters: this.filters(user),
+    });
   }
 }
