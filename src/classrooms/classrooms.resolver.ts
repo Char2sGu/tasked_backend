@@ -51,8 +51,11 @@ export class ClassroomsResolver {
 
   @FlushDb()
   @Mutation(() => Classroom, { name: 'createClassroom' })
-  async createOne(@Args() { data }: CreateClassroomArgs) {
-    return this.service.create(data);
+  async createOne(
+    @ReqUser() user: User,
+    @Args() { data }: CreateClassroomArgs,
+  ) {
+    return this.service.create({ ...data, creator: user });
   }
 
   @FlushDb()
