@@ -5,10 +5,10 @@ import { Field } from '../field.decorator';
 
 @ArgsType()
 export class QueryManyArgs {
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, { defaultValue: 50 })
   @Max(100)
   @Min(1)
-  limit = 50;
+  limit: number;
 
   @Field(() => Int, { nullable: true })
   @Max(2000)
