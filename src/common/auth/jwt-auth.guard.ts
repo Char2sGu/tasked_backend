@@ -16,10 +16,10 @@ import { SKIP_AUTH } from './skip-auth.symbol';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   @Inject()
-  authService: AuthService;
+  private readonly authService: AuthService;
 
   @Inject()
-  reflector: Reflector;
+  private readonly reflector: Reflector;
 
   async canActivate(context: ExecutionContext) {
     const skipAuth = this.reflector.get<true | undefined>(

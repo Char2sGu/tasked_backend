@@ -17,10 +17,10 @@ export class IsInferiorMemberConstraint
   implements ValidatorConstraintInterface
 {
   @Inject()
-  service: MembershipsService;
+  private readonly service: MembershipsService;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   async validate(
     userId: number,

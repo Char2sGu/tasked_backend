@@ -20,10 +20,10 @@ export class MembershipsAccessPolicy
   implements AccessPolicy<ActionName, Request>
 {
   @Inject()
-  service: MembershipsService;
+  private readonly service: MembershipsService;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   get statements(): AccessPolicyStatement<ActionName, Request>[] {
     return [
@@ -46,31 +46,31 @@ export class MembershipsAccessPolicy
     ];
   }
 
-  isCreator: Condition = async ({ req }) => {
+  private readonly isCreator: Condition = async ({ req }) => {
     const membership = await this.getEntity(req);
     return membership.owner == membership.classroom.creator;
   };
 
-  isOwn: Condition = async ({ req }) =>
+  private readonly isOwn: Condition = async ({ req }) =>
     (await this.getEntity(req)).owner == req.user;
 
-  asCreator: Condition = async ({ req }) =>
+  private readonly asCreator: Condition = async ({ req }) =>
     (await this.getEntity(req)).classroom.creator == req.user;
 
-  asStronger: Condition = async ({ req }) => {
+  private readonly asStronger: Condition = async ({ req }) => {
     const ownWeight = await (await this.getOwnMembership(req)).getWeight();
     const targetWeight = await (await this.getEntity(req)).getWeight();
     return ownWeight > targetWeight;
   };
 
-  async getEntity({ params: { id }, user }: Request) {
+  private async getEntity({ params: { id }, user }: Request) {
     return await this.service.retrieve(+id, {
       populate: ['classroom'],
       filters: this.filters(user),
     });
   }
 
-  async getOwnMembership(req: Request) {
+  private async getOwnMembership(req: Request) {
     const { classroom } = await this.getEntity(req);
     return await this.service.retrieve(
       { owner: req.user, classroom },

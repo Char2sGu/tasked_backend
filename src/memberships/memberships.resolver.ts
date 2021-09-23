@@ -21,10 +21,10 @@ import { MembershipsService } from './memberships.service';
 @Resolver(() => Membership)
 export class MembershipsResolver {
   @Inject()
-  service: MembershipsService;
+  private readonly service: MembershipsService;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   @Query(() => PaginatedMemberships, { name: 'memberships' })
   async queryMany(

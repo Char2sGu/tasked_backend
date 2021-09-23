@@ -9,14 +9,14 @@ import { AuthResult } from './dto/auth-result.dto';
 @Resolver()
 export class AuthResolver {
   @Inject()
-  private readonly authService: AuthService;
+  private readonly service: AuthService;
 
   @SkipAuth()
   @Mutation(() => AuthResult)
   async obtainToken(
     @Args() { username, password }: AuthArgs,
   ): Promise<AuthResult> {
-    const token = await this.authService.obtainJwt(username, password);
+    const token = await this.service.obtainJwt(username, password);
     if (!token) throw new UnauthorizedException('Invalid username or password');
     return { token };
   }

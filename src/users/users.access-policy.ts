@@ -18,10 +18,10 @@ type Condition = AccessPolicyCondition<ActionName, Request>;
 @Injectable()
 export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
   @Inject()
-  service: UsersService;
+  private readonly service: UsersService;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   get statements(): AccessPolicyStatement<ActionName, Request>[] {
     return [
@@ -50,12 +50,13 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
     ];
   }
 
-  isSelf: Condition = async ({ req }) =>
+  private readonly isSelf: Condition = async ({ req }) =>
     (await this.getEntity(req)) == req.user;
 
-  isUpdatedRecently: Condition = async ({ req }) => req.user.isUpdatedRecently;
+  private readonly isUpdatedRecently: Condition = async ({ req }) =>
+    req.user.isUpdatedRecently;
 
-  async getEntity({ params: { id }, user }: Request) {
+  private async getEntity({ params: { id }, user }: Request) {
     return await this.service.retrieve(+id, {
       filters: this.filters(user),
     });

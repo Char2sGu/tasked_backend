@@ -19,10 +19,10 @@ export class ClassroomsAccessPolicy
   implements AccessPolicy<ActionName, Request>
 {
   @Inject()
-  service: ClassroomsService;
+  private readonly service: ClassroomsService;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   get statements(): AccessPolicyStatement<ActionName, Request>[] {
     return [
@@ -51,10 +51,10 @@ export class ClassroomsAccessPolicy
     ];
   }
 
-  asCreator: Condition = async ({ req }) =>
+  private readonly asCreator: Condition = async ({ req }) =>
     (await this.getEntity(req)).creator == req.user;
 
-  async getEntity({ params: { id }, user }: Request) {
+  private async getEntity({ params: { id }, user }: Request) {
     return await this.service.retrieve(+id, {
       filters: this.filters(user),
     });

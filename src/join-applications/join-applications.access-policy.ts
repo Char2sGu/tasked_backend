@@ -20,10 +20,10 @@ export class JoinApplicationsAccessPolicy
   implements AccessPolicy<ActionName, Request>
 {
   @Inject()
-  service: JoinApplicationsService;
+  private readonly service: JoinApplicationsService;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   get statements(): AccessPolicyStatement<ActionName, Request>[] {
     return [
@@ -46,13 +46,13 @@ export class JoinApplicationsAccessPolicy
     ];
   }
 
-  asCreator: Condition = async ({ req }) =>
+  private readonly asCreator: Condition = async ({ req }) =>
     (await this.getEntity(req)).classroom.creator == req.user;
 
-  isRejected: Condition = async ({ req }) =>
+  private readonly isRejected: Condition = async ({ req }) =>
     (await this.getEntity(req)).status == ApplicationStatus.Rejected;
 
-  async getEntity({ params: { id }, user }: Request) {
+  private async getEntity({ params: { id }, user }: Request) {
     return await this.service.retrieve(+id, {
       populate: ['classroom'],
       filters: this.filters(user),

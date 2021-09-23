@@ -16,10 +16,10 @@ import { ValidationArguments } from './validation-arguments.interface';
 @Injectable()
 export class ExistenceConstraint implements ValidatorConstraintInterface {
   @Inject()
-  moduleRef: ModuleRef;
+  private readonly moduleRef: ModuleRef;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   async validate(
     value: unknown,

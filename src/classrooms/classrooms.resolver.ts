@@ -23,10 +23,10 @@ import { Classroom } from './entities/classroom.entity';
 @Resolver(() => Classroom)
 export class ClassroomsResolver {
   @Inject()
-  service: ClassroomsService;
+  private readonly service: ClassroomsService;
 
   @Inject(CRUD_FILTERS)
-  filters: CrudFilters;
+  private readonly filters: CrudFilters;
 
   @Query(() => PaginatedClassrooms, { name: 'classrooms' })
   async queryMany(
