@@ -3,8 +3,8 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
 
 import { AuthService } from './auth.service';
-import { AuthArgs } from './dto/auth.args';
-import { AuthResult } from './dto/auth-result.dto';
+import { ObtainTokenArgs } from './dto/obtain-token.args';
+import { ObtainTokenResult } from './dto/obtain-token-result.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -12,10 +12,10 @@ export class AuthResolver {
   private readonly service: AuthService;
 
   @SkipAuth()
-  @Mutation(() => AuthResult)
+  @Mutation(() => ObtainTokenResult)
   async obtainToken(
-    @Args() { username, password }: AuthArgs,
-  ): Promise<AuthResult> {
+    @Args() { username, password }: ObtainTokenArgs,
+  ): Promise<ObtainTokenResult> {
     const token = await this.service.obtainJwt(username, password);
     if (!token) throw new UnauthorizedException('Invalid username or password');
     return { token };

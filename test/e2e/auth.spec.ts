@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { ClientError, GraphQLClient } from 'graphql-request';
-import { AuthResult } from 'src/auth/dto/auth-result.dto';
+import { ObtainTokenResult } from 'src/auth/dto/obtain-token-result.dto';
 import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
 
@@ -50,7 +50,7 @@ describe('Auth', () => {
     });
 
     async function request(args: string) {
-      const result = await client.request<{ obtainToken: AuthResult }>(
+      const result = await client.request<{ obtainToken: ObtainTokenResult }>(
         `mutation { obtainToken${args} { token } }`,
       );
       token = result.obtainToken.token;
