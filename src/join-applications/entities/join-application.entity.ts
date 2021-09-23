@@ -40,6 +40,8 @@ export class JoinApplication extends BaseEntity<JoinApplication> {
   message?: string;
 
   @Field(() => ApplicationStatus)
-  @Property()
+  @Property({
+    default: ApplicationStatus.Pending,
+  })
   status: ApplicationStatus;
 }

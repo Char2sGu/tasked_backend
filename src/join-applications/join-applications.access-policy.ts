@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import {
   AccessPolicy,
@@ -6,52 +6,56 @@ import {
   AccessPolicyStatement,
   Effect,
 } from 'nest-access-policy';
-import { ActionName } from 'nest-mikro-crud';
+import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
+import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 
 import { ApplicationStatus } from './entities/application-status.enum';
+import { JoinApplicationsResolver } from './join-applications.resolver';
 import { JoinApplicationsService } from './join-applications.service';
 
+type ActionName = keyof JoinApplicationsResolver;
+type Condition = AccessPolicyCondition<ActionName, Request>;
 @Injectable()
 export class JoinApplicationsAccessPolicy
   implements AccessPolicy<ActionName, Request>
 {
   @Inject()
-  applicationService: JoinApplicationsService;
+  service: JoinApplicationsService;
 
-  async getEntity({ params: { id }, user }: Request) {
-    try {
-      return await this.applicationService.retrieve({
-        conditions: { id: +id },
-        expand: ['classroom'],
-        user,
-      });
-    } catch (error) {
-      throw new NotFoundException();
-    }
+  @Inject(CRUD_FILTERS)
+  filters: CrudFilters;
+
+  get statements(): AccessPolicyStatement<ActionName, Request>[] {
+    return [
+      {
+        actions: ['queryMany', 'createOne', 'queryOne', 'updateOne'],
+        effect: Effect.Allow,
+      },
+      {
+        actions: ['updateOne'],
+        effect: Effect.Allow,
+        conditions: [this.asCreator],
+        reason: 'Cannot manage applications that were not created by you',
+      },
+      {
+        actions: ['updateOne'],
+        effect: Effect.Forbid,
+        conditions: [this.isRejected],
+        reason: 'Cannot modify rejected applications',
+      },
+    ];
   }
 
-  asCreator: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
+  asCreator: Condition = async ({ req }) =>
     (await this.getEntity(req)).classroom.creator == req.user;
 
-  isRejected: AccessPolicyCondition<ActionName, Request> = async ({ req }) =>
+  isRejected: Condition = async ({ req }) =>
     (await this.getEntity(req)).status == ApplicationStatus.Rejected;
 
-  statements: AccessPolicyStatement<ActionName, Request>[] = [
-    {
-      actions: ['list', 'create', 'retrieve', 'update'],
-      effect: Effect.Allow,
-    },
-    {
-      actions: ['update'],
-      effect: Effect.Allow,
-      conditions: [this.asCreator],
-      reason: 'Only the creator can manage the applications',
-    },
-    {
-      actions: ['update'],
-      effect: Effect.Forbid,
-      conditions: [this.isRejected],
-      reason: 'Rejected applications are forbidden to be updated',
-    },
-  ];
+  async getEntity({ params: { id }, user }: Request) {
+    return await this.service.retrieve(+id, {
+      populate: ['classroom'],
+      filters: this.filters(user),
+    });
+  }
 }
