@@ -19,7 +19,7 @@ export abstract class CrudService<Entity> {
 
   protected readonly repo: EntityRepository<Entity>;
 
-  async list(where: FilterQuery<Entity>, options: FindOptions<Entity>) {
+  async list(where: FilterQuery<Entity>, options?: FindOptions<Entity>) {
     const [results, total] = await this.repo.findAndCount(where, options);
     return { total, results };
   }
@@ -43,7 +43,7 @@ export abstract class CrudService<Entity> {
   async update(
     where: FilterQuery<Entity>,
     data: EntityData<Entity>,
-    options: FindOneOrFailOptions<Entity>,
+    options?: FindOneOrFailOptions<Entity>,
   ) {
     const entity = await this.retrieve(where, options);
     this.repo.assign(entity, data);
@@ -52,7 +52,7 @@ export abstract class CrudService<Entity> {
 
   async destroy(
     where: FilterQuery<Entity>,
-    options: FindOneOrFailOptions<Entity>,
+    options?: FindOneOrFailOptions<Entity>,
   ) {
     const entity = await this.retrieve(where, options);
     this.repo.remove(entity);
@@ -61,7 +61,7 @@ export abstract class CrudService<Entity> {
 
   async exists(
     where: FilterQuery<Entity>,
-    options: FindOneOrFailOptions<Entity>,
+    options?: FindOneOrFailOptions<Entity>,
   ) {
     try {
       await this.retrieve(where, options);
