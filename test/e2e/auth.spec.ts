@@ -41,13 +41,16 @@ describe('Auth', () => {
     });
 
     it.each`
-      desc             | args
-      ${'wrong value'} | ${'(username: "", password: "")'}
-      ${'wrong type'}  | ${'(username: 1, password: 1)'}
-      ${'no args'}     | ${''}
-    `('should throws an error with illegal arguments: $desc', async (args) => {
-      await expect(request(args)).rejects.toThrowError(ClientError);
-    });
+      desc             | args                              | error
+      ${'wrong value'} | ${'(username: "", password: "")'} | ${'Unauthorized'}
+      ${'wrong type'}  | ${'(username: 1, password: 1)'}   | ${'400'}
+      ${'no args'}     | ${''}                             | ${'400'}
+    `(
+      'should throws an error with illegal arguments: $desc',
+      async ({ args, error }) => {
+        await expect(request(args)).rejects.toThrowError(error);
+      },
+    );
 
     async function request(args: string) {
       const result = await client.request<{ obtainToken: ObtainTokenResult }>(
