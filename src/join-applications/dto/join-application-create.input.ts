@@ -1,5 +1,5 @@
 import { ID, InputType } from '@nestjs/graphql';
-import { IsOptional, MaxLength } from 'class-validator';
+import { MaxLength } from 'class-validator';
 import { Field } from 'src/common/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
@@ -44,7 +44,6 @@ export class JoinApplicationCreateInput extends ValidationContextAttached {
   role: Role;
 
   @Field(() => String, { nullable: true })
-  @IsOptional()
   @MaxLength(50)
   message?: string;
 }

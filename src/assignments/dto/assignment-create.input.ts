@@ -1,5 +1,5 @@
 import { ID, InputType } from '@nestjs/graphql';
-import { IsInt, IsOptional, Validate } from 'class-validator';
+import { IsInt, Validate } from 'class-validator';
 import { Field } from 'src/common/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
@@ -29,7 +29,7 @@ export class AssignmentCreateInput extends ValidationContextAttached {
   @Field(() => ID)
   @Validate(IsInferiorMemberConstraint, {
     message:
-      'owner must be the ID of a user which is an inferior member in the clasroom',
+      'owner must be the ID of a user which is an inferior member in the classroom',
   })
   @IsInt()
   recipient: number;
@@ -49,6 +49,5 @@ export class AssignmentCreateInput extends ValidationContextAttached {
   task: number;
 
   @Field(() => Boolean, { nullable: true })
-  @IsOptional()
   isPublic?: boolean;
 }

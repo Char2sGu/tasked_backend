@@ -1,5 +1,5 @@
 import { InputType, Int } from '@nestjs/graphql';
-import { IsOptional, Length } from 'class-validator';
+import { Length } from 'class-validator';
 import { Field } from 'src/common/field.decorator';
 
 @InputType()
@@ -18,11 +18,9 @@ export class AffairCreateInput {
   timeEnd: Date;
 
   @Field(() => String, { nullable: true })
-  @IsOptional()
   @Length(1, 200)
   remark?: string;
 
   @Field(() => Boolean, { nullable: true })
-  @IsOptional()
   isActivated?: boolean;
 }

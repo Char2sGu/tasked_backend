@@ -1,5 +1,5 @@
 import { InputType } from '@nestjs/graphql';
-import { IsOptional, Length, MaxLength } from 'class-validator';
+import { Length, MaxLength } from 'class-validator';
 import { Field } from 'src/common/field.decorator';
 
 @InputType()
@@ -9,7 +9,6 @@ export class TaskCreateInput {
   title: string;
 
   @Field(() => String, { nullable: true })
-  @IsOptional()
   @MaxLength(500)
   description?: string;
 }
