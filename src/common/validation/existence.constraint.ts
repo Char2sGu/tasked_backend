@@ -1,4 +1,3 @@
-import { NotFoundError } from '@mikro-orm/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import {
@@ -6,7 +5,6 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-import { CrudService } from '../crud/crud.service';
 import { CRUD_FILTERS } from '../crud-filters/crud-filters.token';
 import { CrudFilters } from '../crud-filters/crud-filters.type';
 import { Existence } from './existence.decorator';
@@ -34,18 +32,8 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     const service = this.moduleRef.get(serviceType(), { strict: false });
     const conditions = getConditions(value, user, object);
 
-    if (service instanceof CrudService)
-      return (await service.exists(conditions, { filters: this.filters(user) }))
-        ? shouldExist
-        : !shouldExist;
-
-    // TODO: deprecate nest-mikro-crud
-    try {
-      await service.retrieve({ conditions, user });
-      return shouldExist;
-    } catch (error) {
-      if (!(error instanceof NotFoundError)) throw error;
-      return !shouldExist;
-    }
+    return (await service.exists(conditions, { filters: this.filters(user) }))
+      ? shouldExist
+      : !shouldExist;
   }
 }
