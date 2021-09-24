@@ -3,7 +3,7 @@ import { Length } from 'class-validator';
 import { Field } from 'src/common/field.decorator';
 
 @InputType()
-export class AffairCreateInput {
+export class AffairCreateInput extends ValidationContextAttached {
   @Field(() => Int)
   classroom: number;
 
