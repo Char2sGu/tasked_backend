@@ -1,11 +1,10 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { AccessPolicyModule } from 'nest-access-policy';
-import { AuthModule } from 'src/auth/auth.module';
 import { ClassroomsModule } from 'src/classrooms/classrooms.module';
 
 import { AffairsAccessPolicy } from './affairs.access-policy';
-import { AffairsController } from './affairs.controller';
+import { AffairsResolver } from './affairs.resolver';
 import { AffairsService } from './affairs.service';
 import { Affair } from './entities/affair.entity';
 
@@ -13,11 +12,9 @@ import { Affair } from './entities/affair.entity';
   imports: [
     MikroOrmModule.forFeature([Affair]),
     AccessPolicyModule,
-    AuthModule,
     ClassroomsModule,
   ],
-  controllers: [AffairsController],
-  providers: [AffairsService, AffairsAccessPolicy],
+  providers: [AffairsResolver, AffairsService, AffairsAccessPolicy],
   exports: [AffairsService],
 })
 export class AffairsModule {}
