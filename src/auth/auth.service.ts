@@ -1,7 +1,6 @@
-import { NotFoundError } from '@mikro-orm/core';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcryptjs';
+import * as bcryptjs from 'bcryptjs';
 import { IncomingHttpHeaders } from 'node:http';
 
 import { UsersService } from '../users/users.service';
@@ -17,10 +16,10 @@ export class AuthService {
   async obtainJwt(username: string, password: string) {
     try {
       const user = await this.usersService.retrieve({ username });
-      if (await compare(password, user.password))
+      if (await bcryptjs.compare(password, user.password))
         return await this.jwtService.signAsync({ username });
     } catch (error) {
-      if (error instanceof NotFoundError) return;
+      if (error instanceof NotFoundException) return;
       throw error;
     }
   }
