@@ -64,7 +64,7 @@ export class MembershipsAccessPolicy
   };
 
   private async getEntity({ params: { id }, user }: Request) {
-    return await this.service.retrieve(+id, {
+    return this.service.retrieve(+id, {
       populate: ['classroom'],
       filters: this.filters(user),
     });
@@ -72,7 +72,7 @@ export class MembershipsAccessPolicy
 
   private async getOwnMembership(req: Request) {
     const { classroom } = await this.getEntity(req);
-    return await this.service.retrieve(
+    return this.service.retrieve(
       { owner: req.user, classroom },
       {
         populate: ['classroom'],

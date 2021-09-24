@@ -58,7 +58,7 @@ export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
   };
 
   private async getEntity({ params: { id }, user }: Request) {
-    return await this.affairsService.retrieve(+id, {
+    return this.affairsService.retrieve(+id, {
       populate: ['classroom'],
       filters: this.filters(user),
     });
@@ -66,7 +66,7 @@ export class AffairsAccessPolicy implements AccessPolicy<ActionName, Request> {
 
   private async getClassroomWhenCreating({ body, user }: Request) {
     const { classroom: id }: AffairCreateInput = body;
-    return await this.classroomsService.retrieve(+id, {
+    return this.classroomsService.retrieve(+id, {
       filters: this.filters(user),
       failHandler: () => new BadRequestException('Classroom not found'),
     });

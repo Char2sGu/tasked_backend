@@ -57,7 +57,7 @@ export class UsersAccessPolicy implements AccessPolicy<ActionName, Request> {
     req.user.isUpdatedRecently;
 
   private async getEntity({ params: { id }, user }: Request) {
-    return await this.service.retrieve(+id, {
+    return this.service.retrieve(+id, {
       filters: this.filters(user),
     });
   }

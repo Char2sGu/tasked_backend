@@ -53,7 +53,7 @@ export class JoinApplicationsAccessPolicy
     (await this.getEntity(req)).status == ApplicationStatus.Rejected;
 
   private async getEntity({ params: { id }, user }: Request) {
-    return await this.service.retrieve(+id, {
+    return this.service.retrieve(+id, {
       populate: ['classroom'],
       filters: this.filters(user),
     });

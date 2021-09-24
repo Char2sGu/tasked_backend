@@ -48,7 +48,7 @@ export class TasksAccessPolicy implements AccessPolicy<ActionName, Request> {
     (await this.getEntity(req)).creator == req.user;
 
   private async getEntity({ params: { id }, user }: Request) {
-    return await this.service.retrieve(+id, {
+    return this.service.retrieve(+id, {
       filters: this.filters(user),
     });
   }

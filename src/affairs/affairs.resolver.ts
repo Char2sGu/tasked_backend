@@ -56,7 +56,7 @@ export class AffairsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateAffairArgs,
   ) {
-    return await this.service.update(id, data, { filters: this.filters(user) });
+    return this.service.update(id, data, { filters: this.filters(user) });
   }
 
   @FlushDb()

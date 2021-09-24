@@ -34,7 +34,7 @@ export abstract class CrudService<Entity> {
     where: FilterQuery<Entity>,
     options?: FindOneOrFailOptions<Entity>,
   ) {
-    return await this.repo.findOneOrFail(where, {
+    return this.repo.findOneOrFail(where, {
       ...options,
       failHandler: options?.failHandler ?? (() => new NotFoundException()),
     });
