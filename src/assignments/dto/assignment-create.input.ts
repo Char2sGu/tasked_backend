@@ -21,7 +21,7 @@ export class AssignmentCreateInput extends ValidationContextAttached {
       classroom: classroomId,
     }),
     {
-      message: 'classroom must the ID of a classroom having your membership',
+      message: 'classroom must be the ID of a classroom having your membership',
     },
   )
   classroom: number;
