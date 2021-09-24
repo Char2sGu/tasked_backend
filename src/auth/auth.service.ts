@@ -5,6 +5,7 @@ import { IncomingHttpHeaders } from 'node:http';
 import { User } from 'src/users/entities/user.entity';
 
 import { UsersService } from '../users/users.service';
+import { ObtainTokenResult } from './dto/obtain-token-result.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,11 +15,17 @@ export class AuthService {
   @Inject()
   private readonly jwtService: JwtService;
 
-  async obtainJwt(username: string, password: string) {
+  async obtainJwt(
+    username: string,
+    password: string,
+  ): Promise<ObtainTokenResult> {
     try {
       const user = await this.usersService.retrieve({ username });
       const isValid = await bcryptjs.compare(password, user.password);
-      if (isValid) return this.signJwt(user);
+      if (isValid) {
+        const token = await this.signJwt(user);
+        return { token, user };
+      }
     } catch (error) {
       if (error instanceof NotFoundException) return;
       throw error;

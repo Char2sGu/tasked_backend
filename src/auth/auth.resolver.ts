@@ -13,11 +13,10 @@ export class AuthResolver {
 
   @SkipAuth()
   @Mutation(() => ObtainTokenResult)
-  async obtainToken(
-    @Args() { username, password }: ObtainTokenArgs,
-  ): Promise<ObtainTokenResult> {
-    const token = await this.service.obtainJwt(username, password);
-    if (!token) throw new UnauthorizedException('Invalid username or password');
-    return { token };
+  async obtainToken(@Args() { username, password }: ObtainTokenArgs) {
+    const result = await this.service.obtainJwt(username, password);
+    if (!result)
+      throw new UnauthorizedException('Invalid username or password');
+    return result;
   }
 }

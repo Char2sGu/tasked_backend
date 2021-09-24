@@ -33,9 +33,9 @@ describe.only('Classrooms', () => {
       ])
       .flush();
 
-    const token = await module
-      .get(AuthService)
-      .obtainJwt('username', 'password');
+    const token = (
+      await module.get(AuthService).obtainJwt('username', 'password')
+    ).token;
 
     client.setToken(token);
   });

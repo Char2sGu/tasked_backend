@@ -16,7 +16,6 @@ describe('Users', () => {
   let module: TestingModule;
   let client: GraphQLClient;
   let repo: EntityRepository<User>;
-  let token: string;
 
   beforeEach(async () => {
     ({ app, module, client } = await prepareE2E());
@@ -31,7 +30,9 @@ describe('Users', () => {
       ])
       .flush();
 
-    token = await module.get(AuthService).obtainJwt('username', 'password');
+    const token = (
+      await module.get(AuthService).obtainJwt('username', 'password')
+    ).token;
     client.setToken(token);
   });
 

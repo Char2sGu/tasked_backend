@@ -32,11 +32,12 @@ describe('Auth', () => {
   });
 
   describe('obtainToken', () => {
-    let token: string;
+    let result: ObtainTokenResult;
 
     it('should return the token with legal arguments', async () => {
       await request(`(username: "username1", password: "password1")`);
-      expect(typeof token == 'string').toBe(true);
+      expect(typeof result.token == 'string').toBe(true);
+      expect(result.user.id).toBe('1');
     });
 
     it.each`
@@ -52,10 +53,10 @@ describe('Auth', () => {
     );
 
     async function request(args: string) {
-      const result = await client.request<{ obtainToken: ObtainTokenResult }>(
-        `mutation { obtainToken${args} { token } }`,
+      const result_ = await client.request<{ obtainToken: ObtainTokenResult }>(
+        `mutation { obtainToken${args} { token, user { id } } }`,
       );
-      token = result.obtainToken.token;
+      result = result_.obtainToken;
     }
   });
 });

@@ -28,9 +28,9 @@ describe('Memberships', () => {
       .persist(em.create(User, { username: 'username', password: 'password' }))
       .flush();
 
-    const token = await module
-      .get(AuthService)
-      .obtainJwt('username', 'password');
+    const token = (
+      await module.get(AuthService).obtainJwt('username', 'password')
+    ).token;
 
     client.setToken(token);
   });
