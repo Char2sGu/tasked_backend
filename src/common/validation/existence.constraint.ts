@@ -26,13 +26,13 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
         _context: { user },
         ...object
       },
-      constraints: [shouldExist, serviceType, getConditions],
+      constraints: [shouldExist, serviceType, conditions],
     }: ValidationArguments<Parameters<typeof Existence>>,
   ) {
     const service = this.moduleRef.get(serviceType(), { strict: false });
-    const conditions = getConditions(value, user, object);
-
-    return (await service.exists(conditions, { filters: this.filters(user) }))
+    return (await service.exists(conditions?.(value, user, object) ?? {}, {
+      filters: this.filters(user),
+    }))
       ? shouldExist
       : !shouldExist;
   }

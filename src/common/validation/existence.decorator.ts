@@ -10,7 +10,7 @@ export const Existence =
   <Entity>(
     shouldExist: boolean,
     serviceType: () => Type<CrudService<Entity>>,
-    getConditions: (
+    conditions: (
       value: unknown,
       user: User,
       object: unknown,
@@ -19,7 +19,7 @@ export const Existence =
   ): PropertyDecorator =>
   ({ constructor: target }, propertyName: string) =>
     registerDecorator({
-      constraints: [shouldExist, serviceType, getConditions],
+      constraints: [shouldExist, serviceType, conditions],
       options,
       target,
       propertyName,
