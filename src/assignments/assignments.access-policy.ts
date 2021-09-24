@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import {
   AccessPolicy,
@@ -6,54 +6,62 @@ import {
   AccessPolicyStatement,
   Effect,
 } from 'nest-access-policy';
+import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
+import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 
-import { AssignmentsController } from './assignments.controller';
+import { AssignmentsResolver } from './assignments.resolver';
 import { AssignmentsService } from './assignments.service';
 
-type Action = keyof AssignmentsController;
+type ActionName = keyof AssignmentsResolver;
+type Condition = AccessPolicyCondition<ActionName, Request>;
 
 @Injectable()
-export class AssignmentsAccessPolicy implements AccessPolicy<Action, Request> {
+export class AssignmentsAccessPolicy
+  implements AccessPolicy<ActionName, Request>
+{
   @Inject()
-  assignmentsService: AssignmentsService;
+  private readonly service: AssignmentsService;
 
-  async getEntity({ params: { id }, user }: Request) {
-    try {
-      return await this.assignmentsService.retrieve({ conditions: +id, user });
-    } catch (error) {
-      throw new NotFoundException();
-    }
+  @Inject(CRUD_FILTERS)
+  private readonly filters: CrudFilters;
+
+  get statements(): AccessPolicyStatement<ActionName, Request>[] {
+    return [
+      {
+        actions: [
+          'queryMany',
+          'createOne',
+          'queryOne',
+          'updateOne',
+          'deleteOne',
+          'completeOne',
+        ],
+        effect: Effect.Allow,
+      },
+      {
+        actions: ['completeOne'],
+        effect: Effect.Allow,
+        conditions: [this.isReceived],
+        reason: 'Only received assignments can be completed',
+      },
+      {
+        actions: ['updateOne', 'deleteOne'],
+        effect: Effect.Allow,
+        conditions: [this.isAssigned],
+        reason: 'Only assigned assignments can be managed',
+      },
+    ];
   }
 
-  isReceived: AccessPolicyCondition<Action, Request> = async ({ req }) =>
+  private readonly isReceived: Condition = async ({ req }) =>
     (await this.getEntity(req)).recipient == req.user;
 
-  isAssigned: AccessPolicyCondition<Action, Request> = async ({ req }) =>
+  private readonly isAssigned: Condition = async ({ req }) =>
     (await (await this.getEntity(req)).task.init()).creator == req.user;
 
-  statements: AccessPolicyStatement<Action, Request>[] = [
-    {
-      actions: [
-        'list',
-        'create',
-        'retrieve',
-        'update',
-        'destroy',
-        'makeCompleted',
-      ],
-      effect: Effect.Allow,
-    },
-    {
-      actions: ['makeCompleted'],
-      effect: Effect.Allow,
-      conditions: [this.isReceived],
-      reason: 'Only received assignments can be completed',
-    },
-    {
-      actions: ['update', 'destroy'],
-      effect: Effect.Allow,
-      conditions: [this.isAssigned],
-      reason: 'Only assigned assignments can be managed',
-    },
-  ];
+  private async getEntity({ params: { id }, user }: Request) {
+    return await this.service.retrieve(+id, {
+      filters: this.filters(user),
+    });
+  }
 }
