@@ -8,6 +8,9 @@ import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { NotFoundException, Type } from '@nestjs/common';
 
+/**
+ * A factory class to build common CRUD services.
+ */
 export abstract class CrudService<Entity> {
   static of<Entity>(type: Type<Entity>): Type<CrudService<Entity>> {
     class Service extends CrudService<Entity> {

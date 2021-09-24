@@ -11,6 +11,10 @@ import { map, Observable } from 'rxjs';
 
 import { FLUSH_DB } from './flush-db.symbol';
 
+/**
+ * Flush mikro-orm database changes by calling EntityManager.flush() after
+ * each routing method applied a {@link FlushDb @FlushDb()} is over.
+ */
 @Injectable()
 export class FlushDbInterceptor implements NestInterceptor {
   @Inject()

@@ -10,6 +10,12 @@ import { CrudFilters } from '../crud-filters/crud-filters.type';
 import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
 
+/**
+ * A custom class-validator validation constraint to check whether the target
+ * entity exists or not.
+ *
+ * @see {Existence}
+ */
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class ExistenceConstraint implements ValidatorConstraintInterface {

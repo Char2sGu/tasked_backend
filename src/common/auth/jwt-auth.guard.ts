@@ -13,6 +13,11 @@ import { Request } from 'express';
 import { AuthService } from '../../auth/auth.service';
 import { SKIP_AUTH } from './skip-auth.symbol';
 
+/**
+ * Prevent the endpoints from being accessed by unauthenticated users.
+ *
+ * Use {@link SkipAuth} to skip the check.
+ */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   @Inject()

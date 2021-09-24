@@ -6,6 +6,15 @@ import { User } from '../../users/entities/user.entity';
 import { CrudService } from '../crud/crud.service';
 import { ExistenceConstraint } from './existence.constraint';
 
+/**
+ * A custom class-validator validation decorator to apply the
+ * {@link ExistenceConstraint}.
+ * @param shouldExist
+ * @param serviceType
+ * @param conditions
+ * @param options
+ * @returns
+ */
 export const Existence =
   <Entity>(
     shouldExist: boolean,

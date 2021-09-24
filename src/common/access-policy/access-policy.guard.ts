@@ -3,6 +3,9 @@ import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 import { AccessPolicyGuard as BaseAccessPolicyGuard } from 'nest-access-policy';
 
+/**
+ * A workaround to make "nest-access-policy" support GraphQL.
+ */
 export class AccessPolicyGuard extends BaseAccessPolicyGuard {
   async canActivate(context: ExecutionContext) {
     if (context.getType<GqlContextType>() == 'graphql') {
