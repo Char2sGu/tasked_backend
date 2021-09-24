@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
 import { IncomingHttpHeaders } from 'node:http';
+import { User } from 'src/users/entities/user.entity';
 
 import { UsersService } from '../users/users.service';
 
@@ -16,8 +17,8 @@ export class AuthService {
   async obtainJwt(username: string, password: string) {
     try {
       const user = await this.usersService.retrieve({ username });
-      if (await bcryptjs.compare(password, user.password))
-        return await this.jwtService.signAsync({ username });
+      const isValid = await bcryptjs.compare(password, user.password);
+      if (isValid) return this.signJwt(user);
     } catch (error) {
       if (error instanceof NotFoundException) return;
       throw error;
@@ -26,10 +27,8 @@ export class AuthService {
 
   async verifyJwt(token: string) {
     try {
-      const { username } = await this.jwtService.verifyAsync<{
-        username: string;
-      }>(token);
-      return await this.usersService.retrieve({ username });
+      const { id } = await this.jwtService.verifyAsync<JwtData>(token);
+      return this.usersService.retrieve(id);
     } catch (error) {
       return;
     }
@@ -38,4 +37,15 @@ export class AuthService {
   getJwtFromHeaders(headers: IncomingHttpHeaders): string | undefined {
     return headers.authorization?.slice(7); // `7` is the length of the prefix "Bearer "
   }
+
+  private async signJwt(user: User) {
+    const { id, username } = user;
+    const data: JwtData = { id, username };
+    return this.jwtService.signAsync(data);
+  }
+}
+
+interface JwtData {
+  id: number;
+  username: string;
 }

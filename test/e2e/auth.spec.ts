@@ -2,9 +2,8 @@ import { EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
-import { ClientError, GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from 'graphql-request';
 import { ObtainTokenResult } from 'src/auth/dto/obtain-token-result.dto';
-import { TOKEN_LENGTH } from 'src/constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { prepareE2E } from './utils/prepare-e2e';
@@ -37,7 +36,7 @@ describe('Auth', () => {
 
     it('should return the token with legal arguments', async () => {
       await request(`(username: "username1", password: "password1")`);
-      expect(token).toHaveLength(TOKEN_LENGTH);
+      expect(typeof token == 'string').toBe(true);
     });
 
     it.each`
