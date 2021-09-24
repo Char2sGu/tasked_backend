@@ -7,6 +7,13 @@ import {
 import { Expose, Type as TransformType } from 'class-transformer';
 import { Allow, IsOptional, ValidateNested } from 'class-validator';
 
+/**
+ * Combine the decorators from `class-validator` and `class-transformer` into
+ * the `@Field()` to avoid repeating options.
+ * @param returnType
+ * @param options
+ * @returns
+ */
 export const Field = (returnType?: ReturnTypeFunc, options?: FieldOptions) => {
   const decorators = [FieldBase(returnType, options)];
 

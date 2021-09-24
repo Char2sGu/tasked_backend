@@ -3,6 +3,10 @@ import { ID, ObjectType } from '@nestjs/graphql';
 
 import { Field } from './field.decorator';
 
+/**
+ * A wrap of mikro-orm's `BaseEntity`, as the base class of every entity class
+ * in this project.
+ */
 @ObjectType()
 export class BaseEntity<T extends BaseEntity<T>> extends Base<T, 'id'> {
   @Field(() => ID)
