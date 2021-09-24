@@ -1,5 +1,5 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
-import { ObjectType } from '@nestjs/graphql';
+import { Int, ObjectType } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/field.decorator';
@@ -26,11 +26,11 @@ export class Affair extends BaseEntity<Affair> {
 
   @Field(() => Date)
   @Property()
-  timeStart: Date;
+  date: Date;
 
-  @Field(() => Date)
+  @Field(() => Int)
   @Property()
-  timeEnd: Date;
+  duration: number;
 
   @Field(() => String)
   @Property({

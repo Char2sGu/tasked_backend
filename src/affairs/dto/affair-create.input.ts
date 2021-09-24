@@ -1,5 +1,5 @@
 import { InputType, Int } from '@nestjs/graphql';
-import { Length } from 'class-validator';
+import { IsPositive, Length, Max } from 'class-validator';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Field } from 'src/common/field.decorator';
@@ -17,10 +17,12 @@ export class AffairCreateInput extends ValidationContextAttached {
   title: string;
 
   @Field(() => Date)
-  timeStart: Date;
+  date: Date;
 
-  @Field(() => Date)
-  timeEnd: Date;
+  @Field(() => Int)
+  @IsPositive()
+  @Max(1000 * 60 * 60 * 24 * 7) // 7 days
+  duration: number;
 
   @Field(() => String, { nullable: true })
   @Length(1, 200)

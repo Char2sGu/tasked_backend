@@ -47,7 +47,6 @@ export class AffairsResolver {
   @FlushDb()
   @Mutation(() => Affair, { name: 'createAffair' })
   async createOne(@ReqUser() user: User, @Args() { data }: CreateAffairArgs) {
-    this.service.validate(data);
     return this.service.create({ ...data, creator: user });
   }
 
@@ -57,11 +56,7 @@ export class AffairsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateAffairArgs,
   ) {
-    const entity = await this.service.update(id, data, {
-      filters: this.filters(user),
-    });
-    this.service.validate(entity);
-    return entity;
+    return await this.service.update(id, data, { filters: this.filters(user) });
   }
 
   @FlushDb()
