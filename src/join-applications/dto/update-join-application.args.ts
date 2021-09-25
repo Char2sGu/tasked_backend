@@ -7,5 +7,5 @@ import { JoinApplicationUpdateInput } from './join-application-update.input';
 @ArgsType()
 export class UpdateJoinApplicationArgs extends IntersectionType(
   TargetedArgs,
-  HasDataArgs.for(JoinApplicationUpdateInput),
+  HasDataArgs.for(() => JoinApplicationUpdateInput),
 ) {}

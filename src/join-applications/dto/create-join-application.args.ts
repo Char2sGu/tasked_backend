@@ -5,5 +5,5 @@ import { JoinApplicationCreateInput } from './join-application-create.input';
 
 @ArgsType()
 export class CreateJoinApplicationArgs extends HasDataArgs.for(
-  JoinApplicationCreateInput,
+  () => JoinApplicationCreateInput,
 ) {}

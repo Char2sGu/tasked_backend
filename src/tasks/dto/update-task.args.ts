@@ -7,5 +7,5 @@ import { TaskUpdateInput } from './task-update.input';
 @ArgsType()
 export class UpdateTaskArgs extends IntersectionType(
   TargetedArgs,
-  HasDataArgs.for(TaskUpdateInput),
+  HasDataArgs.for(() => TaskUpdateInput),
 ) {}

@@ -7,5 +7,5 @@ import { AssignmentUpdateInput } from './assignment-update.input';
 @ArgsType()
 export class UpdateAssignmentArgs extends IntersectionType(
   TargetedArgs,
-  HasDataArgs.for(AssignmentUpdateInput),
+  HasDataArgs.for(() => AssignmentUpdateInput),
 ) {}

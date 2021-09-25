@@ -5,5 +5,5 @@ import { AssignmentCreateInput } from './assignment-create.input';
 
 @ArgsType()
 export class CreateAssignmentArgs extends HasDataArgs.for(
-  AssignmentCreateInput,
+  () => AssignmentCreateInput,
 ) {}

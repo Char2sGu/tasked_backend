@@ -7,5 +7,5 @@ import { UserUpdateInput } from './user-update.input';
 @ArgsType()
 export class UpdateUserArgs extends IntersectionType(
   TargetedArgs,
-  HasDataArgs.for(UserUpdateInput),
+  HasDataArgs.for(() => UserUpdateInput),
 ) {}

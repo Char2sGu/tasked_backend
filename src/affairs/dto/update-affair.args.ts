@@ -7,5 +7,5 @@ import { AffairCreateInput } from './affair-create.input';
 @ArgsType()
 export class UpdateAffairArgs extends IntersectionType(
   TargetedArgs,
-  HasDataArgs.for(AffairCreateInput),
+  HasDataArgs.for(() => AffairCreateInput),
 ) {}

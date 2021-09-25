@@ -7,5 +7,5 @@ import { ClassroomUpdateInput } from './classroom-update.input';
 @ArgsType()
 export class UpdateClassroomArgs extends IntersectionType(
   TargetedArgs,
-  HasDataArgs.for(ClassroomUpdateInput),
+  HasDataArgs.for(() => ClassroomUpdateInput),
 ) {}

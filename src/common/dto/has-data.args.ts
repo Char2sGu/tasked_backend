@@ -8,10 +8,10 @@ import { Field } from '../field.decorator';
  */
 @ArgsType()
 export class HasDataArgs<Data> {
-  static for<Data>(type: Type<Data>): Type<HasDataArgs<Data>> {
+  static for<Data>(type: () => Type<Data>): Type<HasDataArgs<Data>> {
     @ArgsType()
     class Args extends this<Data> {
-      @Field(() => type, { nested: true })
+      @Field(() => type(), { nested: true })
       data: Data;
     }
 

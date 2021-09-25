@@ -5,5 +5,5 @@ import { ClassroomCreateInput } from './classroom-create.input';
 
 @ArgsType()
 export class CreateClassroomArgs extends HasDataArgs.for(
-  ClassroomCreateInput,
+  () => ClassroomCreateInput,
 ) {}
