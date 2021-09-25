@@ -1,11 +1,12 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { UseAccessPolicies } from 'nest-access-policy';
 import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
+import { ResolveField } from 'src/common/resolve-field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
@@ -46,5 +47,15 @@ export class MembershipsResolver {
   @Mutation(() => Membership, { name: 'deleteMembership' })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteMembershipArgs) {
     return this.service.destroy(id, { filters: this.filters(user) });
+  }
+
+  @ResolveField(() => Membership, 'owner')
+  resolveOwner(@Parent() entity: Membership) {
+    return entity.owner.init();
+  }
+
+  @ResolveField(() => Membership, 'classroom')
+  resolveClassroom(@Parent() entity: Membership) {
+    return entity.classroom.init();
   }
 }
