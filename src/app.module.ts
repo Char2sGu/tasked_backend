@@ -62,7 +62,7 @@ import { UsersModule } from './users/users.module';
       useValue: new ValidationPipe({
         transform: true,
         transformOptions: {
-          exposeDefaultValues: false, // no need to enable this for we can use `@Field(..., { defaultValue: ... })` instead
+          exposeDefaultValues: true, // `@Field(..., { defaultValue: ... })` cannot work in `@ResolveField()` (Bug)
           exposeUnsetFields: false, // if `true`, update actions will unexpectedly assign an `undefined` value to the entity fields and cause error
         },
         whitelist: true,

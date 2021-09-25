@@ -47,9 +47,14 @@ describe.only('Classrooms', () => {
       await em.persist([create(1)]).flush();
     });
 
-    it('should return the data', async () => {
-      await request('(id: 1)');
+    it('should return the scalar data', async () => {
+      await request('(id: 1)', `{ id, name, deletedAt }`);
       expect(result).toEqual({ id: '1', name: 'name', deletedAt: null });
+    });
+
+    it('should return the relation data', async () => {
+      await request(`(id: 1)`, `{ memberships { total } }`);
+      expect(result).toEqual({ memberships: { total: 1 } });
     });
 
     it.each`
@@ -59,18 +64,20 @@ describe.only('Classrooms', () => {
     `(
       'should return an error when the target cannot be found',
       async ({ args }) => {
-        await expect(request(args)).rejects.toThrow('Not Found');
+        await expect(request(args, `{ id }`)).rejects.toThrow('Not Found');
       },
     );
 
     it('should return an error when not authenticated', async () => {
       client.setToken();
-      await expect(request('(id: 1)')).rejects.toThrow('Unauthorized');
+      await expect(request('(id: 1)', `{ id }`)).rejects.toThrow(
+        'Unauthorized',
+      );
     });
 
-    async function request(args?: string) {
+    async function request(args: string, fields: string) {
       const content = await client.request(
-        `query { classroom${args} { id, name, deletedAt } }`,
+        `query { classroom${args} ${fields} }`,
       );
       result = content.classroom;
     }

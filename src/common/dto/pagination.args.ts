@@ -8,10 +8,10 @@ import { Field } from '../field.decorator';
  */
 @ArgsType()
 export class PaginationArgs {
-  @Field(() => Int, { defaultValue: 50 })
+  @Field(() => Int)
   @Max(100)
   @Min(1)
-  limit: number;
+  limit = 50;
 
   @Field(() => Int, { nullable: true })
   @Max(2000)
