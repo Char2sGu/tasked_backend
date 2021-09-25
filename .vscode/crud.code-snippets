@@ -1,0 +1,12 @@
+{
+  "Resolve OneToOne": {
+    "scope": "javascript,typescript",
+    "prefix": "resolve1",
+    "body": [
+      "@ResolveField(() => $1, \"$2\")",
+      "resolve$3(@Parent() entity: $1) {",
+      "  return entity.$2.init();",
+      "}"
+    ]
+  }
+}
