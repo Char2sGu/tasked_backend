@@ -1,9 +1,10 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { UseAccessPolicies } from 'nest-access-policy';
 import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
+import { ResolveField } from 'src/common/resolve-field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { CRUD_FILTERS } from '../common/crud-filters/crud-filters.token';
@@ -80,5 +81,20 @@ export class AssignmentsResolver {
       { isCompleted: true },
       { filters: this.filters(user) },
     );
+  }
+
+  @ResolveField(() => Assignment, 'recipient')
+  resolveRecipient(@Parent() entity: Assignment) {
+    return entity.recipient.init();
+  }
+
+  @ResolveField(() => Assignment, 'classroom')
+  resolveClassroom(@Parent() entity: Assignment) {
+    return entity.classroom.init();
+  }
+
+  @ResolveField(() => Assignment, 'task')
+  resolveTask(@Parent() entity: Assignment) {
+    return entity.task.init();
   }
 }
