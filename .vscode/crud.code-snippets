@@ -1,9 +1,9 @@
 {
-  "Resolve OneToOne": {
+  "Resolve ToOne": {
     "scope": "javascript,typescript",
-    "prefix": "resolve1",
+    "prefix": "resolveo",
     "body": [
-      "@ResolveField(() => $1, \"$2\")",
+      "@ResolveField(() => $1, '$2')",
       "resolve$3(@Parent() entity: $1) {",
       "  return entity.$2.init();",
       "}"
