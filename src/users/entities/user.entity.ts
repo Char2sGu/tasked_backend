@@ -40,35 +40,30 @@ export class User extends BaseEntity<User> {
   @Property()
   gender: Gender = Gender.Unknown;
 
-  @Field(() => [Classroom])
   @OneToMany({
     entity: () => Classroom,
     mappedBy: (classroom) => classroom.creator,
   })
   classrooms = new Collection<Classroom>(this);
 
-  @Field(() => [JoinApplication])
   @OneToMany({
     entity: () => JoinApplication,
     mappedBy: (application) => application.owner,
   })
   joinApplications = new Collection<JoinApplication>(this);
 
-  @Field(() => [Membership])
   @OneToMany({
     entity: () => Membership,
     mappedBy: (memberships) => memberships.owner,
   })
   memberships = new Collection<Membership>(this);
 
-  @Field(() => [Task])
   @OneToMany({
     entity: () => Task,
     mappedBy: (task) => task.creator,
   })
   tasks = new Collection<Task>(this);
 
-  @Field(() => [Assignment])
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.recipient,
