@@ -16,7 +16,7 @@ import { JwtAuthGuard } from './common/auth/jwt-auth.guard';
 import { CommonModule } from './common/common.module';
 import { FlushDbInterceptor } from './common/flush-db/flush-db.interceptor';
 import { ValidationContextInterceptor } from './common/validation/validation-context.interceptor';
-import { DB_PATH } from './constants';
+import { DB_PATH } from './configurations';
 import { JoinApplicationsModule } from './join-applications/join-applications.module';
 import { MembershipsModule } from './memberships/memberships.module';
 import { TasksModule } from './tasks/tasks.module';

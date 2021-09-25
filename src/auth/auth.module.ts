@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { SECRET_KEY } from 'src/constants';
+import { SECRET_KEY } from 'src/configurations';
 import { UsersModule } from 'src/users/users.module';
 
 import { AuthResolver } from './auth.resolver';
