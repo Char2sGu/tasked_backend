@@ -1,7 +1,7 @@
 {
-  "DTO:Arguments": {
+  "Arguments DTO": {
     "scope": "typescript",
-    "prefix": "dto-args",
+    "prefix": "argstype",
     "body": [
       "import { ArgsType } from '@nestjs/graphql';",
       "",
@@ -9,9 +9,9 @@
       "export class $1Args ${2:extends } {$0}"
     ]
   },
-  "DTO:Object": {
+  "Object DTO": {
     "scope": "typescript",
-    "prefix": "dto-obj",
+    "prefix": "objtype",
     "body": [
       "import { ObjectType } from '@nestjs/graphql';",
       "",
