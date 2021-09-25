@@ -1,11 +1,12 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { UseAccessPolicies } from 'nest-access-policy';
 import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
+import { ResolveField } from 'src/common/resolve-field.decorator';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
@@ -76,5 +77,15 @@ export class JoinApplicationsResolver {
         role: entity.role,
       });
     return entity;
+  }
+
+  @ResolveField(() => JoinApplication, 'owner')
+  resolveOwner(@Parent() entity: JoinApplication) {
+    return entity.owner.init();
+  }
+
+  @ResolveField(() => JoinApplication, 'classroom')
+  resolveClassroom(@Parent() entity: JoinApplication) {
+    return entity.classroom.init();
   }
 }
