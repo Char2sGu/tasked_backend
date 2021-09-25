@@ -8,5 +8,22 @@
       "  return entity.$2.init();",
       "}"
     ]
+  },
+  "Resolve ToMany": {
+    "scope": "javascript,typescript",
+    "prefix": "resolvem",
+    "body": [
+      "@ResolveField(() => $1, '$2')",
+      "async resolve$3(",
+      "  @ReqUser() user: User,",
+      "  @Parent() entity: $1,",
+      "  @Args() { limit, offset }: $4,",
+      ") {",
+      "  return this.$5.list(",
+      "    { $6 },",
+      "    { limit, offset, filters: this.filters(user) },",
+      "  );",
+      "}"
+    ]
   }
 }
