@@ -10,10 +10,13 @@ import { ResolveField } from 'src/common/resolve-field.decorator';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
+import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
+import { AcceptJoinApplicationResult } from './dto/accept-join-application-result.dto';
 import { CreateJoinApplicationArgs } from './dto/create-join-application.args';
 import { PaginatedJoinApplications } from './dto/paginated-join-applications.dto';
 import { QueryJoinApplicationArgs } from './dto/query-join-application.args';
 import { QueryJoinApplicationsArgs } from './dto/query-join-applications.args';
+import { RejectJoinApplicationArgs } from './dto/reject-join-application.args';
 import { UpdateJoinApplicationArgs } from './dto/update-join-application.args';
 import { ApplicationStatus } from './entities/application-status.enum';
 import { JoinApplication } from './entities/join-application.entity';
@@ -67,16 +70,41 @@ export class JoinApplicationsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateJoinApplicationArgs,
   ) {
-    const entity = await this.service.update(id, data, {
-      filters: this.filters(user),
+    return this.service.update(id, data, { filters: this.filters(user) });
+  }
+
+  @FlushDb()
+  @Mutation(() => JoinApplication, { name: 'rejectJoinApplication' })
+  async rejectOne(
+    @ReqUser() user: User,
+    @Args() { id }: RejectJoinApplicationArgs,
+  ) {
+    return this.service.update(
+      id,
+      { status: ApplicationStatus.Rejected },
+      { filters: this.filters(user) },
+    );
+  }
+
+  @FlushDb()
+  @Mutation(() => AcceptJoinApplicationResult, {
+    name: 'acceptJoinApplication',
+  })
+  async acceptOne(
+    @ReqUser() user: User,
+    @Args() { id }: AcceptJoinApplicationArgs,
+  ) {
+    const application = await this.service.update(
+      id,
+      { status: ApplicationStatus.Accepted },
+      { filters: this.filters(user) },
+    );
+    const membership = await this.membershipsService.create({
+      owner: user,
+      classroom: application.classroom,
+      role: application.role,
     });
-    if (data.status == ApplicationStatus.Accepted)
-      await this.membershipsService.create({
-        owner: user,
-        classroom: entity.classroom,
-        role: entity.role,
-      });
-    return entity;
+    return { application, membership };
   }
 
   @ResolveField(() => JoinApplication, 'owner')
