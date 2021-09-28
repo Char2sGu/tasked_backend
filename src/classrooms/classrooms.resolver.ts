@@ -44,7 +44,9 @@ export class ClassroomsResolver {
   @Inject()
   private readonly affairsService: AffairsService;
 
-  @Query(() => PaginatedClassrooms, { name: 'classrooms' })
+  @Query(() => PaginatedClassrooms, {
+    name: 'classrooms',
+  })
   async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryClassroomsArgs,
@@ -60,13 +62,17 @@ export class ClassroomsResolver {
     );
   }
 
-  @Query(() => Classroom, { name: 'classroom' })
+  @Query(() => Classroom, {
+    name: 'classroom',
+  })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryClassroomArgs) {
     return this.service.retrieve(id, { filters: this.filters(user) });
   }
 
   @FlushDb()
-  @Mutation(() => Classroom, { name: 'createClassroom' })
+  @Mutation(() => Classroom, {
+    name: 'createClassroom',
+  })
   async createOne(
     @ReqUser() user: User,
     @Args() { data }: CreateClassroomArgs,
@@ -75,7 +81,9 @@ export class ClassroomsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => Classroom, { name: 'updateClassroom' })
+  @Mutation(() => Classroom, {
+    name: 'updateClassroom',
+  })
   async updateOne(
     @ReqUser() user: User,
     @Args() { id, data }: UpdateClassroomArgs,
@@ -84,7 +92,9 @@ export class ClassroomsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => Classroom, { name: 'deleteClassroom' })
+  @Mutation(() => Classroom, {
+    name: 'deleteClassroom',
+  })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteClassroomArgs) {
     return this.service.destroy(id, { filters: this.filters(user) });
   }

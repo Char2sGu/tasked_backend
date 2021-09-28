@@ -30,7 +30,9 @@ export class AssignmentsResolver {
   @Inject(CRUD_FILTERS)
   private readonly filters: CrudFilters;
 
-  @Query(() => PaginatedAssignments, { name: 'assignments' })
+  @Query(() => PaginatedAssignments, {
+    name: 'assignments',
+  })
   async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryAssignmentsArgs,
@@ -41,13 +43,17 @@ export class AssignmentsResolver {
     );
   }
 
-  @Query(() => Assignment, { name: 'assignment' })
+  @Query(() => Assignment, {
+    name: 'assignment',
+  })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryAssignmentArgs) {
     return this.service.retrieve(id, { filters: this.filters(user) });
   }
 
   @FlushDb()
-  @Mutation(() => Assignment, { name: 'createAssignment' })
+  @Mutation(() => Assignment, {
+    name: 'createAssignment',
+  })
   async createOne(
     @ReqUser() user: User,
     @Args() { data }: CreateAssignmentArgs,
@@ -56,7 +62,9 @@ export class AssignmentsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => Assignment, { name: 'updateAssignment' })
+  @Mutation(() => Assignment, {
+    name: 'updateAssignment',
+  })
   async updateOne(
     @ReqUser() user: User,
     @Args() { id, data }: UpdateAssignmentArgs,
@@ -65,13 +73,17 @@ export class AssignmentsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => Assignment, { name: 'deleteAssignment' })
+  @Mutation(() => Assignment, {
+    name: 'deleteAssignment',
+  })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAssignmentArgs) {
     return this.service.destroy(id, { filters: this.filters(user) });
   }
 
   @FlushDb()
-  @Mutation(() => Assignment, { name: 'completeAssignment' })
+  @Mutation(() => Assignment, {
+    name: 'completeAssignment',
+  })
   async completeOne(
     @ReqUser() user: User,
     @Args() { id }: CompleteAssignmentArgs,

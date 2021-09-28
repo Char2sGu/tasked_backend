@@ -36,7 +36,9 @@ export class JoinApplicationsResolver {
   @Inject(CRUD_FILTERS)
   private readonly filters: CrudFilters;
 
-  @Query(() => PaginatedJoinApplications, { name: 'joinApplications' })
+  @Query(() => PaginatedJoinApplications, {
+    name: 'joinApplications',
+  })
   async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryJoinApplicationsArgs,
@@ -47,7 +49,9 @@ export class JoinApplicationsResolver {
     );
   }
 
-  @Query(() => JoinApplication, { name: 'joinApplication' })
+  @Query(() => JoinApplication, {
+    name: 'joinApplication',
+  })
   async queryOne(
     @ReqUser() user: User,
     @Args() { id }: QueryJoinApplicationArgs,
@@ -56,7 +60,9 @@ export class JoinApplicationsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => JoinApplication, { name: 'createJoinApplication' })
+  @Mutation(() => JoinApplication, {
+    name: 'createJoinApplication',
+  })
   async createOne(
     @ReqUser() user: User,
     @Args() { data }: CreateJoinApplicationArgs,
@@ -65,7 +71,9 @@ export class JoinApplicationsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => JoinApplication, { name: 'updateJoinApplication' })
+  @Mutation(() => JoinApplication, {
+    name: 'updateJoinApplication',
+  })
   async updateOne(
     @ReqUser() user: User,
     @Args() { id, data }: UpdateJoinApplicationArgs,
@@ -74,7 +82,9 @@ export class JoinApplicationsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => JoinApplication, { name: 'rejectJoinApplication' })
+  @Mutation(() => JoinApplication, {
+    name: 'rejectJoinApplication',
+  })
   async rejectOne(
     @ReqUser() user: User,
     @Args() { id }: RejectJoinApplicationArgs,

@@ -34,7 +34,9 @@ export class TasksResolver {
   @Inject(CRUD_FILTERS)
   private readonly filters: CrudFilters;
 
-  @Query(() => PaginatedTasks, { name: 'tasks' })
+  @Query(() => PaginatedTasks, {
+    name: 'tasks',
+  })
   async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryTasksArgs,
@@ -45,25 +47,33 @@ export class TasksResolver {
     );
   }
 
-  @Query(() => Task, { name: 'task' })
+  @Query(() => Task, {
+    name: 'task',
+  })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryTaskArgs) {
     return this.service.retrieve(id, { filters: this.filters(user) });
   }
 
   @FlushDb()
-  @Mutation(() => Task, { name: 'createTask' })
+  @Mutation(() => Task, {
+    name: 'createTask',
+  })
   async createOne(@ReqUser() user: User, @Args() { data }: CreateTaskArgs) {
     return this.service.create({ ...data, creator: user });
   }
 
   @FlushDb()
-  @Mutation(() => Task, { name: 'updateTask' })
+  @Mutation(() => Task, {
+    name: 'updateTask',
+  })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateTaskArgs) {
     return this.service.update(id, data, { filters: this.filters(user) });
   }
 
   @FlushDb()
-  @Mutation(() => Task, { name: 'deleteTask' })
+  @Mutation(() => Task, {
+    name: 'deleteTask',
+  })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteTaskArgs) {
     return this.service.destroy(id, { filters: this.filters(user) });
   }

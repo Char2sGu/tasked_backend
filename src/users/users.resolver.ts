@@ -49,7 +49,9 @@ export class UsersResolver {
   @Inject()
   private readonly assignmentsService: AssignmentsService;
 
-  @Query(() => PaginatedUsers, { name: 'users' })
+  @Query(() => PaginatedUsers, {
+    name: 'users',
+  })
   async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryUsersArgs,
@@ -60,25 +62,33 @@ export class UsersResolver {
     );
   }
 
-  @Query(() => User, { name: 'user' })
+  @Query(() => User, {
+    name: 'user',
+  })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryUserArgs) {
     return this.service.retrieve(id, { filters: this.filters(user) });
   }
 
-  @Query(() => User, { name: 'current' })
+  @Query(() => User, {
+    name: 'current',
+  })
   async queryCurrent(@ReqUser() user: User) {
     return user;
   }
 
   @FlushDb()
   @SkipAuth()
-  @Mutation(() => User, { name: 'createUser' })
+  @Mutation(() => User, {
+    name: 'createUser',
+  })
   async createOne(@Args() { data }: CreateUserArgs) {
     return this.service.create(data);
   }
 
   @FlushDb()
-  @Mutation(() => User, { name: 'updateUser' })
+  @Mutation(() => User, {
+    name: 'updateUser',
+  })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateUserArgs) {
     return this.service.update(id, data, { filters: this.filters(user) });
   }

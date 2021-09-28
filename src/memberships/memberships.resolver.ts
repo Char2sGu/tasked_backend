@@ -27,7 +27,9 @@ export class MembershipsResolver {
   @Inject(CRUD_FILTERS)
   private readonly filters: CrudFilters;
 
-  @Query(() => PaginatedMemberships, { name: 'memberships' })
+  @Query(() => PaginatedMemberships, {
+    name: 'memberships',
+  })
   async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryMembershipsArgs,
@@ -38,13 +40,17 @@ export class MembershipsResolver {
     );
   }
 
-  @Query(() => Membership, { name: 'membership' })
+  @Query(() => Membership, {
+    name: 'membership',
+  })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryMembershipArgs) {
     return this.service.retrieve(id, { filters: this.filters(user) });
   }
 
   @FlushDb()
-  @Mutation(() => Membership, { name: 'deleteMembership' })
+  @Mutation(() => Membership, {
+    name: 'deleteMembership',
+  })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteMembershipArgs) {
     return this.service.destroy(id, { filters: this.filters(user) });
   }

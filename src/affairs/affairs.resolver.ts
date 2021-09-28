@@ -29,7 +29,9 @@ export class AffairsResolver {
   @Inject(CRUD_FILTERS)
   private readonly filters: CrudFilters;
 
-  @Query(() => PaginatedAffairs, { name: 'affairs' })
+  @Query(() => PaginatedAffairs, {
+    name: 'affairs',
+  })
   async queryMany(
     @ReqUser() user: User,
     @Args() { limit, offset }: QueryAffairsArgs,
@@ -40,19 +42,25 @@ export class AffairsResolver {
     );
   }
 
-  @Query(() => Affair, { name: 'affair' })
+  @Query(() => Affair, {
+    name: 'affair',
+  })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryAffairArgs) {
     return this.service.retrieve(id, { filters: this.filters(user) });
   }
 
   @FlushDb()
-  @Mutation(() => Affair, { name: 'createAffair' })
+  @Mutation(() => Affair, {
+    name: 'createAffair',
+  })
   async createOne(@ReqUser() user: User, @Args() { data }: CreateAffairArgs) {
     return this.service.create({ ...data, creator: user });
   }
 
   @FlushDb()
-  @Mutation(() => Affair, { name: 'updateAffair' })
+  @Mutation(() => Affair, {
+    name: 'updateAffair',
+  })
   async updateOne(
     @ReqUser() user: User,
     @Args() { id, data }: UpdateAffairArgs,
@@ -61,7 +69,9 @@ export class AffairsResolver {
   }
 
   @FlushDb()
-  @Mutation(() => Affair, { name: 'deleteAffair' })
+  @Mutation(() => Affair, {
+    name: 'deleteAffair',
+  })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAffairArgs) {
     return this.service.destroy(id, { filters: this.filters(user) });
   }
