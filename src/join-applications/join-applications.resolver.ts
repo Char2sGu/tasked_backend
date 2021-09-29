@@ -1,7 +1,5 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { UseAccessPolicies } from 'nest-access-policy';
-import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
@@ -20,11 +18,8 @@ import { RejectJoinApplicationArgs } from './dto/reject-join-application.args';
 import { UpdateJoinApplicationArgs } from './dto/update-join-application.args';
 import { ApplicationStatus } from './entities/application-status.enum';
 import { JoinApplication } from './entities/join-application.entity';
-import { JoinApplicationsAccessPolicy } from './join-applications.access-policy';
 import { JoinApplicationsService } from './join-applications.service';
 
-@UseAccessPolicies(JoinApplicationsAccessPolicy)
-@UseGuards(AccessPolicyGuard)
 @Resolver(() => JoinApplication)
 export class JoinApplicationsResolver {
   @Inject()
@@ -78,7 +73,18 @@ export class JoinApplicationsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateJoinApplicationArgs,
   ) {
-    return this.service.update(id, data, { filters: this.filters(user) });
+    const entity = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (entity.owner != user)
+      throw new ForbiddenException(
+        'Cannot update applications created by others',
+      );
+    if (entity.status != ApplicationStatus.Pending)
+      throw new ForbiddenException('Cannot update resulted applications');
+
+    return this.service.update(id, data);
   }
 
   @FlushDb()
@@ -89,11 +95,14 @@ export class JoinApplicationsResolver {
     @ReqUser() user: User,
     @Args() { id }: RejectJoinApplicationArgs,
   ) {
-    return this.service.update(
-      id,
-      { status: ApplicationStatus.Rejected },
-      { filters: this.filters(user) },
-    );
+    const application = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (application.status != ApplicationStatus.Pending)
+      throw new ForbiddenException('Cannot reject resulted applications');
+
+    return this.service.update(id, { status: ApplicationStatus.Rejected });
   }
 
   @FlushDb()
@@ -104,16 +113,20 @@ export class JoinApplicationsResolver {
     @ReqUser() user: User,
     @Args() { id }: AcceptJoinApplicationArgs,
   ) {
-    const application = await this.service.update(
-      id,
-      { status: ApplicationStatus.Accepted },
-      { filters: this.filters(user) },
-    );
+    const application = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (application.status != ApplicationStatus.Pending)
+      throw new ForbiddenException('Cannot accept resulted applications');
+
+    await this.service.update(id, { status: ApplicationStatus.Accepted });
     const membership = await this.membershipsService.create({
       owner: user,
       classroom: application.classroom,
       role: application.role,
     });
+
     return { application, membership };
   }
 
