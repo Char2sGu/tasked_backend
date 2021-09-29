@@ -112,7 +112,7 @@ describe('Memberships', () => {
     it.each`
       data                                                         | error
       ${() => [create()]}                                          | ${'Cannot delete the membership of the creator'}
-      ${() => [create(3, [[2, Role.Teacher], [1, Role.Student]])]} | ${'Cannot delete superior members'}
+      ${() => [create(3, [[2, Role.Teacher], [1, Role.Student]])]} | ${'Cannot delete memberships of superior members'}
     `(
       'should return an error when unauthorized: $error',
       async ({ data, error }) => {

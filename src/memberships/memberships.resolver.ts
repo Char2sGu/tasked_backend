@@ -1,7 +1,5 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { UseAccessPolicies } from 'nest-access-policy';
-import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
@@ -14,11 +12,8 @@ import { PaginatedMemberships } from './dto/paginated-memberships.dto';
 import { QueryMembershipArgs } from './dto/query-membership.args';
 import { QueryMembershipsArgs } from './dto/query-memberships.args';
 import { Membership } from './entities/membership.entity';
-import { MembershipsAccessPolicy } from './memberships.access-policy';
 import { MembershipsService } from './memberships.service';
 
-@UseAccessPolicies(MembershipsAccessPolicy)
-@UseGuards(AccessPolicyGuard)
 @Resolver(() => Membership)
 export class MembershipsResolver {
   @Inject()
@@ -52,6 +47,36 @@ export class MembershipsResolver {
     name: 'deleteMembership',
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteMembershipArgs) {
+    const targetMembership = await this.service.retrieve(id, {
+      filters: this.filters(user),
+      populate: ['classroom'],
+    });
+
+    if (targetMembership.owner == targetMembership.classroom.creator)
+      throw new ForbiddenException(
+        'Cannot delete the membership of the creator',
+      );
+
+    if (
+      targetMembership.classroom.creator != user &&
+      targetMembership.owner != user
+    ) {
+      const ownMembership = await targetMembership.classroom.memberships
+        .matching({
+          where: { owner: user },
+          filters: this.filters(user),
+        })
+        .then(([membership]) => membership);
+
+      const ownWeight = await ownMembership.getWeight();
+      const targetWeight = await targetMembership.getWeight();
+
+      if (ownWeight <= targetWeight)
+        throw new ForbiddenException(
+          'Cannot delete memberships of superior members',
+        );
+    }
+
     return this.service.destroy(id, { filters: this.filters(user) });
   }
 
