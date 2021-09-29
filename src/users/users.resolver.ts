@@ -1,11 +1,9 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { UseAccessPolicies } from 'nest-access-policy';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
-import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
@@ -24,11 +22,8 @@ import { QueryUserArgs } from './dto/query-user.args';
 import { QueryUsersArgs } from './dto/query-users.args';
 import { UpdateUserArgs } from './dto/update-user.args';
 import { User } from './entities/user.entity';
-import { UsersAccessPolicy } from './users.access-policy';
 import { UsersService } from './users.service';
 
-@UseAccessPolicies(UsersAccessPolicy)
-@UseGuards(AccessPolicyGuard)
 @Resolver(() => User)
 export class UsersResolver {
   @Inject()
@@ -90,7 +85,16 @@ export class UsersResolver {
     name: 'updateUser',
   })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateUserArgs) {
-    return this.service.update(id, data, { filters: this.filters(user) });
+    const entity = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (entity != user)
+      throw new ForbiddenException('Cannot update other users');
+    if (entity.isUpdatedRecently)
+      throw new ForbiddenException('Cannot update again within 3 days');
+
+    return this.service.update(entity.id, data);
   }
 
   @ResolveField(() => User, 'classrooms')
