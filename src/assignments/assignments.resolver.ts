@@ -1,7 +1,5 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { UseAccessPolicies } from 'nest-access-policy';
-import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -9,7 +7,6 @@ import { User } from 'src/users/entities/user.entity';
 
 import { CRUD_FILTERS } from '../common/crud-filters/crud-filters.token';
 import { ReqUser } from '../common/req-user.decorator';
-import { AssignmentsAccessPolicy } from './assignments.access-policy';
 import { AssignmentsService } from './assignments.service';
 import { CompleteAssignmentArgs } from './dto/complete-assignment.args';
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
@@ -20,8 +17,6 @@ import { QueryAssignmentsArgs } from './dto/query-assignments.args';
 import { UpdateAssignmentArgs } from './dto/update-assignment.args';
 import { Assignment } from './entities/assignment.entity';
 
-@UseAccessPolicies(AssignmentsAccessPolicy)
-@UseGuards(AccessPolicyGuard)
 @Resolver(() => Assignment)
 export class AssignmentsResolver {
   @Inject()
@@ -69,7 +64,17 @@ export class AssignmentsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateAssignmentArgs,
   ) {
-    return this.service.update(id, data, { filters: this.filters(user) });
+    const assignment = await this.service.retrieve(id, {
+      filters: this.filters(user),
+      populate: ['task'],
+    });
+
+    if (user != assignment.task.creator)
+      throw new ForbiddenException(
+        'Cannot update assignments not created by you',
+      );
+
+    return this.service.update(id, data);
   }
 
   @FlushDb()
@@ -77,7 +82,17 @@ export class AssignmentsResolver {
     name: 'deleteAssignment',
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAssignmentArgs) {
-    return this.service.destroy(id, { filters: this.filters(user) });
+    const assignment = await this.service.retrieve(id, {
+      filters: this.filters(user),
+      populate: ['task'],
+    });
+
+    if (user != assignment.task.creator)
+      throw new ForbiddenException(
+        'Cannot delete assignments not created by you',
+      );
+
+    return this.service.destroy(id);
   }
 
   @FlushDb()
@@ -88,11 +103,16 @@ export class AssignmentsResolver {
     @ReqUser() user: User,
     @Args() { id }: CompleteAssignmentArgs,
   ) {
-    return this.service.update(
-      { id },
-      { isCompleted: true },
-      { filters: this.filters(user) },
-    );
+    const assignment = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (user != assignment.recipient)
+      throw new ForbiddenException(
+        'Cannot complete assignments not assigned to you',
+      );
+
+    return this.service.update(id, { isCompleted: true });
   }
 
   @ResolveField(() => Assignment, 'recipient')
