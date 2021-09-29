@@ -8,8 +8,6 @@ import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { NotFoundException, Type } from '@nestjs/common';
 
-import { BaseEntity } from '../base-entity.entity';
-
 /**
  * A factory class to build common CRUD services.
  */
@@ -36,10 +34,9 @@ export abstract class CrudService<Entity> {
   }
 
   async retrieve(
-    where: FilterQuery<Entity> | Entity,
+    where: FilterQuery<Entity>,
     options?: FindOneOrFailOptions<Entity>,
   ) {
-    if (where instanceof BaseEntity) return where as Entity;
     return this.repo.findOneOrFail(where, {
       ...options,
       failHandler: options?.failHandler ?? (() => new NotFoundException()),
@@ -47,7 +44,7 @@ export abstract class CrudService<Entity> {
   }
 
   async update(
-    where: FilterQuery<Entity> | Entity,
+    where: FilterQuery<Entity>,
     data: EntityData<Entity>,
     options?: FindOneOrFailOptions<Entity>,
   ) {
@@ -57,7 +54,7 @@ export abstract class CrudService<Entity> {
   }
 
   async destroy(
-    where: FilterQuery<Entity> | Entity,
+    where: FilterQuery<Entity>,
     options?: FindOneOrFailOptions<Entity>,
   ) {
     const entity = await this.retrieve(where, options);
@@ -66,7 +63,7 @@ export abstract class CrudService<Entity> {
   }
 
   async exists(
-    where: FilterQuery<Entity> | Entity,
+    where: FilterQuery<Entity>,
     options?: FindOneOrFailOptions<Entity>,
   ) {
     try {
