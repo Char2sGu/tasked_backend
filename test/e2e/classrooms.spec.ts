@@ -187,7 +187,7 @@ describe.only('Classrooms', () => {
       await em.persist(create(2)).flush();
       const promise = request(`(id: 2, data: {})`, `{ id }`);
       await expect(promise).rejects.toThrow(
-        'Only the creator can update the classroom',
+        'Cannot update classrooms not created by you',
       );
     });
 
@@ -223,7 +223,7 @@ describe.only('Classrooms', () => {
       await em.persist(create(2)).flush();
       const promise = request(`(id: 2)`, `{ id }`);
       await expect(promise).rejects.toThrow(
-        'Only the creator can destroy the classroom',
+        'Cannot delete classrooms not created by you',
       );
     });
 

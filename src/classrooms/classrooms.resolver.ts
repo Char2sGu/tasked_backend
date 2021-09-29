@@ -1,9 +1,7 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { UseAccessPolicies } from 'nest-access-policy';
 import { AffairsService } from 'src/affairs/affairs.service';
 import { QueryAffairsArgs } from 'src/affairs/dto/query-affairs.args';
-import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
@@ -15,7 +13,6 @@ import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
-import { ClassroomsAccessPolicy } from './classrooms.access-policy';
 import { ClassroomsService } from './classrooms.service';
 import { CreateClassroomArgs } from './dto/create-classroom.args';
 import { DeleteClassroomArgs } from './dto/delete-classroom.args';
@@ -25,8 +22,6 @@ import { QueryClassroomsArgs } from './dto/query-classrooms.args';
 import { UpdateClassroomArgs } from './dto/update-classroom.args';
 import { Classroom } from './entities/classroom.entity';
 
-@UseAccessPolicies(ClassroomsAccessPolicy)
-@UseGuards(AccessPolicyGuard)
 @Resolver(() => Classroom)
 export class ClassroomsResolver {
   @Inject()
@@ -88,7 +83,16 @@ export class ClassroomsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateClassroomArgs,
   ) {
-    return this.service.update(id, data, { filters: this.filters(user) });
+    const classroom = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (user != classroom.creator)
+      throw new ForbiddenException(
+        'Cannot update classrooms not created by you',
+      );
+
+    return this.service.update(id, data);
   }
 
   @FlushDb()
@@ -96,6 +100,15 @@ export class ClassroomsResolver {
     name: 'deleteClassroom',
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteClassroomArgs) {
+    const classroom = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (user != classroom.creator)
+      throw new ForbiddenException(
+        'Cannot delete classrooms not created by you',
+      );
+
     return this.service.destroy(id, { filters: this.filters(user) });
   }
 
