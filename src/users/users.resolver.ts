@@ -94,7 +94,7 @@ export class UsersResolver {
     if (entity.isUpdatedRecently)
       throw new ForbiddenException('Cannot update again within 3 days');
 
-    return this.service.update(entity.id, data);
+    return this.service.update(id, data);
   }
 
   @ResolveField(() => User, 'classrooms')

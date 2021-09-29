@@ -69,7 +69,7 @@ export class TasksResolver {
     if (entity.creator != user)
       throw new ForbiddenException('Cannot update tasks not created by you');
 
-    return this.service.update(entity.id, data);
+    return this.service.update(id, data);
   }
 
   @FlushDb()
@@ -84,7 +84,7 @@ export class TasksResolver {
     if (entity.creator != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');
 
-    return this.service.destroy(entity.id);
+    return this.service.destroy(id);
   }
 
   @ResolveField(() => Task, 'assignments')
