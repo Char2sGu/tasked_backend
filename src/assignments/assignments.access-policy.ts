@@ -41,22 +41,22 @@ export class AssignmentsAccessPolicy
       {
         actions: ['completeOne'],
         effect: Effect.Allow,
-        conditions: [this.isReceived],
-        reason: 'Only received assignments can be completed',
+        conditions: [this.asRecipient],
+        reason: 'Cannot complete assignments not assigned to you',
       },
       {
         actions: ['updateOne', 'deleteOne'],
         effect: Effect.Allow,
-        conditions: [this.isAssigned],
-        reason: 'Only assigned assignments can be managed',
+        conditions: [this.asCreator],
+        reason: 'Cannot manage assignments not created by you',
       },
     ];
   }
 
-  private readonly isReceived: Condition = async ({ req }) =>
+  private readonly asRecipient: Condition = async ({ req }) =>
     (await this.getEntity(req)).recipient == req.user;
 
-  private readonly isAssigned: Condition = async ({ req }) =>
+  private readonly asCreator: Condition = async ({ req }) =>
     (await (await this.getEntity(req)).task.init()).creator == req.user;
 
   private async getEntity({ params: { id }, user }: Request) {
