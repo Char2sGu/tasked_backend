@@ -1,9 +1,7 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { UseAccessPolicies } from 'nest-access-policy';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
@@ -18,11 +16,8 @@ import { QueryTaskArgs } from './dto/query-task.args';
 import { QueryTasksArgs } from './dto/query-tasks.args';
 import { UpdateTaskArgs } from './dto/update-task.args';
 import { Task } from './entities/task.entity';
-import { TasksAccessPolicy } from './tasks.access-policy';
 import { TasksService } from './tasks.service';
 
-@UseAccessPolicies(TasksAccessPolicy)
-@UseGuards(AccessPolicyGuard)
 @Resolver(() => Task)
 export class TasksResolver {
   @Inject()
@@ -67,7 +62,14 @@ export class TasksResolver {
     name: 'updateTask',
   })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateTaskArgs) {
-    return this.service.update(id, data, { filters: this.filters(user) });
+    const entity = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (entity.creator != user)
+      throw new ForbiddenException('Cannot update tasks not created by you');
+
+    return this.service.update(entity.id, data);
   }
 
   @FlushDb()
@@ -75,7 +77,14 @@ export class TasksResolver {
     name: 'deleteTask',
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteTaskArgs) {
-    return this.service.destroy(id, { filters: this.filters(user) });
+    const entity = await this.service.retrieve(id, {
+      filters: this.filters(user),
+    });
+
+    if (entity.creator != user)
+      throw new ForbiddenException('Cannot delete tasks not created by you');
+
+    return this.service.destroy(entity.id);
   }
 
   @ResolveField(() => Task, 'assignments')
