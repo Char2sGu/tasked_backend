@@ -1,7 +1,6 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { UseAccessPolicies } from 'nest-access-policy';
-import { AccessPolicyGuard } from 'src/common/access-policy/access-policy.guard';
+import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
 import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
@@ -9,7 +8,6 @@ import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
-import { AffairsAccessPolicy } from './affairs.access-policy';
 import { AffairsService } from './affairs.service';
 import { CreateAffairArgs } from './dto/create-affair.args';
 import { DeleteAffairArgs } from './dto/delete-affair.args';
@@ -19,8 +17,6 @@ import { QueryAffairsArgs } from './dto/query-affairs.args';
 import { UpdateAffairArgs } from './dto/update-affair.args';
 import { Affair } from './entities/affair.entity';
 
-@UseAccessPolicies(AffairsAccessPolicy)
-@UseGuards(AccessPolicyGuard)
 @Resolver(() => Affair)
 export class AffairsResolver {
   @Inject()
@@ -28,6 +24,9 @@ export class AffairsResolver {
 
   @Inject(CRUD_FILTERS)
   private readonly filters: CrudFilters;
+
+  @Inject()
+  classroomsService: ClassroomsService;
 
   @Query(() => PaginatedAffairs, {
     name: 'affairs',
@@ -54,7 +53,16 @@ export class AffairsResolver {
     name: 'createAffair',
   })
   async createOne(@ReqUser() user: User, @Args() { data }: CreateAffairArgs) {
-    return this.service.create({ ...data, creator: user });
+    const classroom = await this.classroomsService.retrieve(data.classroom, {
+      filters: this.filters(user),
+    });
+
+    if (user != classroom.creator)
+      throw new ForbiddenException(
+        'Cannot create affairs in classrooms not created by you',
+      );
+
+    return this.service.create({ ...data });
   }
 
   @FlushDb()
@@ -65,7 +73,17 @@ export class AffairsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateAffairArgs,
   ) {
-    return this.service.update(id, data, { filters: this.filters(user) });
+    const affair = await this.service.retrieve(id, {
+      filters: this.filters(user),
+      populate: ['classroom'],
+    });
+
+    if (user != affair.classroom.creator)
+      throw new ForbiddenException(
+        'Cannot update affairs of classrooms not created by you',
+      );
+
+    return this.service.update(id, data);
   }
 
   @FlushDb()
@@ -73,7 +91,17 @@ export class AffairsResolver {
     name: 'deleteAffair',
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAffairArgs) {
-    return this.service.destroy(id, { filters: this.filters(user) });
+    const affair = await this.service.retrieve(id, {
+      filters: this.filters(user),
+      populate: ['classroom'],
+    });
+
+    if (affair)
+      throw new ForbiddenException(
+        'Cannot delete affairs of classrooms not created by you',
+      );
+
+    return this.service.destroy(id);
   }
 
   @ResolveField(() => Affair, 'classroom')
