@@ -3,8 +3,6 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { ValidationArguments } from 'src/common/validation/validation-arguments.interface';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
@@ -18,9 +16,6 @@ export class IsInferiorMemberConstraint
 {
   @Inject()
   private readonly service: MembershipsService;
-
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
 
   async validate(
     userId: number,
@@ -38,7 +33,7 @@ export class IsInferiorMemberConstraint
         ([user, userId] as const).map((owner) =>
           this.service.retrieve(
             { owner, classroom: classroomId },
-            { filters: this.filters(user) },
+            { filters: { visible: { user } } },
           ),
         ),
       );

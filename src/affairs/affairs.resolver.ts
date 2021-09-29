@@ -1,8 +1,6 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
-import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -22,9 +20,6 @@ export class AffairsResolver {
   @Inject()
   service: AffairsService;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   @Inject()
   classroomsService: ClassroomsService;
 
@@ -37,7 +32,7 @@ export class AffairsResolver {
   ) {
     return this.service.list(
       {},
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -45,7 +40,7 @@ export class AffairsResolver {
     name: 'affair',
   })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryAffairArgs) {
-    return this.service.retrieve(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: { visible: { user } } });
   }
 
   @FlushDb()
@@ -54,7 +49,7 @@ export class AffairsResolver {
   })
   async createOne(@ReqUser() user: User, @Args() { data }: CreateAffairArgs) {
     const classroom = await this.classroomsService.retrieve(data.classroom, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (user != classroom.creator)
@@ -74,7 +69,7 @@ export class AffairsResolver {
     @Args() { id, data }: UpdateAffairArgs,
   ) {
     const affair = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
       populate: ['classroom'],
     });
 
@@ -92,7 +87,7 @@ export class AffairsResolver {
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAffairArgs) {
     const affair = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
       populate: ['classroom'],
     });
 

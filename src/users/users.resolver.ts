@@ -5,8 +5,6 @@ import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
 import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
-import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -29,9 +27,6 @@ export class UsersResolver {
   @Inject()
   private readonly service: UsersService;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   @Inject()
   private readonly classroomsService: ClassroomsService;
 
@@ -53,7 +48,7 @@ export class UsersResolver {
   ) {
     return this.service.list(
       {},
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -61,7 +56,7 @@ export class UsersResolver {
     name: 'user',
   })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryUserArgs) {
-    return this.service.retrieve(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: { visible: { user } } });
   }
 
   @Query(() => User, {
@@ -86,7 +81,7 @@ export class UsersResolver {
   })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateUserArgs) {
     const entity = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (entity != user)
@@ -105,7 +100,7 @@ export class UsersResolver {
   ) {
     return this.classroomsService.list(
       { creator: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -117,7 +112,7 @@ export class UsersResolver {
   ) {
     return this.membershipsService.list(
       { owner: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -129,7 +124,7 @@ export class UsersResolver {
   ) {
     return this.membershipsService.list(
       { owner: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -141,7 +136,7 @@ export class UsersResolver {
   ) {
     return this.tasksService.list(
       { creator: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -153,7 +148,7 @@ export class UsersResolver {
   ) {
     return this.assignmentsService.list(
       { recipient: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 }

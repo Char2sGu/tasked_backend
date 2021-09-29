@@ -7,7 +7,7 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Affair>({
-  name: 'crud',
+  name: 'visible',
   cond: ({ user }: { user: User }) => ({
     classroom: { memberships: { owner: user } },
   }),

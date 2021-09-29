@@ -10,7 +10,7 @@ import { ApplicationStatus } from './application-status.enum';
 
 @ObjectType()
 @Filter<JoinApplication>({
-  name: 'crud',
+  name: 'visible',
   cond: ({ user }: { user: User }) => ({
     $or: [{ owner: user }, { classroom: { creator: user } }],
   }),

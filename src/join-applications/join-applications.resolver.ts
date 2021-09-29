@@ -1,7 +1,5 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -28,9 +26,6 @@ export class JoinApplicationsResolver {
   @Inject()
   private readonly membershipsService: MembershipsService;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   @Query(() => PaginatedJoinApplications, {
     name: 'joinApplications',
   })
@@ -40,7 +35,7 @@ export class JoinApplicationsResolver {
   ) {
     return this.service.list(
       {},
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -51,7 +46,7 @@ export class JoinApplicationsResolver {
     @ReqUser() user: User,
     @Args() { id }: QueryJoinApplicationArgs,
   ) {
-    return this.service.retrieve(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: { visible: { user } } });
   }
 
   @FlushDb()
@@ -74,7 +69,7 @@ export class JoinApplicationsResolver {
     @Args() { id, data }: UpdateJoinApplicationArgs,
   ) {
     const entity = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (entity.owner != user)
@@ -96,7 +91,7 @@ export class JoinApplicationsResolver {
     @Args() { id }: RejectJoinApplicationArgs,
   ) {
     const application = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (application.status != ApplicationStatus.Pending)
@@ -114,7 +109,7 @@ export class JoinApplicationsResolver {
     @Args() { id }: AcceptJoinApplicationArgs,
   ) {
     const application = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (application.status != ApplicationStatus.Pending)

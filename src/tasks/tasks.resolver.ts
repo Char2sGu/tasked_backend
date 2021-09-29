@@ -2,8 +2,6 @@ import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -26,9 +24,6 @@ export class TasksResolver {
   @Inject()
   private readonly assignmentsService: AssignmentsService;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   @Query(() => PaginatedTasks, {
     name: 'tasks',
   })
@@ -38,7 +33,7 @@ export class TasksResolver {
   ) {
     return this.service.list(
       {},
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -46,7 +41,7 @@ export class TasksResolver {
     name: 'task',
   })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryTaskArgs) {
-    return this.service.retrieve(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: { visible: { user } } });
   }
 
   @FlushDb()
@@ -63,7 +58,7 @@ export class TasksResolver {
   })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateTaskArgs) {
     const entity = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (entity.creator != user)
@@ -78,7 +73,7 @@ export class TasksResolver {
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteTaskArgs) {
     const entity = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (entity.creator != user)
@@ -95,7 +90,7 @@ export class TasksResolver {
   ) {
     return this.assignmentsService.list(
       { task: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 }

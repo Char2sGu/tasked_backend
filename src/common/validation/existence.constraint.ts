@@ -5,8 +5,6 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-import { CRUD_FILTERS } from '../crud-filters/crud-filters.token';
-import { CrudFilters } from '../crud-filters/crud-filters.type';
 import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
 
@@ -22,9 +20,6 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
   @Inject()
   private readonly moduleRef: ModuleRef;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   async validate(
     value: unknown,
     {
@@ -37,7 +32,7 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
   ) {
     const service = this.moduleRef.get(serviceType(), { strict: false });
     return (await service.exists(conditions?.(value, user, object) ?? {}, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     }))
       ? shouldExist
       : !shouldExist;

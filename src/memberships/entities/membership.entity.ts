@@ -9,7 +9,7 @@ import { Role } from './role.enum';
 
 @ObjectType()
 @Filter<Membership>({
-  name: 'crud',
+  name: 'visible',
   cond: ({ user }: { user: User }) => ({
     classroom: { memberships: { owner: user } },
   }),

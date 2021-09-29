@@ -8,7 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Assignment>({
-  name: 'crud',
+  name: 'visible',
   cond: ({ user }: { user: User }) => ({
     $or: [
       { recipient: user },

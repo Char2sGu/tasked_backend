@@ -2,8 +2,6 @@ import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AffairsService } from 'src/affairs/affairs.service';
 import { QueryAffairsArgs } from 'src/affairs/dto/query-affairs.args';
-import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -27,9 +25,6 @@ export class ClassroomsResolver {
   @Inject()
   private readonly service: ClassroomsService;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   @Inject()
   private readonly joinApplicationsService: JoinApplicationsService;
 
@@ -51,7 +46,7 @@ export class ClassroomsResolver {
       {
         limit,
         offset,
-        filters: this.filters(user),
+        filters: { visible: { user } },
         orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
       },
     );
@@ -61,7 +56,7 @@ export class ClassroomsResolver {
     name: 'classroom',
   })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryClassroomArgs) {
-    return this.service.retrieve(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: { visible: { user } } });
   }
 
   @FlushDb()
@@ -84,7 +79,7 @@ export class ClassroomsResolver {
     @Args() { id, data }: UpdateClassroomArgs,
   ) {
     const classroom = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (user != classroom.creator)
@@ -101,7 +96,7 @@ export class ClassroomsResolver {
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteClassroomArgs) {
     const classroom = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (user != classroom.creator)
@@ -109,7 +104,7 @@ export class ClassroomsResolver {
         'Cannot delete classrooms not created by you',
       );
 
-    return this.service.destroy(id, { filters: this.filters(user) });
+    return this.service.destroy(id, { filters: { visible: { user } } });
   }
 
   @ResolveField(() => Classroom, 'joinApplications')
@@ -120,7 +115,7 @@ export class ClassroomsResolver {
   ) {
     return this.joinApplicationsService.list(
       { classroom: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -132,7 +127,7 @@ export class ClassroomsResolver {
   ) {
     return this.membershipsService.list(
       { classroom: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -144,7 +139,7 @@ export class ClassroomsResolver {
   ) {
     return this.affairsService.list(
       { classroom: entity },
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 }

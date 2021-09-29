@@ -1,7 +1,5 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { CRUD_FILTERS } from 'src/common/crud-filters/crud-filters.token';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -19,9 +17,6 @@ export class MembershipsResolver {
   @Inject()
   private readonly service: MembershipsService;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   @Query(() => PaginatedMemberships, {
     name: 'memberships',
   })
@@ -31,7 +26,7 @@ export class MembershipsResolver {
   ) {
     return this.service.list(
       {},
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -39,7 +34,7 @@ export class MembershipsResolver {
     name: 'membership',
   })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryMembershipArgs) {
-    return this.service.retrieve(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: { visible: { user } } });
   }
 
   @FlushDb()
@@ -48,7 +43,7 @@ export class MembershipsResolver {
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteMembershipArgs) {
     const targetMembership = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
       populate: ['classroom'],
     });
 
@@ -64,7 +59,7 @@ export class MembershipsResolver {
       const ownMembership = await targetMembership.classroom.memberships
         .matching({
           where: { owner: user },
-          filters: this.filters(user),
+          filters: { visible: { user } },
         })
         .then(([membership]) => membership);
 
@@ -77,7 +72,7 @@ export class MembershipsResolver {
         );
     }
 
-    return this.service.destroy(id, { filters: this.filters(user) });
+    return this.service.destroy(id, { filters: { visible: { user } } });
   }
 
   @ResolveField(() => Membership, 'owner')

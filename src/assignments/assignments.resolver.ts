@@ -1,11 +1,9 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { CrudFilters } from 'src/common/crud-filters/crud-filters.type';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
-import { CRUD_FILTERS } from '../common/crud-filters/crud-filters.token';
 import { ReqUser } from '../common/req-user.decorator';
 import { AssignmentsService } from './assignments.service';
 import { CompleteAssignmentArgs } from './dto/complete-assignment.args';
@@ -22,9 +20,6 @@ export class AssignmentsResolver {
   @Inject()
   service: AssignmentsService;
 
-  @Inject(CRUD_FILTERS)
-  private readonly filters: CrudFilters;
-
   @Query(() => PaginatedAssignments, {
     name: 'assignments',
   })
@@ -34,7 +29,7 @@ export class AssignmentsResolver {
   ) {
     return this.service.list(
       {},
-      { limit, offset, filters: this.filters(user) },
+      { limit, offset, filters: { visible: { user } } },
     );
   }
 
@@ -42,7 +37,7 @@ export class AssignmentsResolver {
     name: 'assignment',
   })
   async queryOne(@ReqUser() user: User, @Args() { id }: QueryAssignmentArgs) {
-    return this.service.retrieve(id, { filters: this.filters(user) });
+    return this.service.retrieve(id, { filters: { visible: { user } } });
   }
 
   @FlushDb()
@@ -65,7 +60,7 @@ export class AssignmentsResolver {
     @Args() { id, data }: UpdateAssignmentArgs,
   ) {
     const assignment = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
       populate: ['task'],
     });
 
@@ -83,7 +78,7 @@ export class AssignmentsResolver {
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAssignmentArgs) {
     const assignment = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
       populate: ['task'],
     });
 
@@ -104,7 +99,7 @@ export class AssignmentsResolver {
     @Args() { id }: CompleteAssignmentArgs,
   ) {
     const assignment = await this.service.retrieve(id, {
-      filters: this.filters(user),
+      filters: { visible: { user } },
     });
 
     if (user != assignment.recipient)

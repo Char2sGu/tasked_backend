@@ -24,7 +24,7 @@ import { User } from 'src/users/entities/user.entity';
   default: true,
 })
 @Filter<Classroom>({
-  name: 'crud',
+  name: 'visible',
   cond: ({ user }: { user: User }) => ({
     memberships: { owner: user },
   }),

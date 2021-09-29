@@ -21,7 +21,7 @@
       ") {",
       "  return this.$5.list(",
       "    { $6 },",
-      "    { limit, offset, filters: this.filters(user) },",
+      "    { limit, offset, filters: { visible: { user } } },",
       "  );",
       "}"
     ]
