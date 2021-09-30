@@ -3,7 +3,7 @@ import { Allow } from 'class-validator';
 import { Field } from 'src/common/field.decorator';
 
 @ArgsType()
-export class ObtainTokenArgs {
+export class QueryTokenArgs {
   @Field(() => String)
   @Allow()
   username: string;
