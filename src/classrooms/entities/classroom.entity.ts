@@ -6,7 +6,7 @@ import {
   OneToMany,
   Property,
 } from '@mikro-orm/core';
-import { ObjectType } from '@nestjs/graphql';
+import { Int, ObjectType } from '@nestjs/graphql';
 import { PaginatedAffairs } from 'src/affairs/dto/paginated-affairs.dto';
 import { Affair } from 'src/affairs/entities/affair.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
@@ -52,6 +52,7 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (membership) => membership.classroom,
+    eager: true,
   })
   memberships = new Collection<Membership>(this);
 
@@ -67,4 +68,12 @@ export class Classroom extends BaseEntity<Classroom> {
     nullable: true,
   })
   deletedAt?: Date;
+
+  @Field(() => Int)
+  @Property({
+    persist: false,
+  })
+  get memberCount() {
+    return this.memberships.length;
+  }
 }
