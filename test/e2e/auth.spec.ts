@@ -3,7 +3,6 @@ import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { GraphQLClient } from 'graphql-request';
-import { ObtainTokenResult } from 'src/auth/dto/obtain-token-result.dto';
 import { User } from 'src/users/entities/user.entity';
 
 import { prepareE2E } from './utils/prepare-e2e';
@@ -31,13 +30,12 @@ describe('Auth', () => {
     await app.close();
   });
 
-  describe('obtainToken', () => {
-    let result: ObtainTokenResult;
+  describe('token', () => {
+    let result: string;
 
     it('should return the token with legal arguments', async () => {
       await request(`(username: "username1", password: "password1")`);
-      expect(typeof result.token == 'string').toBe(true);
-      expect(result.user.id).toBe('1');
+      expect(typeof result == 'string').toBe(true);
     });
 
     it.each`
@@ -53,10 +51,10 @@ describe('Auth', () => {
     );
 
     async function request(args: string) {
-      const result_ = await client.request<{ obtainToken: ObtainTokenResult }>(
-        `mutation { obtainToken${args} { token, user { id } } }`,
+      const result_ = await client.request<{ token: string }>(
+        `query { token${args} }`,
       );
-      result = result_.obtainToken;
+      result = result_.token;
     }
   });
 });

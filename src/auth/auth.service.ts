@@ -5,7 +5,6 @@ import { IncomingHttpHeaders } from 'node:http';
 import { User } from 'src/users/entities/user.entity';
 
 import { UsersService } from '../users/users.service';
-import { ObtainTokenResult } from './dto/obtain-token-result.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,10 +14,7 @@ export class AuthService {
   @Inject()
   private readonly jwtService: JwtService;
 
-  async obtainJwt(
-    username: string,
-    password: string,
-  ): Promise<ObtainTokenResult> {
+  async obtainJwt(username: string, password: string) {
     try {
       const user = await this.usersService.retrieve({ username });
       const isValid = await bcryptjs.compare(password, user.password);
