@@ -60,9 +60,9 @@ export class UsersResolver {
   }
 
   @Query(() => User, {
-    name: 'current',
+    name: 'me',
   })
-  async queryCurrent(@ReqUser() user: User) {
+  async queryMe(@ReqUser() user: User) {
     return user;
   }
 

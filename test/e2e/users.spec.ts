@@ -106,7 +106,7 @@ describe('Users', () => {
     }
   });
 
-  describe('current', () => {
+  describe('me', () => {
     let user: User;
 
     it('should return the current user', async () => {
@@ -120,10 +120,8 @@ describe('Users', () => {
     });
 
     async function request() {
-      const result = await client.request<{ current: User }>(
-        `query { current { id } }`,
-      );
-      user = result.current;
+      const result = await client.request<{ me: User }>(`query { me { id } }`);
+      user = result.me;
     }
   });
 
