@@ -67,6 +67,13 @@ export class ClassroomsResolver {
     @ReqUser() user: User,
     @Args() { data }: CreateClassroomArgs,
   ) {
+    const QUOTA = 20;
+    const createdCount = await this.service.count({ creator: user });
+    if (createdCount >= QUOTA)
+      throw new ForbiddenException(
+        `Cannot create more than ${QUOTA} classrooms`,
+      );
+
     return this.service.create({ ...data, creator: user });
   }
 
