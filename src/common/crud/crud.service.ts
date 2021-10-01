@@ -1,6 +1,7 @@
 import {
   EntityData,
   FilterQuery,
+  FindOneOptions as FindOneOptionsBase,
   FindOneOrFailOptions,
   FindOptions,
 } from '@mikro-orm/core';
@@ -37,19 +38,21 @@ export abstract class CrudService<Entity> {
 
   async retrieve(
     where: FilterQuery<Entity> | Entity,
-    options?: FindOneOrFailOptions<Entity>,
+    options?: FindOneOptions<Entity>,
   ) {
     if (where instanceof BaseEntity) return where as Entity;
-    return this.repo.findOneOrFail(where, {
-      ...options,
-      failHandler: options?.failHandler ?? (() => new NotFoundException()),
-    });
+    return options?.failHandler == false
+      ? this.repo.findOne(where, { ...options })
+      : this.repo.findOneOrFail(where, {
+          ...options,
+          failHandler: options?.failHandler ?? (() => new NotFoundException()),
+        });
   }
 
   async update(
     where: FilterQuery<Entity> | Entity,
     data: EntityData<Entity>,
-    options?: FindOneOrFailOptions<Entity>,
+    options?: FindOneOptions<Entity>,
   ) {
     const entity = await this.retrieve(where, options);
     this.repo.assign(entity, data);
@@ -58,23 +61,14 @@ export abstract class CrudService<Entity> {
 
   async destroy(
     where: FilterQuery<Entity> | Entity,
-    options?: FindOneOrFailOptions<Entity>,
+    options?: FindOneOptions<Entity>,
   ) {
     const entity = await this.retrieve(where, options);
     this.repo.remove(entity);
     return entity;
   }
+}
 
-  async exists(
-    where: FilterQuery<Entity> | Entity,
-    options?: FindOneOrFailOptions<Entity>,
-  ) {
-    try {
-      await this.retrieve(where, options);
-      return true;
-    } catch (error) {
-      if (error instanceof NotFoundException) return false;
-      throw error;
-    }
-  }
+interface FindOneOptions<Entity> extends FindOneOptionsBase<Entity> {
+  failHandler?: FindOneOrFailOptions<Entity>['failHandler'] | false;
 }
