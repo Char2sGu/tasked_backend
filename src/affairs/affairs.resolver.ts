@@ -78,7 +78,7 @@ export class AffairsResolver {
         'Cannot update affairs of classrooms not created by you',
       );
 
-    return this.service.update(id, data);
+    return this.service.update(affair, data);
   }
 
   @FlushDb()
@@ -96,7 +96,7 @@ export class AffairsResolver {
         'Cannot delete affairs of classrooms not created by you',
       );
 
-    return this.service.destroy(id);
+    return this.service.destroy(affair);
   }
 
   @ResolveField(() => Affair, 'classroom')

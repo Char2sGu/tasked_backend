@@ -68,18 +68,18 @@ export class JoinApplicationsResolver {
     @ReqUser() user: User,
     @Args() { id, data }: UpdateJoinApplicationArgs,
   ) {
-    const entity = await this.service.retrieve(id, {
+    const application = await this.service.retrieve(id, {
       filters: { visible: { user } },
     });
 
-    if (entity.owner != user)
+    if (application.owner != user)
       throw new ForbiddenException(
         'Cannot update applications created by others',
       );
-    if (entity.status != ApplicationStatus.Pending)
+    if (application.status != ApplicationStatus.Pending)
       throw new ForbiddenException('Cannot update resulted applications');
 
-    return this.service.update(id, data);
+    return this.service.update(application, data);
   }
 
   @FlushDb()
@@ -97,7 +97,9 @@ export class JoinApplicationsResolver {
     if (application.status != ApplicationStatus.Pending)
       throw new ForbiddenException('Cannot reject resulted applications');
 
-    return this.service.update(id, { status: ApplicationStatus.Rejected });
+    return this.service.update(application, {
+      status: ApplicationStatus.Rejected,
+    });
   }
 
   @FlushDb()
@@ -115,7 +117,10 @@ export class JoinApplicationsResolver {
     if (application.status != ApplicationStatus.Pending)
       throw new ForbiddenException('Cannot accept resulted applications');
 
-    await this.service.update(id, { status: ApplicationStatus.Accepted });
+    await this.service.update(application, {
+      status: ApplicationStatus.Accepted,
+    });
+
     const membership = await this.membershipsService.create({
       owner: user,
       classroom: application.classroom,

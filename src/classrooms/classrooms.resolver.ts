@@ -87,7 +87,7 @@ export class ClassroomsResolver {
         'Cannot update classrooms not created by you',
       );
 
-    return this.service.update(id, data);
+    return this.service.update(classroom, data);
   }
 
   @FlushDb()
@@ -104,7 +104,7 @@ export class ClassroomsResolver {
         'Cannot delete classrooms not created by you',
       );
 
-    return this.service.destroy(id, { filters: { visible: { user } } });
+    return this.service.destroy(classroom);
   }
 
   @ResolveField(() => Classroom, 'joinApplications')

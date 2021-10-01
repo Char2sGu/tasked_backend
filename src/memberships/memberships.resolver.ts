@@ -72,7 +72,7 @@ export class MembershipsResolver {
         );
     }
 
-    return this.service.destroy(id, { filters: { visible: { user } } });
+    return this.service.destroy(targetMembership);
   }
 
   @ResolveField(() => Membership, 'owner')

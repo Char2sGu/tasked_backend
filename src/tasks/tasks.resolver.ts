@@ -57,14 +57,14 @@ export class TasksResolver {
     name: 'updateTask',
   })
   async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateTaskArgs) {
-    const entity = await this.service.retrieve(id, {
+    const task = await this.service.retrieve(id, {
       filters: { visible: { user } },
     });
 
-    if (entity.creator != user)
+    if (task.creator != user)
       throw new ForbiddenException('Cannot update tasks not created by you');
 
-    return this.service.update(id, data);
+    return this.service.update(task, data);
   }
 
   @FlushDb()
@@ -72,14 +72,14 @@ export class TasksResolver {
     name: 'deleteTask',
   })
   async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteTaskArgs) {
-    const entity = await this.service.retrieve(id, {
+    const task = await this.service.retrieve(id, {
       filters: { visible: { user } },
     });
 
-    if (entity.creator != user)
+    if (task.creator != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');
 
-    return this.service.destroy(id);
+    return this.service.destroy(task);
   }
 
   @ResolveField(() => Task, 'assignments')

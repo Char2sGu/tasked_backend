@@ -69,7 +69,7 @@ export class AssignmentsResolver {
         'Cannot update assignments not created by you',
       );
 
-    return this.service.update(id, data);
+    return this.service.update(assignment, data);
   }
 
   @FlushDb()
@@ -87,7 +87,7 @@ export class AssignmentsResolver {
         'Cannot delete assignments not created by you',
       );
 
-    return this.service.destroy(id);
+    return this.service.destroy(assignment);
   }
 
   @FlushDb()
@@ -107,7 +107,7 @@ export class AssignmentsResolver {
         'Cannot complete assignments not assigned to you',
       );
 
-    return this.service.update(id, { isCompleted: true });
+    return this.service.update(assignment, { isCompleted: true });
   }
 
   @ResolveField(() => Assignment, 'recipient')
