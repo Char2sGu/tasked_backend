@@ -1,4 +1,5 @@
 import {
+  CountOptions,
   EntityData,
   FilterQuery,
   FindOneOptions as FindOneOptionsBase,
@@ -26,7 +27,8 @@ export abstract class CrudService<Entity> {
   protected readonly repo: EntityRepository<Entity>;
 
   async list(where: FilterQuery<Entity>, options?: FindOptions<Entity>) {
-    const [results, total] = await this.repo.findAndCount(where, options);
+    const results = await this.repo.find(where, options);
+    const total = await this.count(where, options);
     return { total, results };
   }
 
@@ -66,6 +68,10 @@ export abstract class CrudService<Entity> {
     const entity = await this.retrieve(where, options);
     this.repo.remove(entity);
     return entity;
+  }
+
+  async count(where?: FilterQuery<Entity>, options?: CountOptions<Entity>) {
+    return this.repo.count(where, options);
   }
 }
 
