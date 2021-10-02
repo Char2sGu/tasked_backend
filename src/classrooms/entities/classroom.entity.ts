@@ -38,7 +38,6 @@ export class Classroom extends BaseEntity<Classroom> {
   })
   description?: string;
 
-  @Field(() => User)
   @ManyToOne({
     entity: () => User,
   })

@@ -117,6 +117,11 @@ export class ClassroomsResolver {
     return this.service.destroy(classroom);
   }
 
+  @ResolveField(() => Classroom, 'creator', () => User)
+  resolveCreator(@Parent() entity: Classroom) {
+    return entity.creator.init();
+  }
+
   @ResolveField(
     () => Classroom,
     'joinApplications',
