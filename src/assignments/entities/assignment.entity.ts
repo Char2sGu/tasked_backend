@@ -19,19 +19,16 @@ import { User } from 'src/users/entities/user.entity';
 })
 @Entity()
 export class Assignment extends BaseEntity<Assignment> {
-  @Field(() => User)
   @ManyToOne({
     entity: () => User,
   })
   recipient: User;
 
-  @Field(() => Classroom)
   @ManyToOne({
     entity: () => Classroom,
   })
   classroom: Classroom;
 
-  @Field(() => Task)
   @ManyToOne({
     entity: () => Task,
   })

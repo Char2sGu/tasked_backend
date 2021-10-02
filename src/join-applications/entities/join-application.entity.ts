@@ -17,13 +17,11 @@ import { ApplicationStatus } from './application-status.enum';
 })
 @Entity()
 export class JoinApplication extends BaseEntity<JoinApplication> {
-  @Field(() => User)
   @ManyToOne({
     entity: () => User,
   })
   owner: User;
 
-  @Field(() => Classroom)
   @ManyToOne({
     entity: () => Classroom,
   })

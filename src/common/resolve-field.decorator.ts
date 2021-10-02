@@ -18,7 +18,7 @@ export const ResolveField =
   <Entity, Field extends Extract<NonFunctionPropertyNames<Entity>, string>>(
     entityType: () => Type<Entity>,
     field: Field,
-    returnType?: ReturnTypeFunc,
+    returnType: ReturnTypeFunc,
     options?: ResolveFieldOptions,
   ) =>
   (
@@ -27,7 +27,7 @@ export const ResolveField =
     descriptor: PropertyDescriptor,
   ) =>
     ResolveFieldBase(field, returnType, options)(
-      propertyKey,
+      prototype,
       propertyKey,
       descriptor,
     );

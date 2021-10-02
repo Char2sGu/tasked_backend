@@ -1,7 +1,9 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
+import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { ReqUser } from '../common/req-user.decorator';
@@ -110,17 +112,17 @@ export class AssignmentsResolver {
     return this.service.update(assignment, { isCompleted: true });
   }
 
-  @ResolveField(() => Assignment, 'recipient')
+  @ResolveField(() => Assignment, 'recipient', () => User)
   resolveRecipient(@Parent() entity: Assignment) {
     return entity.recipient.init();
   }
 
-  @ResolveField(() => Assignment, 'classroom')
+  @ResolveField(() => Assignment, 'classroom', () => Classroom)
   resolveClassroom(@Parent() entity: Assignment) {
     return entity.classroom.init();
   }
 
-  @ResolveField(() => Assignment, 'task')
+  @ResolveField(() => Assignment, 'task', () => Task)
   resolveTask(@Parent() entity: Assignment) {
     return entity.task.init();
   }

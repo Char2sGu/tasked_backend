@@ -2,6 +2,7 @@ import { QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -105,7 +106,7 @@ export class AffairsResolver {
     return this.service.destroy(affair);
   }
 
-  @ResolveField(() => Affair, 'classroom')
+  @ResolveField(() => Affair, 'classroom', () => Classroom)
   async resolveClassroom(@Parent() entity: Affair) {
     return entity.classroom.init();
   }

@@ -14,7 +14,6 @@ import { User } from 'src/users/entities/user.entity';
 })
 @Entity()
 export class Affair extends BaseEntity<Affair> {
-  @Field(() => Classroom)
   @ManyToOne({
     entity: () => Classroom,
   })

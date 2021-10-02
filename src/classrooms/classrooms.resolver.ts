@@ -1,12 +1,15 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AffairsService } from 'src/affairs/affairs.service';
+import { PaginatedAffairs } from 'src/affairs/dto/paginated-affairs.dto';
 import { QueryAffairsArgs } from 'src/affairs/dto/query-affairs.args';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
+import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
 import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
 import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
+import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
@@ -114,7 +117,11 @@ export class ClassroomsResolver {
     return this.service.destroy(classroom);
   }
 
-  @ResolveField(() => Classroom, 'joinApplications')
+  @ResolveField(
+    () => Classroom,
+    'joinApplications',
+    () => PaginatedJoinApplications,
+  )
   async resolveJoinApplications(
     @ReqUser() user: User,
     @Parent() entity: Classroom,
@@ -126,7 +133,7 @@ export class ClassroomsResolver {
     );
   }
 
-  @ResolveField(() => Classroom, 'memberships')
+  @ResolveField(() => Classroom, 'memberships', () => PaginatedMemberships)
   async resolveMemberships(
     @ReqUser() user: User,
     @Parent() entity: Classroom,
@@ -138,7 +145,7 @@ export class ClassroomsResolver {
     );
   }
 
-  @ResolveField(() => Classroom, 'affairs')
+  @ResolveField(() => Classroom, 'affairs', () => PaginatedAffairs)
   async resolveAffairs(
     @ReqUser() user: User,
     @Parent() entity: Classroom,

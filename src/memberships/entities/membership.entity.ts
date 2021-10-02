@@ -16,13 +16,11 @@ import { Role } from './role.enum';
 })
 @Entity()
 export class Membership extends BaseEntity<Membership> {
-  @Field(() => User)
   @ManyToOne({
     entity: () => User,
   })
   owner: User;
 
-  @Field(() => Classroom)
   @ManyToOne({
     entity: () => Classroom,
   })

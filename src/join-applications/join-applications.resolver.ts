@@ -1,5 +1,6 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -130,12 +131,12 @@ export class JoinApplicationsResolver {
     return { application, membership };
   }
 
-  @ResolveField(() => JoinApplication, 'owner')
+  @ResolveField(() => JoinApplication, 'owner', () => User)
   resolveOwner(@Parent() entity: JoinApplication) {
     return entity.owner.init();
   }
 
-  @ResolveField(() => JoinApplication, 'classroom')
+  @ResolveField(() => JoinApplication, 'classroom', () => Classroom)
   resolveClassroom(@Parent() entity: JoinApplication) {
     return entity.classroom.init();
   }
