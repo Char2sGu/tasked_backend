@@ -3,7 +3,7 @@
     "scope": "javascript,typescript",
     "prefix": "resolveo",
     "body": [
-      "@ResolveField(() => $1, '$2')",
+      "@ResolveField(() => $1, '$2', () => $4)",
       "resolve$3(@Parent() entity: $1) {",
       "  return entity.$2.init();",
       "}"
