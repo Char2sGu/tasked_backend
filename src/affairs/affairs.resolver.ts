@@ -29,10 +29,10 @@ export class AffairsResolver {
   })
   async queryMany(
     @ReqUser() user: User,
-    @Args() { limit, offset }: QueryAffairsArgs,
+    @Args() { limit, offset, isActivated }: QueryAffairsArgs,
   ) {
     return this.service.list(
-      {},
+      { ...(isActivated != undefined ? { isActivated } : null) },
       {
         limit,
         offset,

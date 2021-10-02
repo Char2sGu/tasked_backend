@@ -142,10 +142,13 @@ export class ClassroomsResolver {
   async resolveAffairs(
     @ReqUser() user: User,
     @Parent() entity: Classroom,
-    @Args() { limit, offset }: QueryAffairsArgs,
+    @Args() { limit, offset, isActivated }: QueryAffairsArgs,
   ) {
     return this.affairsService.list(
-      { classroom: entity },
+      {
+        classroom: entity,
+        ...(isActivated != undefined ? { isActivated } : null),
+      },
       { limit, offset, filters: { visible: { user } } },
     );
   }
