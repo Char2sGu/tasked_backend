@@ -32,6 +32,12 @@ export class Classroom extends BaseEntity<Classroom> {
   @Property()
   name: string;
 
+  @Field(() => String, { nullable: true })
+  @Property({
+    nullable: true,
+  })
+  description?: string;
+
   @Field(() => User)
   @ManyToOne({
     entity: () => User,
