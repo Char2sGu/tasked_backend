@@ -1,3 +1,4 @@
+import { QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
@@ -32,7 +33,12 @@ export class AffairsResolver {
   ) {
     return this.service.list(
       {},
-      { limit, offset, filters: { visible: { user } } },
+      {
+        limit,
+        offset,
+        filters: { visible: { user } },
+        orderBy: { date: QueryOrder.DESC },
+      },
     );
   }
 
