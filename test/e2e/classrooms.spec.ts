@@ -30,6 +30,10 @@ describe.only('Classrooms', () => {
           username: 'username',
           password: 'password',
         }),
+        em.create(User, {
+          username: 'username2',
+          password: 'password2',
+        }),
       ])
       .flush();
 
@@ -239,7 +243,7 @@ describe.only('Classrooms', () => {
     await app.close();
   });
 
-  function create(creator: unknown) {
+  function create(creator: number) {
     return em.create(Classroom, {
       name: 'name',
       creator,

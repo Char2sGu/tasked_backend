@@ -25,7 +25,11 @@ describe('Memberships', () => {
 
   beforeEach(async () => {
     await em
-      .persist(em.create(User, { username: 'username', password: 'password' }))
+      .persist([
+        em.create(User, { username: 'username', password: 'password' }),
+        em.create(User, { username: 'username2', password: 'password' }),
+        em.create(User, { username: 'username3', password: 'password' }),
+      ])
       .flush();
 
     const token = (
