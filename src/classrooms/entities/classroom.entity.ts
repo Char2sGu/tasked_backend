@@ -6,7 +6,7 @@ import {
   OneToMany,
   Property,
 } from '@mikro-orm/core';
-import { Int, ObjectType } from '@nestjs/graphql';
+import { ObjectType } from '@nestjs/graphql';
 import { Affair } from 'src/affairs/entities/affair.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/field.decorator';
@@ -66,14 +66,4 @@ export class Classroom extends BaseEntity<Classroom> {
     nullable: true,
   })
   deletedAt?: Date;
-
-  @Field(() => Int)
-  @Property({
-    persist: false,
-  })
-  get memberCount() {
-    return this.memberships
-      .init()
-      .then(() => this.memberships.count() || this.memberships.loadCount());
-  }
 }
