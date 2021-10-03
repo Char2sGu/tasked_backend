@@ -52,7 +52,6 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (membership) => membership.classroom,
-    eager: true,
   })
   memberships = new Collection<Membership>(this);
 
@@ -73,6 +72,8 @@ export class Classroom extends BaseEntity<Classroom> {
     persist: false,
   })
   get memberCount() {
-    return this.memberships.length;
+    return this.memberships
+      .init()
+      .then(() => this.memberships.count() || this.memberships.loadCount());
   }
 }
