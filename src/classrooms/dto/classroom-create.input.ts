@@ -10,6 +10,6 @@ export class ClassroomCreateInput extends ValidationContextAttached {
   name: string;
 
   @Field(() => String, { nullable: true })
-  @MaxLength(60)
+  @MaxLength(100)
   description?: string;
 }
