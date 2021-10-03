@@ -38,9 +38,9 @@ export abstract class CrudService<Entity> {
     return entity;
   }
 
-  async retrieve(
+  async retrieve<Population extends string = never>(
     where: FilterQuery<Entity> | Entity,
-    options?: FindOneOptions<Entity>,
+    options?: FindOneOptions<Entity, Population>,
   ) {
     if (where instanceof BaseEntity) return where as Entity;
     return options?.failHandler == false
@@ -51,19 +51,19 @@ export abstract class CrudService<Entity> {
         });
   }
 
-  async update(
+  async update<Population extends string = never>(
     where: FilterQuery<Entity> | Entity,
     data: EntityData<Entity>,
-    options?: FindOneOptions<Entity>,
+    options?: FindOneOptions<Entity, Population>,
   ) {
     const entity = await this.retrieve(where, options);
     this.repo.assign(entity, data);
     return entity;
   }
 
-  async destroy(
+  async destroy<Population extends string = never>(
     where: FilterQuery<Entity> | Entity,
-    options?: FindOneOptions<Entity>,
+    options?: FindOneOptions<Entity, Population>,
   ) {
     const entity = await this.retrieve(where, options);
     this.repo.remove(entity);
@@ -75,6 +75,7 @@ export abstract class CrudService<Entity> {
   }
 }
 
-interface FindOneOptions<Entity> extends FindOneOptionsBase<Entity> {
+interface FindOneOptions<Entity, Population extends string>
+  extends FindOneOptionsBase<Entity, Population> {
   failHandler?: FindOneOrFailOptions<Entity>['failHandler'] | false;
 }

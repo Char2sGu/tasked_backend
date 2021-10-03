@@ -1,4 +1,4 @@
-import { NonFunctionPropertyNames } from '@mikro-orm/core/typings';
+import { EntityField } from '@mikro-orm/core/';
 import { Type } from '@nestjs/common';
 import {
   ResolveField as ResolveFieldBase,
@@ -15,7 +15,7 @@ import {
  * @returns
  */
 export const ResolveField =
-  <Entity, Field extends Extract<NonFunctionPropertyNames<Entity>, string>>(
+  <Entity, Field extends Extract<EntityField<Entity>, string>>(
     entityType: () => Type<Entity>,
     field: Field,
     returnType: ReturnTypeFunc,
