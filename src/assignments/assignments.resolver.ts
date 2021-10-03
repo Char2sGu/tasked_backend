@@ -46,11 +46,8 @@ export class AssignmentsResolver {
   @Mutation(() => Assignment, {
     name: 'createAssignment',
   })
-  async createOne(
-    @ReqUser() user: User,
-    @Args() { data }: CreateAssignmentArgs,
-  ) {
-    return this.service.create({ ...data, creator: user });
+  async createOne(@Args() { data }: CreateAssignmentArgs) {
+    return this.service.create({ ...data });
   }
 
   @FlushDb()
