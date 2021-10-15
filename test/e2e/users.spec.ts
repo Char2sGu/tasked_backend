@@ -1,5 +1,4 @@
 import { EntityRepository } from '@mikro-orm/core';
-import { NonFunctionPropertyNames } from '@mikro-orm/core/typings';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
@@ -41,7 +40,7 @@ describe('Users', () => {
   });
 
   describe('user', () => {
-    const fields: NonFunctionPropertyNames<User>[] = [
+    const fields: (keyof User)[] = [
       'id',
       'username',
       'nickname',
