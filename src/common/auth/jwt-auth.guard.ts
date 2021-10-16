@@ -21,10 +21,10 @@ import { SKIP_AUTH } from './skip-auth.symbol';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   @Inject()
-  private readonly authService: AuthService;
+  private auth: AuthService;
 
   @Inject()
-  private readonly reflector: Reflector;
+  private reflector: Reflector;
 
   async canActivate(context: ExecutionContext) {
     const skipAuth = this.reflector.get<true | undefined>(
@@ -34,9 +34,9 @@ export class JwtAuthGuard implements CanActivate {
 
     if (!skipAuth) {
       const request = this.getRequest(context);
-      const token = this.authService.getJwtFromHeaders(request.headers);
+      const token = this.auth.getJwtFromHeaders(request.headers);
       if (!token) throw new UnauthorizedException();
-      const user = await this.authService.verifyJwt(token);
+      const user = await this.auth.verifyJwt(token);
       if (!user) throw new UnauthorizedException();
       request.user = user;
     }

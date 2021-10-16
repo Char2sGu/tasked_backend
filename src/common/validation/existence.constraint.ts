@@ -18,7 +18,7 @@ import { ValidationArguments } from './validation-arguments.interface';
 @Injectable()
 export class ExistenceConstraint implements ValidatorConstraintInterface {
   @Inject()
-  private readonly moduleRef: ModuleRef;
+  private moduleRef: ModuleRef;
 
   async validate(
     value: unknown,

@@ -9,7 +9,7 @@ import { QueryTokenArgs } from './dto/query-token.args';
 @Resolver()
 export class AuthResolver {
   @Inject()
-  private readonly service: AuthService;
+  private service: AuthService;
 
   @SkipAuth()
   @Mutation(() => AuthResult, {

@@ -15,7 +15,7 @@ import { JoinApplication } from './entities/join-application.entity';
 @Injectable()
 export class JoinApplicationsService extends CrudService.of(JoinApplication) {
   @Inject()
-  private readonly memberships: MembershipsService;
+  private memberships: MembershipsService;
 
   async queryMany(user: User, { limit, offset }: QueryJoinApplicationsArgs) {
     return this.list({}, { limit, offset, filters: { visible: { user } } });

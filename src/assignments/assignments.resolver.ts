@@ -20,7 +20,7 @@ import { Assignment } from './entities/assignment.entity';
 @Resolver(() => Assignment)
 export class AssignmentsResolver {
   @Inject()
-  service: AssignmentsService;
+  private service: AssignmentsService;
 
   @Query(() => PaginatedAssignments, {
     name: 'assignments',

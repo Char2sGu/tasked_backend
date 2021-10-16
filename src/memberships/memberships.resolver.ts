@@ -16,7 +16,7 @@ import { MembershipsService } from './memberships.service';
 @Resolver(() => Membership)
 export class MembershipsResolver {
   @Inject()
-  private readonly service: MembershipsService;
+  private service: MembershipsService;
 
   @Query(() => PaginatedMemberships, {
     name: 'memberships',

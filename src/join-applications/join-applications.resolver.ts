@@ -20,7 +20,7 @@ import { JoinApplicationsService } from './join-applications.service';
 @Resolver(() => JoinApplication)
 export class JoinApplicationsResolver {
   @Inject()
-  private readonly service: JoinApplicationsService;
+  private service: JoinApplicationsService;
 
   @Query(() => PaginatedJoinApplications, {
     name: 'joinApplications',

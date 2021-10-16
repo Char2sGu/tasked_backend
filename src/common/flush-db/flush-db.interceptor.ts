@@ -18,10 +18,10 @@ import { FLUSH_DB } from './flush-db.symbol';
 @Injectable()
 export class FlushDbInterceptor implements NestInterceptor {
   @Inject()
-  private readonly em: EntityManager;
+  private em: EntityManager;
 
   @Inject()
-  private readonly reflector: Reflector;
+  private reflector: Reflector;
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(

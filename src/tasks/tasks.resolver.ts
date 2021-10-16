@@ -20,10 +20,10 @@ import { TasksService } from './tasks.service';
 @Resolver(() => Task)
 export class TasksResolver {
   @Inject()
-  private readonly service: TasksService;
+  private service: TasksService;
 
   @Inject()
-  private readonly assignmentsService: AssignmentsService;
+  private assignments: AssignmentsService;
 
   @Query(() => PaginatedTasks, {
     name: 'tasks',
@@ -74,7 +74,7 @@ export class TasksResolver {
     @Parent() entity: Task,
     @Args() { limit, offset, isCompleted, isPublic }: QueryAssignmentsArgs,
   ) {
-    return this.assignmentsService.list(
+    return this.assignments.list(
       { task: entity, isCompleted, isPublic },
       { limit, offset, filters: { visible: { user } } },
     );

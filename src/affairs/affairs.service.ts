@@ -14,7 +14,7 @@ import { Affair } from './entities/affair.entity';
 @Injectable()
 export class AffairsService extends CrudService.of(Affair) {
   @Inject()
-  classrooms: ClassroomsService;
+  private classrooms: ClassroomsService;
 
   async queryMany(
     user: User,

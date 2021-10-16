@@ -30,19 +30,19 @@ import { UsersService } from './users.service';
 @Resolver(() => User)
 export class UsersResolver {
   @Inject()
-  private readonly service: UsersService;
+  private service: UsersService;
 
   @Inject()
-  private readonly classroomsService: ClassroomsService;
+  private classrooms: ClassroomsService;
 
   @Inject()
-  private readonly membershipsService: MembershipsService;
+  private memberships: MembershipsService;
 
   @Inject()
-  private readonly tasksService: TasksService;
+  private tasks: TasksService;
 
   @Inject()
-  private readonly assignmentsService: AssignmentsService;
+  private assignments: AssignmentsService;
 
   @Query(() => PaginatedUsers, {
     name: 'users',
@@ -88,7 +88,7 @@ export class UsersResolver {
     @Parent() entity: User,
     @Args() { limit, offset }: QueryClassroomsArgs,
   ) {
-    return this.classroomsService.list(
+    return this.classrooms.list(
       { creator: entity },
       { limit, offset, filters: { visible: { user } } },
     );
@@ -100,7 +100,7 @@ export class UsersResolver {
     @Parent() entity: User,
     @Args() { limit, offset }: QueryJoinApplicationsArgs,
   ) {
-    return this.membershipsService.list(
+    return this.memberships.list(
       { owner: entity },
       { limit, offset, filters: { visible: { user } } },
     );
@@ -112,7 +112,7 @@ export class UsersResolver {
     @Parent() entity: User,
     @Args() { limit, offset }: QueryMembershipsArgs,
   ) {
-    return this.membershipsService.list(
+    return this.memberships.list(
       { owner: entity },
       { limit, offset, filters: { visible: { user } } },
     );
@@ -124,7 +124,7 @@ export class UsersResolver {
     @Parent() entity: User,
     @Args() { limit, offset }: QueryTasksArgs,
   ) {
-    return this.tasksService.list(
+    return this.tasks.list(
       { creator: entity },
       { limit, offset, filters: { visible: { user } } },
     );
@@ -136,7 +136,7 @@ export class UsersResolver {
     @Parent() entity: User,
     @Args() { limit, offset }: QueryAssignmentsArgs,
   ) {
-    return this.assignmentsService.list(
+    return this.assignments.list(
       { recipient: entity },
       { limit, offset, filters: { visible: { user } } },
     );

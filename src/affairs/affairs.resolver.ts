@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
@@ -19,10 +18,7 @@ import { Affair } from './entities/affair.entity';
 @Resolver(() => Affair)
 export class AffairsResolver {
   @Inject()
-  service: AffairsService;
-
-  @Inject()
-  classroomsService: ClassroomsService;
+  private service: AffairsService;
 
   @Query(() => PaginatedAffairs, {
     name: 'affairs',

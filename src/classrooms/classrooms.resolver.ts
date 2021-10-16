@@ -29,19 +29,19 @@ import { Classroom } from './entities/classroom.entity';
 @Resolver(() => Classroom)
 export class ClassroomsResolver {
   @Inject()
-  private readonly service: ClassroomsService;
+  private service: ClassroomsService;
 
   @Inject()
-  private readonly joinApplicationsService: JoinApplicationsService;
+  private joinApplications: JoinApplicationsService;
 
   @Inject()
-  private readonly membershipsService: MembershipsService;
+  private memberships: MembershipsService;
 
   @Inject()
-  private readonly affairsService: AffairsService;
+  private affairs: AffairsService;
 
   @Inject()
-  assignmentsService: AssignmentsService;
+  private assignments: AssignmentsService;
 
   @Query(() => PaginatedClassrooms, {
     name: 'classrooms',
@@ -96,7 +96,7 @@ export class ClassroomsResolver {
     @Parent() entity: Classroom,
     @Args() { limit, offset }: QueryJoinApplicationsArgs,
   ) {
-    return this.joinApplicationsService.list(
+    return this.joinApplications.list(
       { classroom: entity },
       { limit, offset, filters: { visible: { user } } },
     );
@@ -108,7 +108,7 @@ export class ClassroomsResolver {
     @Parent() entity: Classroom,
     @Args() { limit, offset }: QueryMembershipsArgs,
   ) {
-    return this.membershipsService.list(
+    return this.memberships.list(
       { classroom: entity },
       { limit, offset, filters: { visible: { user } } },
     );
@@ -120,7 +120,7 @@ export class ClassroomsResolver {
     @Parent() entity: Classroom,
     @Args() { limit, offset, isActivated }: QueryAffairsArgs,
   ) {
-    return this.affairsService.list(
+    return this.affairs.list(
       {
         classroom: entity,
         ...(isActivated != undefined ? { isActivated } : null),
@@ -135,7 +135,7 @@ export class ClassroomsResolver {
     @Parent() entity: Classroom,
     @Args() { limit, offset }: QueryAssignmentsArgs,
   ) {
-    return this.assignmentsService.list(
+    return this.assignments.list(
       { classroom: entity },
       { limit, offset, filters: { visible: { user } } },
     );

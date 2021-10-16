@@ -15,7 +15,7 @@ export class IsInferiorMemberConstraint
   implements ValidatorConstraintInterface
 {
   @Inject()
-  private readonly service: MembershipsService;
+  private service: MembershipsService;
 
   async validate(
     userId: number,

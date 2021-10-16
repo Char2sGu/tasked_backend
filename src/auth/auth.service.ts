@@ -10,14 +10,14 @@ import { AuthResult } from './dto/auth-result.dto';
 @Injectable()
 export class AuthService {
   @Inject()
-  private readonly usersService: UsersService;
+  private users: UsersService;
 
   @Inject()
-  private readonly jwtService: JwtService;
+  private jwt: JwtService;
 
   async obtainJwt(username: string, password: string): Promise<AuthResult> {
     try {
-      const user = await this.usersService.retrieve({ username });
+      const user = await this.users.retrieve({ username });
       const isValid = await bcryptjs.compare(password, user.password);
       if (isValid) {
         const token = await this.signJwt(user);
@@ -31,8 +31,8 @@ export class AuthService {
 
   async verifyJwt(token: string) {
     try {
-      const { id } = await this.jwtService.verifyAsync<JwtData>(token);
-      return this.usersService.retrieve(id);
+      const { id } = await this.jwt.verifyAsync<JwtData>(token);
+      return this.users.retrieve(id);
     } catch (error) {
       return;
     }
@@ -45,7 +45,7 @@ export class AuthService {
   private async signJwt(user: User) {
     const { id, username } = user;
     const data: JwtData = { id, username };
-    return this.jwtService.signAsync(data);
+    return this.jwt.signAsync(data);
   }
 }
 
