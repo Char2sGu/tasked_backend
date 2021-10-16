@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AffairsService } from 'src/affairs/affairs.service';
 import { PaginatedAffairs } from 'src/affairs/dto/paginated-affairs.dto';
@@ -46,81 +46,39 @@ export class ClassroomsResolver {
   @Query(() => PaginatedClassrooms, {
     name: 'classrooms',
   })
-  async queryMany(
-    @ReqUser() user: User,
-    @Args() { limit, offset }: QueryClassroomsArgs,
-  ) {
-    return this.service.list(
-      {},
-      {
-        limit,
-        offset,
-        filters: { visible: { user } },
-        orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
-      },
-    );
+  async queryMany(@ReqUser() user: User, @Args() args: QueryClassroomsArgs) {
+    return this.service.queryMany(user, args);
   }
 
   @Query(() => Classroom, {
     name: 'classroom',
   })
-  async queryOne(@ReqUser() user: User, @Args() { id }: QueryClassroomArgs) {
-    return this.service.retrieve(id, { filters: { visible: { user } } });
+  async queryOne(@ReqUser() user: User, @Args() args: QueryClassroomArgs) {
+    return this.service.queryOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Classroom, {
     name: 'createClassroom',
   })
-  async createOne(
-    @ReqUser() user: User,
-    @Args() { data }: CreateClassroomArgs,
-  ) {
-    const QUOTA = 20;
-    const createdCount = await this.service.count({ creator: user });
-    if (createdCount >= QUOTA)
-      throw new ForbiddenException(
-        `Cannot create more than ${QUOTA} classrooms`,
-      );
-
-    return this.service.create({ ...data, creator: user });
+  async createOne(@ReqUser() user: User, @Args() args: CreateClassroomArgs) {
+    return this.service.createOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Classroom, {
     name: 'updateClassroom',
   })
-  async updateOne(
-    @ReqUser() user: User,
-    @Args() { id, data }: UpdateClassroomArgs,
-  ) {
-    const classroom = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-    });
-
-    if (user != classroom.creator)
-      throw new ForbiddenException(
-        'Cannot update classrooms not created by you',
-      );
-
-    return this.service.update(classroom, data);
+  async updateOne(@ReqUser() user: User, @Args() args: UpdateClassroomArgs) {
+    return this.service.updateOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Classroom, {
     name: 'deleteClassroom',
   })
-  async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteClassroomArgs) {
-    const classroom = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-    });
-
-    if (user != classroom.creator)
-      throw new ForbiddenException(
-        'Cannot delete classrooms not created by you',
-      );
-
-    return this.service.destroy(classroom);
+  async deleteOne(@ReqUser() user: User, @Args() args: DeleteClassroomArgs) {
+    return this.service.deleteOne(user, args);
   }
 
   @ResolveField(() => Classroom, 'creator', () => User)
