@@ -3,6 +3,9 @@ import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AffairsService } from 'src/affairs/affairs.service';
 import { PaginatedAffairs } from 'src/affairs/dto/paginated-affairs.dto';
 import { QueryAffairsArgs } from 'src/affairs/dto/query-affairs.args';
+import { AssignmentsService } from 'src/assignments/assignments.service';
+import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
+import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { ResolveField } from 'src/common/resolve-field.decorator';
@@ -36,6 +39,9 @@ export class ClassroomsResolver {
 
   @Inject()
   private readonly affairsService: AffairsService;
+
+  @Inject()
+  assignmentsService: AssignmentsService;
 
   @Query(() => PaginatedClassrooms, {
     name: 'classrooms',
@@ -161,6 +167,18 @@ export class ClassroomsResolver {
         classroom: entity,
         ...(isActivated != undefined ? { isActivated } : null),
       },
+      { limit, offset, filters: { visible: { user } } },
+    );
+  }
+
+  @ResolveField(() => Classroom, 'assignments', () => PaginatedAssignments)
+  async resolveAssignments(
+    @ReqUser() user: User,
+    @Parent() entity: Classroom,
+    @Args() { limit, offset }: QueryAssignmentsArgs,
+  ) {
+    return this.assignmentsService.list(
+      { classroom: entity },
       { limit, offset, filters: { visible: { user } } },
     );
   }
