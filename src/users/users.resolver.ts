@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
@@ -47,21 +47,15 @@ export class UsersResolver {
   @Query(() => PaginatedUsers, {
     name: 'users',
   })
-  async queryMany(
-    @ReqUser() user: User,
-    @Args() { limit, offset }: QueryUsersArgs,
-  ) {
-    return this.service.list(
-      {},
-      { limit, offset, filters: { visible: { user } } },
-    );
+  async queryMany(@ReqUser() user: User, @Args() args: QueryUsersArgs) {
+    return this.service.queryMany(user, args);
   }
 
   @Query(() => User, {
     name: 'user',
   })
-  async queryOne(@ReqUser() user: User, @Args() { id }: QueryUserArgs) {
-    return this.service.retrieve(id, { filters: { visible: { user } } });
+  async queryOne(@ReqUser() user: User, @Args() args: QueryUserArgs) {
+    return this.service.queryOne(user, args);
   }
 
   @Query(() => User, {
@@ -76,25 +70,16 @@ export class UsersResolver {
   @Mutation(() => User, {
     name: 'createUser',
   })
-  async createOne(@Args() { data }: CreateUserArgs) {
-    return this.service.create(data);
+  async createOne(@Args() args: CreateUserArgs) {
+    return this.service.createOne(args);
   }
 
   @FlushDb()
   @Mutation(() => User, {
     name: 'updateUser',
   })
-  async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateUserArgs) {
-    const entity = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-    });
-
-    if (entity != user)
-      throw new ForbiddenException('Cannot update other users');
-    if (entity.isUpdatedRecently)
-      throw new ForbiddenException('Cannot update again within 3 days');
-
-    return this.service.update(id, data);
+  async updateOne(@ReqUser() user: User, @Args() args: UpdateUserArgs) {
+    return this.service.updateOne(user, args);
   }
 
   @ResolveField(() => User, 'classrooms', () => PaginatedClassrooms)
