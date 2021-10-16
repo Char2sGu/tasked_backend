@@ -83,6 +83,11 @@ export class TasksResolver {
     return this.service.destroy(task);
   }
 
+  @ResolveField(() => Task, 'creator', () => User)
+  resolveCreator(@Parent() entity: Task) {
+    return entity.creator.init();
+  }
+
   @ResolveField(() => Task, 'assignments', () => Assignment)
   async resolveAssignments(
     @ReqUser() user: User,
