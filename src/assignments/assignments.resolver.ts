@@ -8,7 +8,6 @@ import { User } from 'src/users/entities/user.entity';
 
 import { ReqUser } from '../common/req-user.decorator';
 import { AssignmentsService } from './assignments.service';
-import { CompleteAssignmentArgs } from './dto/complete-assignment.args';
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
 import { DeleteAssignmentArgs } from './dto/delete-assignment.args';
 import { PaginatedAssignments } from './dto/paginated-assignments.dto';
@@ -58,17 +57,6 @@ export class AssignmentsResolver {
   })
   async deleteOne(@ReqUser() user: User, @Args() args: DeleteAssignmentArgs) {
     return this.service.deleteOne(user, args);
-  }
-
-  @FlushDb()
-  @Mutation(() => Assignment, {
-    name: 'completeAssignment',
-  })
-  async completeOne(
-    @ReqUser() user: User,
-    @Args() args: CompleteAssignmentArgs,
-  ) {
-    return this.service.completeOne(user, args);
   }
 
   @ResolveField(() => Assignment, 'recipient', () => User)

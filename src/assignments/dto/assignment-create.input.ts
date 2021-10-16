@@ -50,4 +50,7 @@ export class AssignmentCreateInput extends ValidationContextAttached {
 
   @Field(() => Boolean, { nullable: true })
   isPublic?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  isImportant?: boolean;
 }

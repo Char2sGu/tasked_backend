@@ -1,9 +1,9 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { isDefined } from 'class-validator';
 import { CrudService } from 'src/common/crud/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
-import { CompleteAssignmentArgs } from './dto/complete-assignment.args';
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
 import { DeleteAssignmentArgs } from './dto/delete-assignment.args';
 import { QueryAssignmentArgs } from './dto/query-assignment.args';
@@ -46,10 +46,22 @@ export class AssignmentsService extends CrudService.of(Assignment) {
       populate: ['task'],
     });
 
-    if (user != assignment.task.creator)
-      throw new ForbiddenException(
-        'Cannot update assignments not created by you',
-      );
+    if (user != assignment.task.creator) {
+      if (isDefined(data.isPublic))
+        throw new ForbiddenException(
+          'Cannot update publicness of assignments not created by you',
+        );
+    }
+    if (user != assignment.recipient) {
+      if (isDefined(data.isCompleted))
+        throw new ForbiddenException(
+          'Cannot update completeness of assignments not assigned to you',
+        );
+      if (isDefined(data.isImportant))
+        throw new ForbiddenException(
+          'Cannot update importance of assignments not assigned to you',
+        );
+    }
 
     return this.update(assignment, data);
   }
@@ -66,18 +78,5 @@ export class AssignmentsService extends CrudService.of(Assignment) {
       );
 
     return this.destroy(assignment);
-  }
-
-  async completeOne(user: User, { id }: CompleteAssignmentArgs) {
-    const assignment = await this.retrieve(id, {
-      filters: { visible: { user } },
-    });
-
-    if (user != assignment.recipient)
-      throw new ForbiddenException(
-        'Cannot complete assignments not assigned to you',
-      );
-
-    return this.update(assignment, { isCompleted: true });
   }
 }
