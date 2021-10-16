@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
@@ -25,68 +25,39 @@ export class AssignmentsResolver {
   @Query(() => PaginatedAssignments, {
     name: 'assignments',
   })
-  async queryMany(
-    @ReqUser() user: User,
-    @Args() { limit, offset, isCompleted, isPublic }: QueryAssignmentsArgs,
-  ) {
-    return this.service.list(
-      { isCompleted, isPublic },
-      { limit, offset, filters: { visible: { user } } },
-    );
+  async queryMany(@ReqUser() user: User, @Args() args: QueryAssignmentsArgs) {
+    return this.service.queryMany(user, args);
   }
 
   @Query(() => Assignment, {
     name: 'assignment',
   })
-  async queryOne(@ReqUser() user: User, @Args() { id }: QueryAssignmentArgs) {
-    return this.service.retrieve(id, { filters: { visible: { user } } });
+  async queryOne(@ReqUser() user: User, @Args() args: QueryAssignmentArgs) {
+    return this.service.queryOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Assignment, {
     name: 'createAssignment',
   })
-  async createOne(@Args() { data }: CreateAssignmentArgs) {
-    return this.service.create({ ...data });
+  async createOne(@Args() args: CreateAssignmentArgs) {
+    return this.service.createOne(args);
   }
 
   @FlushDb()
   @Mutation(() => Assignment, {
     name: 'updateAssignment',
   })
-  async updateOne(
-    @ReqUser() user: User,
-    @Args() { id, data }: UpdateAssignmentArgs,
-  ) {
-    const assignment = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-      populate: ['task'],
-    });
-
-    if (user != assignment.task.creator)
-      throw new ForbiddenException(
-        'Cannot update assignments not created by you',
-      );
-
-    return this.service.update(assignment, data);
+  async updateOne(@ReqUser() user: User, @Args() args: UpdateAssignmentArgs) {
+    return this.service.updateOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Assignment, {
     name: 'deleteAssignment',
   })
-  async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAssignmentArgs) {
-    const assignment = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-      populate: ['task'],
-    });
-
-    if (user != assignment.task.creator)
-      throw new ForbiddenException(
-        'Cannot delete assignments not created by you',
-      );
-
-    return this.service.destroy(assignment);
+  async deleteOne(@ReqUser() user: User, @Args() args: DeleteAssignmentArgs) {
+    return this.service.deleteOne(user, args);
   }
 
   @FlushDb()
@@ -95,18 +66,9 @@ export class AssignmentsResolver {
   })
   async completeOne(
     @ReqUser() user: User,
-    @Args() { id }: CompleteAssignmentArgs,
+    @Args() args: CompleteAssignmentArgs,
   ) {
-    const assignment = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-    });
-
-    if (user != assignment.recipient)
-      throw new ForbiddenException(
-        'Cannot complete assignments not assigned to you',
-      );
-
-    return this.service.update(assignment, { isCompleted: true });
+    return this.service.completeOne(user, args);
   }
 
   @ResolveField(() => Assignment, 'recipient', () => User)
