@@ -87,10 +87,10 @@ export class TasksResolver {
   async resolveAssignments(
     @ReqUser() user: User,
     @Parent() entity: Task,
-    @Args() { limit, offset }: QueryAssignmentsArgs,
+    @Args() { limit, offset, isCompleted, isPublic }: QueryAssignmentsArgs,
   ) {
     return this.assignmentsService.list(
-      { task: entity },
+      { task: entity, isCompleted, isPublic },
       { limit, offset, filters: { visible: { user } } },
     );
   }

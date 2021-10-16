@@ -27,10 +27,10 @@ export class AssignmentsResolver {
   })
   async queryMany(
     @ReqUser() user: User,
-    @Args() { limit, offset }: QueryAssignmentsArgs,
+    @Args() { limit, offset, isCompleted, isPublic }: QueryAssignmentsArgs,
   ) {
     return this.service.list(
-      {},
+      { isCompleted, isPublic },
       { limit, offset, filters: { visible: { user } } },
     );
   }
