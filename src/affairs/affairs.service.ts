@@ -1,4 +1,4 @@
-import { QueryOrder } from '@mikro-orm/core';
+import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { CrudService } from 'src/common/crud/crud.service';
@@ -19,9 +19,10 @@ export class AffairsService extends CrudService.of(Affair) {
   async queryMany(
     user: User,
     { limit, offset, isActivated }: QueryAffairsArgs,
+    query: FilterQuery<Affair> = {},
   ) {
     return this.list(
-      { ...(isActivated != undefined ? { isActivated } : null) },
+      { $and: [query, { isActivated }] },
       {
         limit,
         offset,

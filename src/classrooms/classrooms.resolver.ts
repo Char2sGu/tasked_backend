@@ -94,50 +94,35 @@ export class ClassroomsResolver {
   async resolveJoinApplications(
     @ReqUser() user: User,
     @Parent() entity: Classroom,
-    @Args() { limit, offset }: QueryJoinApplicationsArgs,
+    @Args() args: QueryJoinApplicationsArgs,
   ) {
-    return this.joinApplications.list(
-      { classroom: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.joinApplications.queryMany(user, args, { classroom: entity });
   }
 
   @ResolveField(() => Classroom, 'memberships', () => PaginatedMemberships)
   async resolveMemberships(
     @ReqUser() user: User,
     @Parent() entity: Classroom,
-    @Args() { limit, offset }: QueryMembershipsArgs,
+    @Args() args: QueryMembershipsArgs,
   ) {
-    return this.memberships.list(
-      { classroom: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.memberships.queryMany(user, args, { classroom: entity });
   }
 
   @ResolveField(() => Classroom, 'affairs', () => PaginatedAffairs)
   async resolveAffairs(
     @ReqUser() user: User,
     @Parent() entity: Classroom,
-    @Args() { limit, offset, isActivated }: QueryAffairsArgs,
+    @Args() args: QueryAffairsArgs,
   ) {
-    return this.affairs.list(
-      {
-        classroom: entity,
-        ...(isActivated != undefined ? { isActivated } : null),
-      },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.affairs.queryMany(user, args, { classroom: entity });
   }
 
   @ResolveField(() => Classroom, 'assignments', () => PaginatedAssignments)
   async resolveAssignments(
     @ReqUser() user: User,
     @Parent() entity: Classroom,
-    @Args() { limit, offset }: QueryAssignmentsArgs,
+    @Args() args: QueryAssignmentsArgs,
   ) {
-    return this.assignments.list(
-      { classroom: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.assignments.queryMany(user, args, { classroom: entity });
   }
 }

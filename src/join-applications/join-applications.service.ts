@@ -1,3 +1,4 @@
+import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/common/crud/crud.service';
 import { MembershipsService } from 'src/memberships/memberships.service';
@@ -17,8 +18,12 @@ export class JoinApplicationsService extends CrudService.of(JoinApplication) {
   @Inject()
   private memberships: MembershipsService;
 
-  async queryMany(user: User, { limit, offset }: QueryJoinApplicationsArgs) {
-    return this.list({}, { limit, offset, filters: { visible: { user } } });
+  async queryMany(
+    user: User,
+    { limit, offset }: QueryJoinApplicationsArgs,
+    query: FilterQuery<JoinApplication> = {},
+  ) {
+    return this.list(query, { limit, offset, filters: { visible: { user } } });
   }
 
   async queryOne(user: User, { id }: QueryJoinApplicationArgs) {

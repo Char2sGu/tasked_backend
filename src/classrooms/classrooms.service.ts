@@ -12,16 +12,17 @@ import { Classroom } from './entities/classroom.entity';
 
 @Injectable()
 export class ClassroomsService extends CrudService.of(Classroom) {
-  async queryMany(user: User, { limit, offset }: QueryClassroomsArgs) {
-    return this.list(
-      {},
-      {
-        limit,
-        offset,
-        filters: { visible: { user } },
-        orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
-      },
-    );
+  async queryMany(
+    user: User,
+    { limit, offset }: QueryClassroomsArgs,
+    query: FilterQuery<Classroom> = {},
+  ) {
+    return this.list(query, {
+      limit,
+      offset,
+      filters: { visible: { user } },
+      orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
+    });
   }
 
   async queryOne(user: User, { id }: QueryClassroomArgs) {

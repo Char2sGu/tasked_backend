@@ -1,3 +1,4 @@
+import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/common/crud/crud.service';
 import { User } from 'src/users/entities/user.entity';
@@ -15,9 +16,10 @@ export class AssignmentsService extends CrudService.of(Assignment) {
   async queryMany(
     user: User,
     { limit, offset, isCompleted, isPublic }: QueryAssignmentsArgs,
+    query: FilterQuery<Assignment> = {},
   ) {
     return this.list(
-      { isCompleted, isPublic },
+      { $and: [query, { isCompleted, isPublic }] },
       { limit, offset, filters: { visible: { user } } },
     );
   }

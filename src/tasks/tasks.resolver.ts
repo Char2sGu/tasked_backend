@@ -72,11 +72,8 @@ export class TasksResolver {
   async resolveAssignments(
     @ReqUser() user: User,
     @Parent() entity: Task,
-    @Args() { limit, offset, isCompleted, isPublic }: QueryAssignmentsArgs,
+    @Args() args: QueryAssignmentsArgs,
   ) {
-    return this.assignments.list(
-      { task: entity, isCompleted, isPublic },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.assignments.queryMany(user, args, { classroom: entity });
   }
 }

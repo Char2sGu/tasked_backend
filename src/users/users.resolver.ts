@@ -86,59 +86,44 @@ export class UsersResolver {
   async resolveClassrooms(
     @ReqUser() user: User,
     @Parent() entity: User,
-    @Args() { limit, offset }: QueryClassroomsArgs,
+    @Args() args: QueryClassroomsArgs,
   ) {
-    return this.classrooms.list(
-      { creator: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.classrooms.queryMany(user, args, { creator: entity });
   }
 
   @ResolveField(() => User, 'joinApplications', () => PaginatedJoinApplications)
   async resolveJoinApplications(
     @ReqUser() user: User,
     @Parent() entity: User,
-    @Args() { limit, offset }: QueryJoinApplicationsArgs,
+    @Args() args: QueryJoinApplicationsArgs,
   ) {
-    return this.memberships.list(
-      { owner: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.memberships.queryMany(user, args, { owner: entity });
   }
 
   @ResolveField(() => User, 'memberships', () => PaginatedMemberships)
   async resolveMemberships(
     @ReqUser() user: User,
     @Parent() entity: User,
-    @Args() { limit, offset }: QueryMembershipsArgs,
+    @Args() args: QueryMembershipsArgs,
   ) {
-    return this.memberships.list(
-      { owner: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.memberships.queryMany(user, args, { owner: entity });
   }
 
   @ResolveField(() => User, 'tasks', () => PaginatedTasks)
   async resolveTasks(
     @ReqUser() user: User,
     @Parent() entity: User,
-    @Args() { limit, offset }: QueryTasksArgs,
+    @Args() args: QueryTasksArgs,
   ) {
-    return this.tasks.list(
-      { creator: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.tasks.queryMany(user, args, { creator: entity });
   }
 
   @ResolveField(() => User, 'assignments', () => PaginatedAssignments)
   async resolveAssignments(
     @ReqUser() user: User,
     @Parent() entity: User,
-    @Args() { limit, offset }: QueryAssignmentsArgs,
+    @Args() args: QueryAssignmentsArgs,
   ) {
-    return this.assignments.list(
-      { recipient: entity },
-      { limit, offset, filters: { visible: { user } } },
-    );
+    return this.assignments.queryMany(user, args, { recipient: entity });
   }
 }
