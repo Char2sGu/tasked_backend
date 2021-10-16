@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
@@ -28,59 +28,39 @@ export class TasksResolver {
   @Query(() => PaginatedTasks, {
     name: 'tasks',
   })
-  async queryMany(
-    @ReqUser() user: User,
-    @Args() { limit, offset }: QueryTasksArgs,
-  ) {
-    return this.service.list(
-      {},
-      { limit, offset, filters: { visible: { user } } },
-    );
+  async queryMany(@ReqUser() user: User, @Args() args: QueryTasksArgs) {
+    return this.service.queryMany(user, args);
   }
 
   @Query(() => Task, {
     name: 'task',
   })
-  async queryOne(@ReqUser() user: User, @Args() { id }: QueryTaskArgs) {
-    return this.service.retrieve(id, { filters: { visible: { user } } });
+  async queryOne(@ReqUser() user: User, @Args() args: QueryTaskArgs) {
+    return this.service.queryOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Task, {
     name: 'createTask',
   })
-  async createOne(@ReqUser() user: User, @Args() { data }: CreateTaskArgs) {
-    return this.service.create({ ...data, creator: user });
+  async createOne(@ReqUser() user: User, @Args() args: CreateTaskArgs) {
+    return this.service.createOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Task, {
     name: 'updateTask',
   })
-  async updateOne(@ReqUser() user: User, @Args() { id, data }: UpdateTaskArgs) {
-    const task = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-    });
-
-    if (task.creator != user)
-      throw new ForbiddenException('Cannot update tasks not created by you');
-
-    return this.service.update(task, data);
+  async updateOne(@ReqUser() user: User, @Args() args: UpdateTaskArgs) {
+    return this.service.updateOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Task, {
     name: 'deleteTask',
   })
-  async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteTaskArgs) {
-    const task = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-    });
-
-    if (task.creator != user)
-      throw new ForbiddenException('Cannot delete tasks not created by you');
-
-    return this.service.destroy(task);
+  async deleteOne(@ReqUser() user: User, @Args() args: DeleteTaskArgs) {
+    return this.service.deleteOne(user, args);
   }
 
   @ResolveField(() => Task, 'creator', () => User)
