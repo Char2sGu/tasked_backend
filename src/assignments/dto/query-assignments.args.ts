@@ -9,4 +9,7 @@ export class QueryAssignmentsArgs extends PaginationArgs {
 
   @Field(() => Boolean, { nullable: true })
   isPublic?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  isOwn?: boolean;
 }

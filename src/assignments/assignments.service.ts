@@ -15,11 +15,19 @@ import { Assignment } from './entities/assignment.entity';
 export class AssignmentsService extends CrudService.of(Assignment) {
   async queryMany(
     user: User,
-    { limit, offset, isCompleted, isPublic }: QueryAssignmentsArgs,
+    { limit, offset, isOwn, ...filters }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
     return this.list(
-      { $and: [query, { isCompleted, isPublic }] },
+      {
+        $and: [
+          query,
+          filters,
+          isOwn == undefined
+            ? {}
+            : { recipient: isOwn ? user : { $not: user } },
+        ],
+      },
       { limit, offset, filters: { visible: { user } } },
     );
   }
