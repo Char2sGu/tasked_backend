@@ -45,4 +45,10 @@ export class Assignment extends BaseEntity<Assignment> {
     default: false,
   })
   isCompleted: boolean;
+
+  @Field(() => Boolean)
+  @Property({
+    default: false,
+  })
+  isImportant: boolean;
 }
