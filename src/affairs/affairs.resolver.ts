@@ -1,5 +1,4 @@
-import { QueryOrder } from '@mikro-orm/core';
-import { ForbiddenException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
@@ -28,82 +27,39 @@ export class AffairsResolver {
   @Query(() => PaginatedAffairs, {
     name: 'affairs',
   })
-  async queryMany(
-    @ReqUser() user: User,
-    @Args() { limit, offset, isActivated }: QueryAffairsArgs,
-  ) {
-    return this.service.list(
-      { ...(isActivated != undefined ? { isActivated } : null) },
-      {
-        limit,
-        offset,
-        filters: { visible: { user } },
-        orderBy: { date: QueryOrder.DESC },
-      },
-    );
+  async queryMany(@ReqUser() user: User, @Args() args: QueryAffairsArgs) {
+    return this.service.queryMany(user, args);
   }
 
   @Query(() => Affair, {
     name: 'affair',
   })
-  async queryOne(@ReqUser() user: User, @Args() { id }: QueryAffairArgs) {
-    return this.service.retrieve(id, { filters: { visible: { user } } });
+  async queryOne(@ReqUser() user: User, @Args() args: QueryAffairArgs) {
+    return this.service.queryOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Affair, {
     name: 'createAffair',
   })
-  async createOne(@ReqUser() user: User, @Args() { data }: CreateAffairArgs) {
-    const classroom = await this.classroomsService.retrieve(data.classroom, {
-      filters: { visible: { user } },
-    });
-
-    if (user != classroom.creator)
-      throw new ForbiddenException(
-        'Cannot create affairs in classrooms not created by you',
-      );
-
-    return this.service.create({ ...data });
+  async createOne(@ReqUser() user: User, @Args() args: CreateAffairArgs) {
+    return this.service.createOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Affair, {
     name: 'updateAffair',
   })
-  async updateOne(
-    @ReqUser() user: User,
-    @Args() { id, data }: UpdateAffairArgs,
-  ) {
-    const affair = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-      populate: ['classroom'],
-    });
-
-    if (user != affair.classroom.creator)
-      throw new ForbiddenException(
-        'Cannot update affairs of classrooms not created by you',
-      );
-
-    return this.service.update(affair, data);
+  async updateOne(@ReqUser() user: User, @Args() args: UpdateAffairArgs) {
+    return this.service.updateOne(user, args);
   }
 
   @FlushDb()
   @Mutation(() => Affair, {
     name: 'deleteAffair',
   })
-  async deleteOne(@ReqUser() user: User, @Args() { id }: DeleteAffairArgs) {
-    const affair = await this.service.retrieve(id, {
-      filters: { visible: { user } },
-      populate: ['classroom'],
-    });
-
-    if (affair)
-      throw new ForbiddenException(
-        'Cannot delete affairs of classrooms not created by you',
-      );
-
-    return this.service.destroy(affair);
+  async deleteOne(@ReqUser() user: User, @Args() args: DeleteAffairArgs) {
+    return this.service.deleteOne(user, args);
   }
 
   @ResolveField(() => Affair, 'classroom', () => Classroom)
