@@ -1,4 +1,4 @@
-import { FilterQuery } from '@mikro-orm/core';
+import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { isDefined } from 'class-validator';
 import { CrudService } from 'src/common/crud/crud.service';
@@ -28,7 +28,12 @@ export class AssignmentsService extends CrudService.of(Assignment) {
             : { recipient: isOwn ? user : { $not: user } },
         ],
       },
-      { limit, offset, filters: { visible: { user } } },
+      {
+        limit,
+        offset,
+        orderBy: { createdAt: QueryOrder.DESC },
+        filters: { visible: { user } },
+      },
     );
   }
 
