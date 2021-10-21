@@ -73,4 +73,6 @@ export class Classroom extends BaseEntity<Classroom> {
     nullable: true,
   })
   deletedAt?: Date;
+
+  membership: never;
 }

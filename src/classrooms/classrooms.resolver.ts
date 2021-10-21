@@ -14,6 +14,7 @@ import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-
 import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
+import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
@@ -84,6 +85,13 @@ export class ClassroomsResolver {
   @ResolveField(() => Classroom, 'creator', () => User)
   resolveCreator(@Parent() entity: Classroom) {
     return entity.creator.init();
+  }
+
+  @ResolveField(() => Classroom, 'membership', () => Membership)
+  async resolveMembership(@ReqUser() user: User, @Parent() entity: Classroom) {
+    return entity.memberships
+      .matching({ where: { owner: user }, limit: 1 })
+      .then(([v]) => v);
   }
 
   @ResolveField(
