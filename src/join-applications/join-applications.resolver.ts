@@ -87,12 +87,12 @@ export class JoinApplicationsResolver {
   }
 
   @ResolveField(() => JoinApplication, 'owner', () => User)
-  resolveOwner(@Parent() entity: JoinApplication) {
+  async resolveOwner(@Parent() entity: JoinApplication) {
     return entity.owner.init();
   }
 
   @ResolveField(() => JoinApplication, 'classroom', () => Classroom)
-  resolveClassroom(@Parent() entity: JoinApplication) {
+  async resolveClassroom(@Parent() entity: JoinApplication) {
     return entity.classroom.init();
   }
 }

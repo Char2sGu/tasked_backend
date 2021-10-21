@@ -64,7 +64,7 @@ export class TasksResolver {
   }
 
   @ResolveField(() => Task, 'creator', () => User)
-  resolveCreator(@Parent() entity: Task) {
+  async resolveCreator(@Parent() entity: Task) {
     return entity.creator.init();
   }
 

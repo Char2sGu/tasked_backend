@@ -83,7 +83,7 @@ export class ClassroomsResolver {
   }
 
   @ResolveField(() => Classroom, 'creator', () => User)
-  resolveCreator(@Parent() entity: Classroom) {
+  async resolveCreator(@Parent() entity: Classroom) {
     return entity.creator.init();
   }
 

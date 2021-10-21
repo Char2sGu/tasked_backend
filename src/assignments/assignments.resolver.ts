@@ -60,17 +60,17 @@ export class AssignmentsResolver {
   }
 
   @ResolveField(() => Assignment, 'recipient', () => User)
-  resolveRecipient(@Parent() entity: Assignment) {
+  async resolveRecipient(@Parent() entity: Assignment) {
     return entity.recipient.init();
   }
 
   @ResolveField(() => Assignment, 'classroom', () => Classroom)
-  resolveClassroom(@Parent() entity: Assignment) {
+  async resolveClassroom(@Parent() entity: Assignment) {
     return entity.classroom.init();
   }
 
   @ResolveField(() => Assignment, 'task', () => Task)
-  resolveTask(@Parent() entity: Assignment) {
+  async resolveTask(@Parent() entity: Assignment) {
     return entity.task.init();
   }
 }

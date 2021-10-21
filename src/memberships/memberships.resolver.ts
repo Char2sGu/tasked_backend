@@ -41,12 +41,12 @@ export class MembershipsResolver {
   }
 
   @ResolveField(() => Membership, 'owner', () => User)
-  resolveOwner(@Parent() entity: Membership) {
+  async resolveOwner(@Parent() entity: Membership) {
     return entity.owner.init();
   }
 
   @ResolveField(() => Membership, 'classroom', () => Classroom)
-  resolveClassroom(@Parent() entity: Membership) {
+  async resolveClassroom(@Parent() entity: Membership) {
     return entity.classroom.init();
   }
 }
