@@ -1,6 +1,7 @@
 import { FilterQuery, FindOneOrFailOptions } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/common/crud/crud.service';
+import { Role } from 'src/memberships/entities/role.enum';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateClassroomArgs } from './dto/create-classroom.args';
@@ -37,7 +38,11 @@ export class ClassroomsService extends CrudService.of(Classroom) {
         `Cannot create more than ${QUOTA} classrooms`,
       );
 
-    return this.create({ ...data, creator: user });
+    return this.create({
+      ...data,
+      creator: user,
+      memberships: [{ owner: user, role: Role.Teacher }],
+    });
   }
 
   async updateOne(user: User, { id, data }: UpdateClassroomArgs) {
