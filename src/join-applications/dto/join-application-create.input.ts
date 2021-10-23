@@ -1,5 +1,7 @@
 import { ID, InputType } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
+import { ClassroomsService } from 'src/classrooms/classrooms.service';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Field } from 'src/common/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
@@ -36,6 +38,17 @@ export class JoinApplicationCreateInput extends ValidationContextAttached {
     }),
     {
       message: 'classroom must not have a membership of you',
+    },
+  )
+  @Existence<Classroom>(
+    false,
+    () => ClassroomsService,
+    (classroomId: number) => ({
+      id: classroomId,
+      isOpen: true,
+    }),
+    {
+      message: 'classroom must be open',
     },
   )
   classroom: number;
