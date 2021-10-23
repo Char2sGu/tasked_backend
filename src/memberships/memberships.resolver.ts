@@ -10,6 +10,7 @@ import { DeleteMembershipArgs } from './dto/delete-membership.args';
 import { PaginatedMemberships } from './dto/paginated-memberships.dto';
 import { QueryMembershipArgs } from './dto/query-membership.args';
 import { QueryMembershipsArgs } from './dto/query-memberships.args';
+import { UpdateMembershipArgs } from './dto/update-membership.args';
 import { Membership } from './entities/membership.entity';
 import { MembershipsService } from './memberships.service';
 
@@ -30,6 +31,14 @@ export class MembershipsResolver {
   })
   async queryOne(@ReqUser() user: User, @Args() args: QueryMembershipArgs) {
     return this.service.queryOne(user, args);
+  }
+
+  @FlushDb()
+  @Mutation(() => Membership, {
+    name: 'updateMembership',
+  })
+  async updateOne(@ReqUser() user: User, @Args() args: UpdateMembershipArgs) {
+    return this.service.updateOne(user, args);
   }
 
   @FlushDb()

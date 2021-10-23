@@ -6,6 +6,7 @@ import { User } from 'src/users/entities/user.entity';
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
 import { QueryMembershipArgs } from './dto/query-membership.args';
 import { QueryMembershipsArgs } from './dto/query-memberships.args';
+import { UpdateMembershipArgs } from './dto/update-membership.args';
 import { Membership } from './entities/membership.entity';
 
 @Injectable()
@@ -20,6 +21,33 @@ export class MembershipsService extends CrudService.of(Membership) {
 
   async queryOne(user: User, { id }: QueryMembershipArgs) {
     return this.retrieve(id, { filters: { visible: { user } } });
+  }
+
+  async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
+    const target = await this.retrieve(id, { filters: { visible: { user } } });
+    const own = await this.retrieve(
+      { classroom: target.classroom, owner: user },
+      { filters: { visible: { user } } },
+    );
+
+    if (data.displayName != undefined) {
+      if (target != own)
+        throw new ForbiddenException(
+          'Cannot update "displayName" of memberships not belonging to you',
+        );
+    }
+    if (data.role != undefined) {
+      if (target == own)
+        throw new ForbiddenException(
+          'Cannot update "role" of your own membership',
+        );
+      if ((await own.getWeight()) <= (await target.getWeight()))
+        throw new ForbiddenException(
+          'Cannot update "role" of memberships not inferior to you',
+        );
+    }
+
+    return this.update(target, data);
   }
 
   async deleteOne(user: User, { id }: DeleteMembershipArgs) {
