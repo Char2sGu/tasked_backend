@@ -17,7 +17,7 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Classroom>({
-  name: 'exclude-soft-deleted',
+  name: 'undeleted',
   cond: { deletedAt: null },
   default: true,
 })
