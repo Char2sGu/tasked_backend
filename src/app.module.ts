@@ -12,7 +12,7 @@ import { AffairsModule } from './affairs/affairs.module';
 import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
-import { JwtAuthGuard } from './common/auth/jwt-auth.guard';
+import { AuthGuard } from './common/auth/auth.guard';
 import { CommonModule } from './common/common.module';
 import { FlushDbInterceptor } from './common/flush-db/flush-db.interceptor';
 import { ValidationContextInterceptor } from './common/validation/validation-context.interceptor';
@@ -78,7 +78,7 @@ import { UsersModule } from './users/users.module';
     },
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: AuthGuard,
     },
   ],
 })

@@ -19,7 +19,7 @@ import { SKIP_AUTH } from './skip-auth.symbol';
  * Use {@link SkipAuth} to skip the check.
  */
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   @Inject()
   private auth: AuthService;
 
