@@ -31,7 +31,3 @@ export const ResolveField =
       propertyKey,
       descriptor,
     );
-
-type Capitalize<T extends string> = T extends `${infer A}${infer B}`
-  ? `${Uppercase<A>}${B}`
-  : never;
