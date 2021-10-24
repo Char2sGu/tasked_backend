@@ -83,9 +83,3 @@ export class User extends BaseEntity<User> {
     this.password = await hash(this.password, 10);
   }
 }
-
-declare module 'express' {
-  interface Request {
-    user?: User;
-  }
-}
