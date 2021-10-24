@@ -3,7 +3,7 @@ import { Type } from '@nestjs/common';
 import { registerDecorator, ValidationOptions } from 'class-validator';
 
 import { User } from '../../users/entities/user.entity';
-import { CrudService } from '../crud/crud.service';
+import { CrudService } from '../crud.service';
 import { ExistenceConstraint } from './existence.constraint';
 
 /**

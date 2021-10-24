@@ -1,6 +1,6 @@
 import { FilterQuery, FindOneOrFailOptions } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/common/crud/crud.service';
+import { CrudService } from 'src/common/crud.service';
 import { Role } from 'src/memberships/entities/role.enum';
 import { User } from 'src/users/entities/user.entity';
 

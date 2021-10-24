@@ -1,7 +1,7 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
-import { CrudService } from 'src/common/crud/crud.service';
+import { CrudService } from 'src/common/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateAffairArgs } from './dto/create-affair.args';

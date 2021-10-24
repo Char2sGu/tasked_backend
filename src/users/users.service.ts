@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/common/crud/crud.service';
+import { CrudService } from 'src/common/crud.service';
 
 import { CreateUserArgs } from './dto/create-user.args';
 import { QueryUserArgs } from './dto/query-user.args';

@@ -1,6 +1,6 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/common/crud/crud.service';
+import { CrudService } from 'src/common/crud.service';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
