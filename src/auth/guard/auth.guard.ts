@@ -10,7 +10,7 @@ import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 import { Request } from 'express';
 
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../auth.service';
 import { SKIP_AUTH } from './skip-auth.symbol';
 
 /**
