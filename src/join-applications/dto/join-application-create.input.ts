@@ -2,7 +2,7 @@ import { ID, InputType } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { Field } from 'src/common/field.decorator';
+import { Field } from 'src/common/utilities/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';

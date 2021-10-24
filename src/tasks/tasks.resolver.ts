@@ -4,8 +4,8 @@ import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
-import { ReqUser } from 'src/common/req-user.decorator';
-import { ResolveField } from 'src/common/resolve-field.decorator';
+import { ReqUser } from 'src/common/utilities/req-user.decorator';
+import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';

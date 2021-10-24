@@ -2,11 +2,11 @@ import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
-import { ResolveField } from 'src/common/resolve-field.decorator';
+import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
-import { ReqUser } from '../common/req-user.decorator';
+import { ReqUser } from '../common/utilities/req-user.decorator';
 import { AssignmentsService } from './assignments.service';
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
 import { DeleteAssignmentArgs } from './dto/delete-assignment.args';

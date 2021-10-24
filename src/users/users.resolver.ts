@@ -8,8 +8,8 @@ import { PaginatedClassrooms } from 'src/classrooms/dto/paginated-classrooms.dto
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
 import { SkipAuth } from 'src/common/auth/skip-auth.decorator';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
-import { ReqUser } from 'src/common/req-user.decorator';
-import { ResolveField } from 'src/common/resolve-field.decorator';
+import { ReqUser } from 'src/common/utilities/req-user.decorator';
+import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
 import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';

@@ -1,7 +1,7 @@
 import { Type } from '@nestjs/common';
 import { ArgsType } from '@nestjs/graphql';
 
-import { Field } from '../field.decorator';
+import { Field } from '../utilities/field.decorator';
 
 /**
  * A factory class to build DTO classes having a `data` field.

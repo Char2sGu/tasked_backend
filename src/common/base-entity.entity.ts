@@ -1,7 +1,7 @@
 import { BaseEntity as Base, PrimaryKey, Property } from '@mikro-orm/core';
 import { ID, ObjectType } from '@nestjs/graphql';
 
-import { Field } from './field.decorator';
+import { Field } from './utilities/field.decorator';
 
 /**
  * A wrap of mikro-orm's `BaseEntity`, as the base class of every entity class

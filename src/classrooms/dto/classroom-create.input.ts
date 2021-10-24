@@ -1,6 +1,6 @@
 import { InputType } from '@nestjs/graphql';
 import { Length, MaxLength } from 'class-validator';
-import { Field } from 'src/common/field.decorator';
+import { Field } from 'src/common/utilities/field.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 
 @InputType()

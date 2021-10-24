@@ -1,6 +1,6 @@
 import { InputType } from '@nestjs/graphql';
 import { Length, NotContains } from 'class-validator';
-import { Field } from 'src/common/field.decorator';
+import { Field } from 'src/common/utilities/field.decorator';
 
 import { Role } from '../entities/role.enum';
 

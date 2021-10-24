@@ -1,7 +1,7 @@
 import { ArgsType, Int } from '@nestjs/graphql';
 import { Max, Min } from 'class-validator';
 
-import { Field } from '../field.decorator';
+import { Field } from '../utilities/field.decorator';
 
 /**
  * A base class specifying common pagination parameters.
