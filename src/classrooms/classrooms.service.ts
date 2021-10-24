@@ -15,15 +15,18 @@ import { Classroom } from './entities/classroom.entity';
 export class ClassroomsService extends CrudService.of(Classroom) {
   async queryMany(
     user: User,
-    { limit, offset }: QueryClassroomsArgs,
+    { limit, offset, isOpen }: QueryClassroomsArgs,
     query: FilterQuery<Classroom> = {},
   ) {
-    return this.list(query, {
-      limit,
-      offset,
-      filters: { visible: { user } },
-      orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
-    });
+    return this.list(
+      { $and: [query, isOpen != undefined ? { isOpen } : {}] },
+      {
+        limit,
+        offset,
+        filters: { visible: { user } },
+        orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
+      },
+    );
   }
 
   async queryOne(user: User, { id }: QueryClassroomArgs) {
