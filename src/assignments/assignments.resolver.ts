@@ -6,7 +6,7 @@ import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
-import { ReqUser } from '../common/utilities/req-user.decorator';
+import { ReqUser } from '../common/decorators/req-user.decorator';
 import { AssignmentsService } from './assignments.service';
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
 import { DeleteAssignmentArgs } from './dto/delete-assignment.args';
