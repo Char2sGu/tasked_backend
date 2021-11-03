@@ -1,11 +1,6 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module, ValidationPipe } from '@nestjs/common';
-import {
-  APP_GUARD,
-  APP_INTERCEPTOR,
-  APP_PIPE,
-  RouterModule,
-} from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AssignmentsModule } from './assignments/assignments.module';
@@ -32,18 +27,6 @@ import { UsersModule } from './users/users.module';
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
-    RouterModule.register([
-      {
-        path: '/api',
-        children: [
-          { path: '/classrooms', module: ClassroomsModule },
-          { path: '/memberships', module: MembershipsModule },
-          { path: '/join-applications', module: JoinApplicationsModule },
-          { path: '/tasks', module: TasksModule },
-          { path: '/assignments', module: AssignmentsModule },
-        ],
-      },
-    ]),
     CommonModule,
     AuthModule,
     UsersModule,
