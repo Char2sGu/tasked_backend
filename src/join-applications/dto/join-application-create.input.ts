@@ -53,9 +53,6 @@ export class JoinApplicationCreateInput extends ValidationContextAttached {
   )
   classroom: number;
 
-  @Field(() => Role)
-  role: Role;
-
   @Field(() => String, { nullable: true })
   @MaxLength(50)
   message?: string;

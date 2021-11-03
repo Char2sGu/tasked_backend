@@ -3,7 +3,6 @@ import { ObjectType } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/utilities/field.decorator';
-import { Role } from 'src/memberships/entities/role.enum';
 import { User } from 'src/users/entities/user.entity';
 
 import { ApplicationStatus } from './application-status.enum';
@@ -26,10 +25,6 @@ export class JoinApplication extends BaseEntity<JoinApplication> {
     entity: () => Classroom,
   })
   classroom: Classroom;
-
-  @Field(() => Role)
-  @Property()
-  role: Role;
 
   @Field(() => String, { nullable: true })
   @Property({

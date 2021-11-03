@@ -13,7 +13,6 @@ import { PaginatedJoinApplications } from './dto/paginated-join-applications.dto
 import { QueryJoinApplicationArgs } from './dto/query-join-application.args';
 import { QueryJoinApplicationsArgs } from './dto/query-join-applications.args';
 import { RejectJoinApplicationArgs } from './dto/reject-join-application.args';
-import { UpdateJoinApplicationArgs } from './dto/update-join-application.args';
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsService } from './join-applications.service';
 
@@ -51,17 +50,6 @@ export class JoinApplicationsResolver {
     @Args() args: CreateJoinApplicationArgs,
   ) {
     return this.service.createOne(user, args);
-  }
-
-  @FlushDb()
-  @Mutation(() => JoinApplication, {
-    name: 'updateJoinApplication',
-  })
-  async updateOne(
-    @ReqUser() user: User,
-    @Args() args: UpdateJoinApplicationArgs,
-  ) {
-    return this.service.updateOne(user, args);
   }
 
   @FlushDb()
