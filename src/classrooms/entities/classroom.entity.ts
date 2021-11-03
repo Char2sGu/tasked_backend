@@ -7,7 +7,6 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
-import { Affair } from 'src/affairs/entities/affair.entity';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/utilities/field.decorator';
@@ -61,12 +60,6 @@ export class Classroom extends BaseEntity<Classroom> {
     mappedBy: (membership) => membership.classroom,
   })
   memberships = new Collection<Membership>(this);
-
-  @OneToMany({
-    entity: () => Affair,
-    mappedBy: (item) => item.classroom,
-  })
-  affairs = new Collection<Affair>(this);
 
   @OneToMany({
     entity: () => Assignment,

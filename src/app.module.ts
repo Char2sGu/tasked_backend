@@ -8,7 +8,6 @@ import {
 } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
-import { AffairsModule } from './affairs/affairs.module';
 import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guard/auth.guard';
@@ -40,7 +39,6 @@ import { UsersModule } from './users/users.module';
           { path: '/classrooms', module: ClassroomsModule },
           { path: '/memberships', module: MembershipsModule },
           { path: '/join-applications', module: JoinApplicationsModule },
-          { path: '/affairs', module: AffairsModule },
           { path: '/tasks', module: TasksModule },
           { path: '/assignments', module: AssignmentsModule },
         ],
@@ -52,7 +50,6 @@ import { UsersModule } from './users/users.module';
     ClassroomsModule,
     MembershipsModule,
     JoinApplicationsModule,
-    AffairsModule,
     TasksModule,
     AssignmentsModule,
   ],

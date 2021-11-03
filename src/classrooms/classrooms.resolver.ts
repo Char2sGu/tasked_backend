@@ -1,8 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { AffairsService } from 'src/affairs/affairs.service';
-import { PaginatedAffairs } from 'src/affairs/dto/paginated-affairs.dto';
-import { QueryAffairsArgs } from 'src/affairs/dto/query-affairs.args';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
@@ -37,9 +34,6 @@ export class ClassroomsResolver {
 
   @Inject()
   private memberships: MembershipsService;
-
-  @Inject()
-  private affairs: AffairsService;
 
   @Inject()
   private assignments: AssignmentsService;
@@ -114,15 +108,6 @@ export class ClassroomsResolver {
     @Args() args: QueryMembershipsArgs,
   ) {
     return this.memberships.queryMany(user, args, { classroom: entity });
-  }
-
-  @ResolveField(() => Classroom, 'affairs', () => PaginatedAffairs)
-  async resolveAffairs(
-    @ReqUser() user: User,
-    @Parent() entity: Classroom,
-    @Args() args: QueryAffairsArgs,
-  ) {
-    return this.affairs.queryMany(user, args, { classroom: entity });
   }
 
   @ResolveField(() => Classroom, 'assignments', () => PaginatedAssignments)
