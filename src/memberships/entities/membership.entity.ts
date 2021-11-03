@@ -26,12 +26,6 @@ export class Membership extends BaseEntity<Membership> {
   })
   classroom: Classroom;
 
-  @Field(() => String, { nullable: true })
-  @Property({
-    nullable: true,
-  })
-  displayName?: string;
-
   @Field(() => Role)
   @Property()
   role: Role;

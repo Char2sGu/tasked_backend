@@ -30,12 +30,6 @@ export class MembershipsService extends CrudService.of(Membership) {
       { filters: { visible: { user } } },
     );
 
-    if (data.displayName != undefined) {
-      if (target != own)
-        throw new ForbiddenException(
-          'Cannot update "displayName" of memberships not belonging to you',
-        );
-    }
     if (data.role != undefined) {
       if (target == own)
         throw new ForbiddenException(
