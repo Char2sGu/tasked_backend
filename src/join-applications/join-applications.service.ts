@@ -20,10 +20,24 @@ export class JoinApplicationsService extends CrudService.of(JoinApplication) {
 
   async queryMany(
     user: User,
-    { limit, offset }: QueryJoinApplicationsArgs,
+    { limit, offset, isPending }: QueryJoinApplicationsArgs,
     query: FilterQuery<JoinApplication> = {},
   ) {
-    return this.list(query, { limit, offset, filters: { visible: { user } } });
+    return this.list(
+      {
+        $and: [
+          query,
+          isPending != undefined
+            ? {
+                status: isPending
+                  ? { $eq: ApplicationStatus.Pending }
+                  : { $not: ApplicationStatus.Pending },
+              }
+            : {},
+        ],
+      },
+      { limit, offset, filters: { visible: { user } } },
+    );
   }
 
   async queryOne(user: User, { id }: QueryJoinApplicationArgs) {
