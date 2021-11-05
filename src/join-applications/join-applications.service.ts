@@ -1,4 +1,4 @@
-import { FilterQuery } from '@mikro-orm/core';
+import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/common/crud.service';
 import { Role } from 'src/memberships/entities/role.enum';
@@ -36,7 +36,12 @@ export class JoinApplicationsService extends CrudService.of(JoinApplication) {
             : {},
         ],
       },
-      { limit, offset, filters: { visible: { user } } },
+      {
+        limit,
+        offset,
+        filters: { visible: { user } },
+        orderBy: { id: QueryOrder.DESC },
+      },
     );
   }
 
