@@ -6,7 +6,6 @@ import { Field } from 'src/common/utilities/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
-import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
@@ -54,6 +53,6 @@ export class JoinApplicationCreateInput extends ValidationContextAttached {
   classroom: number;
 
   @Field(() => String, { nullable: true })
-  @MaxLength(50)
+  @MaxLength(20)
   message?: string;
 }
