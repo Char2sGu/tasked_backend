@@ -10,6 +10,7 @@ import { CreateJoinApplicationArgs } from './dto/create-join-application.args';
 import { QueryJoinApplicationArgs } from './dto/query-join-application.args';
 import { QueryJoinApplicationsArgs } from './dto/query-join-applications.args';
 import { RejectJoinApplicationArgs } from './dto/reject-join-application.args';
+import { UpdateJoinApplicationArgs } from './dto/update-join-application.args';
 import { ApplicationStatus } from './entities/application-status.enum';
 import { JoinApplication } from './entities/join-application.entity';
 
@@ -46,6 +47,15 @@ export class JoinApplicationsService extends CrudService.of(JoinApplication) {
 
   async createOne(user: User, { data }: CreateJoinApplicationArgs) {
     return this.create({ ...data, owner: user });
+  }
+
+  async updateOne(user: User, { id, data }: UpdateJoinApplicationArgs) {
+    const target = await this.retrieve(id, { filters: { visible: { user } } });
+
+    if (target.status != ApplicationStatus.Pending)
+      throw new ForbiddenException('Cannot update resulted applications');
+
+    return this.update(target, data);
   }
 
   async rejectOne(user: User, { id }: RejectJoinApplicationArgs) {

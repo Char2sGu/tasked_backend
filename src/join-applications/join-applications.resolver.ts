@@ -6,13 +6,11 @@ import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
-import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
-import { AcceptJoinApplicationResult } from './dto/accept-join-application-result.dto';
 import { CreateJoinApplicationArgs } from './dto/create-join-application.args';
 import { PaginatedJoinApplications } from './dto/paginated-join-applications.dto';
 import { QueryJoinApplicationArgs } from './dto/query-join-application.args';
 import { QueryJoinApplicationsArgs } from './dto/query-join-applications.args';
-import { RejectJoinApplicationArgs } from './dto/reject-join-application.args';
+import { UpdateJoinApplicationArgs } from './dto/update-join-application.args';
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsService } from './join-applications.service';
 
@@ -54,24 +52,13 @@ export class JoinApplicationsResolver {
 
   @FlushDb()
   @Mutation(() => JoinApplication, {
-    name: 'rejectJoinApplication',
+    name: 'updateJoinApplication',
   })
-  async rejectOne(
+  async updateOne(
     @ReqUser() user: User,
-    @Args() args: RejectJoinApplicationArgs,
+    @Args() args: UpdateJoinApplicationArgs,
   ) {
-    return this.service.rejectOne(user, args);
-  }
-
-  @FlushDb()
-  @Mutation(() => AcceptJoinApplicationResult, {
-    name: 'acceptJoinApplication',
-  })
-  async acceptOne(
-    @ReqUser() user: User,
-    @Args() args: AcceptJoinApplicationArgs,
-  ) {
-    return this.service.acceptOne(user, args);
+    return this.service.updateOne(user, args);
   }
 
   @ResolveField(() => JoinApplication, 'owner', () => User)
