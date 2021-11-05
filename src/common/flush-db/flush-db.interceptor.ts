@@ -7,7 +7,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { map, Observable } from 'rxjs';
+import { concatMap, from, map, Observable, of } from 'rxjs';
 
 import { FLUSH_DB } from './flush-db.symbol';
 
@@ -25,13 +25,13 @@ export class FlushDbInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map(async (value) => {
+      concatMap((value) => {
         const ifFlush = this.reflector.get<true | undefined>(
           FLUSH_DB,
           context.getHandler(),
         );
-        if (ifFlush) await this.em.flush();
-        return value;
+        if (ifFlush) return from(this.em.flush()).pipe(map(() => value));
+        else return of(value);
       }),
     );
   }
