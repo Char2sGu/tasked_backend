@@ -74,7 +74,7 @@ export class JoinApplicationsService extends CrudService.of(JoinApplication) {
     });
 
     const membership = await this.memberships.create({
-      owner: user,
+      owner: application.owner,
       classroom: application.classroom,
       role: Role.Student,
     });
