@@ -42,10 +42,10 @@ export class ClassroomsService extends CrudService.of(Classroom) {
       );
 
     return this.create({
-      isOpen: true,
-      ...data,
       creator: user,
       memberships: [{ owner: user, role: Role.Teacher }],
+      isOpen: true,
+      ...data,
     });
   }
 

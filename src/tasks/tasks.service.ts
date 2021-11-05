@@ -25,7 +25,10 @@ export class TasksService extends CrudService.of(Task) {
   }
 
   async createOne(user: User, { data }: CreateTaskArgs) {
-    return this.create({ ...data, creator: user });
+    return this.create({
+      creator: user,
+      ...data,
+    });
   }
 
   async updateOne(user: User, { id, data }: UpdateTaskArgs) {
