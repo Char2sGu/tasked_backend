@@ -42,7 +42,12 @@ export class AssignmentsService extends CrudService.of(Assignment) {
   }
 
   async createOne({ data }: CreateAssignmentArgs) {
-    return this.create({ ...data });
+    return this.create({
+      isPublic: false,
+      isCompleted: false,
+      isImportant: false,
+      ...data,
+    });
   }
 
   async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {

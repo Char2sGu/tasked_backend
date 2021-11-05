@@ -39,9 +39,7 @@ export class Classroom extends BaseEntity<Classroom> {
   description?: string;
 
   @Field(() => Boolean)
-  @Property({
-    default: true,
-  })
+  @Property()
   isOpen: boolean;
 
   @ManyToOne({

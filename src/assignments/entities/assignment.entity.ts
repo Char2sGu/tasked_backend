@@ -35,20 +35,14 @@ export class Assignment extends BaseEntity<Assignment> {
   task: Task;
 
   @Field(() => Boolean)
-  @Property({
-    default: false,
-  })
+  @Property()
   isPublic: boolean;
 
   @Field(() => Boolean)
-  @Property({
-    default: false,
-  })
+  @Property()
   isCompleted: boolean;
 
   @Field(() => Boolean)
-  @Property({
-    default: false,
-  })
+  @Property()
   isImportant: boolean;
 }

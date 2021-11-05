@@ -45,7 +45,11 @@ export class JoinApplicationsService extends CrudService.of(JoinApplication) {
   }
 
   async createOne(user: User, { data }: CreateJoinApplicationArgs) {
-    return this.create({ ...data, owner: user });
+    return this.create({
+      status: ApplicationStatus.Pending,
+      ...data,
+      owner: user,
+    });
   }
 
   async rejectOne(user: User, { id }: RejectJoinApplicationArgs) {
