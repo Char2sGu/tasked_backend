@@ -40,7 +40,7 @@ export class JoinApplicationCreateInput extends ValidationContextAttached {
     },
   )
   @Existence<Classroom>(
-    false,
+    true,
     () => ClassroomsService,
     (classroomId: number) => ({
       id: classroomId,
