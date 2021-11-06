@@ -39,17 +39,9 @@ export class JoinApplicationCreateInput extends ValidationContextAttached {
       message: 'classroom must not have a membership of you',
     },
   )
-  @Existence<Classroom>(
-    true,
-    () => ClassroomsService,
-    (classroomId: number) => ({
-      id: classroomId,
-      isOpen: true,
-    }),
-    {
-      message: 'classroom must be open',
-    },
-  )
+  @Existence<Classroom>(true, () => ClassroomsService, (id: number) => id, {
+    message: 'classroom not found',
+  })
   classroom: number;
 
   @Field(() => String, { nullable: true })

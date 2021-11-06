@@ -23,7 +23,7 @@ import { User } from 'src/users/entities/user.entity';
 @Filter<Classroom>({
   name: 'visible',
   cond: ({ user }: { user: User }) => ({
-    memberships: { owner: user },
+    $or: [{ memberships: { owner: user } }, { isOpen: true }],
   }),
 })
 @Entity()
