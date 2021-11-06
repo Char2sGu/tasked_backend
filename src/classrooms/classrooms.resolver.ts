@@ -81,7 +81,9 @@ export class ClassroomsResolver {
     return entity.creator.init();
   }
 
-  @ResolveField(() => Classroom, 'membership', () => Membership)
+  @ResolveField(() => Classroom, 'membership', () => Membership, {
+    nullable: true,
+  })
   async resolveMembership(@ReqUser() user: User, @Parent() entity: Classroom) {
     return entity.memberships
       .matching({ where: { owner: user }, limit: 1 })
