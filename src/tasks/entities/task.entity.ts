@@ -16,6 +16,7 @@ import { User } from 'src/users/entities/user.entity';
 @Filter<Task>({
   name: 'visible',
   cond: ({ user }: { user: User }) => ({
+    assignments: { classroom: { deletedAt: null } },
     $or: [{ creator: user }, { assignments: { recipient: user } }],
   }),
 })

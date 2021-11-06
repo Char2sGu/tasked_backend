@@ -11,7 +11,7 @@ import { Role } from './role.enum';
 @Filter<Membership>({
   name: 'visible',
   cond: ({ user }: { user: User }) => ({
-    classroom: { memberships: { owner: user } },
+    classroom: { memberships: { owner: user }, deletedAt: null },
   }),
 })
 @Entity()

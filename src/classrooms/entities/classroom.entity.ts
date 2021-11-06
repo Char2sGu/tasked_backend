@@ -16,13 +16,9 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Classroom>({
-  name: 'undeleted',
-  cond: { deletedAt: null },
-  default: true,
-})
-@Filter<Classroom>({
   name: 'visible',
   cond: ({ user }: { user: User }) => ({
+    deletedAt: null,
     $or: [{ memberships: { owner: user } }, { isOpen: true }],
   }),
 })
