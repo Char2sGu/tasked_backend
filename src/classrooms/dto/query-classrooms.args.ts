@@ -6,4 +6,7 @@ import { Field } from 'src/common/utilities/field.decorator';
 export class QueryClassroomsArgs extends PaginationArgs {
   @Field(() => Boolean, { nullable: true })
   isOpen?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  isJoined?: boolean;
 }

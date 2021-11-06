@@ -15,11 +15,17 @@ import { Classroom } from './entities/classroom.entity';
 export class ClassroomsService extends CrudService.of(Classroom) {
   async queryMany(
     user: User,
-    { limit, offset, isOpen }: QueryClassroomsArgs,
+    { limit, offset, isOpen, isJoined }: QueryClassroomsArgs,
     query: FilterQuery<Classroom> = {},
   ) {
     return this.list(
-      { $and: [query, isOpen != undefined ? { isOpen } : {}] },
+      {
+        $and: [
+          query,
+          isOpen != undefined ? { isOpen } : {},
+          isJoined != undefined ? { memberships: { owner: user } } : {},
+        ],
+      },
       {
         limit,
         offset,
