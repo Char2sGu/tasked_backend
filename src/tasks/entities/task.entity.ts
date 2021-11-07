@@ -37,6 +37,10 @@ export class Task extends BaseEntity<Task> {
   })
   description?: string;
 
+  @Field(() => Boolean)
+  @Property()
+  isActive: boolean;
+
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.task,
