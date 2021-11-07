@@ -14,10 +14,13 @@ import { Task } from './entities/task.entity';
 export class TasksService extends CrudService.of(Task) {
   async queryMany(
     user: User,
-    { limit, offset }: QueryTasksArgs,
+    { limit, offset, isOwn }: QueryTasksArgs,
     query: FilterQuery<Task> = {},
   ) {
-    return this.list(query, { limit, offset, filters: { visible: { user } } });
+    return this.list(
+      { $and: [query, isOwn != undefined ? { creator: user } : {}] },
+      { limit, offset, filters: { visible: { user } } },
+    );
   }
 
   async queryOne(user: User, { id }: QueryTaskArgs) {
