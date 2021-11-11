@@ -1,5 +1,6 @@
 import { InputType } from '@nestjs/graphql';
 import { Field } from 'src/common/utilities/field.decorator';
+
 import { Role } from '../entities/role.enum';
 
 @InputType()
