@@ -13,6 +13,7 @@ import { ValidationContextInterceptor } from './common/validation/validation-con
 import { DB_PATH } from './configurations';
 import { JoinApplicationsModule } from './join-applications/join-applications.module';
 import { MembershipsModule } from './memberships/memberships.module';
+import { SharedModule } from './shared/shared.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 
@@ -28,6 +29,7 @@ import { UsersModule } from './users/users.module';
       autoSchemaFile: true,
     }),
     CommonModule,
+    SharedModule,
     AuthModule,
     UsersModule,
     ClassroomsModule,
