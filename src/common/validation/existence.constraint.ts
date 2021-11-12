@@ -31,10 +31,13 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     }: ValidationArguments<Parameters<typeof Existence>>,
   ) {
     const service = this.moduleRef.get(serviceType(), { strict: false });
-    return (await service.retrieve(conditions?.(value, user, object) ?? {}, {
-      filters: { visible: { user } },
-      failHandler: false,
-    }))
+    return (await service.crud.retrieve(
+      conditions?.(value, user, object) ?? {},
+      {
+        filters: { visible: { user } },
+        failHandler: false,
+      },
+    ))
       ? shouldExist
       : !shouldExist;
   }

@@ -6,9 +6,8 @@ import {
   FindOneOrFailOptions,
   FindOptions,
 } from '@mikro-orm/core';
-import { EntityRepository } from '@mikro-orm/knex';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { NotFoundException, Type } from '@nestjs/common';
+import { EntityRepository } from '@mikro-orm/core';
+import { NotFoundException } from '@nestjs/common';
 
 import { BaseEntity } from '../common/base-entity.entity';
 
@@ -16,14 +15,6 @@ import { BaseEntity } from '../common/base-entity.entity';
  * A factory class to build common CRUD services.
  */
 export abstract class CrudService<Entity> {
-  static of<Entity>(type: Type<Entity>): Type<CrudService<Entity>> {
-    class Service extends CrudService<Entity> {
-      @InjectRepository(type)
-      repo: EntityRepository<Entity>;
-    }
-    return Service;
-  }
-
   protected repo: EntityRepository<Entity>;
 
   async list(where: FilterQuery<Entity>, options?: FindOptions<Entity>) {

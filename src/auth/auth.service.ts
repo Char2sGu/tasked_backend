@@ -17,7 +17,7 @@ export class AuthService {
 
   async obtainJwt(username: string, password: string): Promise<AuthResult> {
     try {
-      const user = await this.users.retrieve({ username });
+      const user = await this.users.crud.retrieve({ username });
       const isValid = await bcryptjs.compare(password, user.password);
       if (isValid) {
         const token = await this.signJwt(user);
@@ -32,7 +32,7 @@ export class AuthService {
   async verifyJwt(token: string) {
     try {
       const { id } = await this.jwt.verifyAsync<JwtData>(token);
-      return this.users.retrieve(id);
+      return this.users.crud.retrieve(id);
     } catch (error) {
       return;
     }

@@ -1,5 +1,5 @@
-import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
+import { CrudModule } from 'src/crud/crud.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 
 import { AssignmentsResolver } from './assignments.resolver';
@@ -9,7 +9,7 @@ import { IsInferiorMemberConstraint } from './dto/is-inferior-member.constraint'
 import { Assignment } from './entities/assignment.entity';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Assignment]), MembershipsModule],
+  imports: [CrudModule.forFeature(Assignment), MembershipsModule],
   providers: [
     AssignmentsResolver,
     AssignmentsFieldsResolver,

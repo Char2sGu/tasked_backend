@@ -1,7 +1,7 @@
-import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { forwardRef, Module } from '@nestjs/common';
 import { AssignmentsModule } from 'src/assignments/assignments.module';
 import { ClassroomsModule } from 'src/classrooms/classrooms.module';
+import { CrudModule } from 'src/crud/crud.module';
 import { JoinApplicationsModule } from 'src/join-applications/join-applications.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { TasksModule } from 'src/tasks/tasks.module';
@@ -13,7 +13,7 @@ import { UsersFieldsResolver } from './users-fields.resolver';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([User]),
+    CrudModule.forFeature(User),
     forwardRef(() => ClassroomsModule),
     forwardRef(() => JoinApplicationsModule),
     forwardRef(() => MembershipsModule),

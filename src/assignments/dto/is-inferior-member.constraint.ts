@@ -31,7 +31,7 @@ export class IsInferiorMemberConstraint
     try {
       [ownMembership, targetMembership] = await Promise.all(
         ([user, userId] as const).map((owner) =>
-          this.service.retrieve(
+          this.service.crud.retrieve(
             { owner, classroom: classroomId },
             { filters: { visible: { user } } },
           ),

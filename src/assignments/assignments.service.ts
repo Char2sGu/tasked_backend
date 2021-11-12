@@ -1,7 +1,7 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { isDefined } from 'class-validator';
-import { CrudService } from 'src/shared/crud.service';
+import { CrudService } from 'src/crud/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
@@ -12,13 +12,15 @@ import { UpdateAssignmentArgs } from './dto/update-assignment.args';
 import { Assignment } from './entities/assignment.entity';
 
 @Injectable()
-export class AssignmentsService extends CrudService.of(Assignment) {
+export class AssignmentsService {
+  constructor(public crud: CrudService<Assignment>) {}
+
   async queryMany(
     user: User,
     { limit, offset, isOwn, ...filters }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
-    return this.list(
+    return this.crud.list(
       {
         $and: [
           query,
@@ -38,11 +40,11 @@ export class AssignmentsService extends CrudService.of(Assignment) {
   }
 
   async queryOne(user: User, { id }: QueryAssignmentArgs) {
-    return this.retrieve(id, { filters: { visible: { user } } });
+    return this.crud.retrieve(id, { filters: { visible: { user } } });
   }
 
   async createOne({ data }: CreateAssignmentArgs) {
-    return this.create({
+    return this.crud.create({
       isPublic: false,
       isCompleted: false,
       isImportant: false,
@@ -51,7 +53,7 @@ export class AssignmentsService extends CrudService.of(Assignment) {
   }
 
   async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {
-    const assignment = await this.retrieve(id, {
+    const assignment = await this.crud.retrieve(id, {
       filters: { visible: { user } },
       populate: ['task'],
     });
@@ -73,11 +75,11 @@ export class AssignmentsService extends CrudService.of(Assignment) {
         );
     }
 
-    return this.update(assignment, data);
+    return this.crud.update(assignment, data);
   }
 
   async deleteOne(user: User, { id }: DeleteAssignmentArgs) {
-    const assignment = await this.retrieve(id, {
+    const assignment = await this.crud.retrieve(id, {
       filters: { visible: { user } },
       populate: ['task'],
     });
@@ -87,6 +89,6 @@ export class AssignmentsService extends CrudService.of(Assignment) {
         'Cannot delete assignments not created by you',
       );
 
-    return this.destroy(assignment);
+    return this.crud.destroy(assignment);
   }
 }

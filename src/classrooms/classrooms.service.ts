@@ -1,7 +1,7 @@
 import { FilterQuery, FindOneOrFailOptions } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { CrudService } from 'src/crud/crud.service';
 import { Role } from 'src/memberships/entities/role.enum';
-import { CrudService } from 'src/shared/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateClassroomArgs } from './dto/create-classroom.args';
@@ -12,13 +12,15 @@ import { UpdateClassroomArgs } from './dto/update-classroom.args';
 import { Classroom } from './entities/classroom.entity';
 
 @Injectable()
-export class ClassroomsService extends CrudService.of(Classroom) {
+export class ClassroomsService {
+  constructor(public crud: CrudService<Classroom>) {}
+
   async queryMany(
     user: User,
     { limit, offset, isOpen, isJoined }: QueryClassroomsArgs,
     query: FilterQuery<Classroom> = {},
   ) {
-    return this.list(
+    return this.crud.list(
       {
         $and: [
           query,
@@ -36,18 +38,18 @@ export class ClassroomsService extends CrudService.of(Classroom) {
   }
 
   async queryOne(user: User, { id }: QueryClassroomArgs) {
-    return this.retrieve(id, { filters: { visible: { user } } });
+    return this.crud.retrieve(id, { filters: { visible: { user } } });
   }
 
   async createOne(user: User, { data }: CreateClassroomArgs) {
     const QUOTA = 20;
-    const createdCount = await this.count({ creator: user });
+    const createdCount = await this.crud.count({ creator: user });
     if (createdCount >= QUOTA)
       throw new ForbiddenException(
         `Cannot create more than ${QUOTA} classrooms`,
       );
 
-    return this.create({
+    return this.crud.create({
       creator: user,
       memberships: [{ owner: user, role: Role.Teacher }],
       isOpen: true,
@@ -56,7 +58,7 @@ export class ClassroomsService extends CrudService.of(Classroom) {
   }
 
   async updateOne(user: User, { id, data }: UpdateClassroomArgs) {
-    const classroom = await this.retrieve(id, {
+    const classroom = await this.crud.retrieve(id, {
       filters: { visible: { user } },
     });
 
@@ -65,11 +67,11 @@ export class ClassroomsService extends CrudService.of(Classroom) {
         'Cannot update classrooms not created by you',
       );
 
-    return this.update(classroom, data);
+    return this.crud.update(classroom, data);
   }
 
   async deleteOne(user: User, { id }: DeleteClassroomArgs) {
-    const classroom = await this.retrieve(id, {
+    const classroom = await this.crud.retrieve(id, {
       filters: { visible: { user } },
     });
 
@@ -78,14 +80,14 @@ export class ClassroomsService extends CrudService.of(Classroom) {
         'Cannot delete classrooms not created by you',
       );
 
-    return this.destroy(classroom);
+    return this.crud.destroy(classroom);
   }
 
   async destroy(
     where: FilterQuery<Classroom>,
     options?: FindOneOrFailOptions<Classroom>,
   ) {
-    const entity = await this.retrieve(where, options);
+    const entity = await this.crud.retrieve(where, options);
     entity.deletedAt = new Date();
     return entity;
   }

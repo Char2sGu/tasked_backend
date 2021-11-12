@@ -1,6 +1,6 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/shared/crud.service';
+import { CrudService } from 'src/crud/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
@@ -10,22 +10,30 @@ import { UpdateMembershipArgs } from './dto/update-membership.args';
 import { Membership } from './entities/membership.entity';
 
 @Injectable()
-export class MembershipsService extends CrudService.of(Membership) {
+export class MembershipsService {
+  constructor(public crud: CrudService<Membership>) {}
+
   async queryMany(
     user: User,
     { limit, offset }: QueryMembershipsArgs,
     query: FilterQuery<Membership> = {},
   ) {
-    return this.list(query, { limit, offset, filters: { visible: { user } } });
+    return this.crud.list(query, {
+      limit,
+      offset,
+      filters: { visible: { user } },
+    });
   }
 
   async queryOne(user: User, { id }: QueryMembershipArgs) {
-    return this.retrieve(id, { filters: { visible: { user } } });
+    return this.crud.retrieve(id, { filters: { visible: { user } } });
   }
 
   async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
-    const target = await this.retrieve(id, { filters: { visible: { user } } });
-    const own = await this.retrieve(
+    const target = await this.crud.retrieve(id, {
+      filters: { visible: { user } },
+    });
+    const own = await this.crud.retrieve(
       { classroom: target.classroom, owner: user },
       { filters: { visible: { user } } },
     );
@@ -41,11 +49,11 @@ export class MembershipsService extends CrudService.of(Membership) {
         );
     }
 
-    return this.update(target, data);
+    return this.crud.update(target, data);
   }
 
   async deleteOne(user: User, { id }: DeleteMembershipArgs) {
-    const targetMembership = await this.retrieve(id, {
+    const targetMembership = await this.crud.retrieve(id, {
       filters: { visible: { user } },
       populate: ['classroom'],
     });
@@ -75,6 +83,6 @@ export class MembershipsService extends CrudService.of(Membership) {
         );
     }
 
-    return this.destroy(targetMembership);
+    return this.crud.destroy(targetMembership);
   }
 }

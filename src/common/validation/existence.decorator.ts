@@ -1,9 +1,9 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { Type } from '@nestjs/common';
 import { registerDecorator, ValidationOptions } from 'class-validator';
+import { CrudService } from 'src/crud/crud.service';
+import { User } from 'src/users/entities/user.entity';
 
-import { CrudService } from '../../shared/crud.service';
-import { User } from '../../users/entities/user.entity';
 import { ExistenceConstraint } from './existence.constraint';
 
 /**
@@ -18,7 +18,7 @@ import { ExistenceConstraint } from './existence.constraint';
 export const Existence =
   <Entity>(
     shouldExist: boolean,
-    serviceType: () => Type<CrudService<Entity>>,
+    serviceType: () => Type<{ crud: CrudService<Entity> }>, // TODO: decouple here
     conditions: (
       value: unknown,
       user: User,
