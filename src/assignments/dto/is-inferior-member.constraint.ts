@@ -34,7 +34,7 @@ export class IsInferiorMemberConstraint
         ([user, userId] as const).map((owner) =>
           this.service.crud.retrieve(
             { owner, classroom: classroomId },
-            { filters: { [CRUD_FILTER]: user } },
+            { filters: { [CRUD_FILTER]: { user } } },
           ),
         ),
       );

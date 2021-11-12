@@ -35,13 +35,13 @@ export class AssignmentsService {
         limit,
         offset,
         orderBy: { createdAt: QueryOrder.DESC },
-        filters: { [CRUD_FILTER]: user },
+        filters: { [CRUD_FILTER]: { user } },
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryAssignmentArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: user } });
+    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
   }
 
   async createOne({ data }: CreateAssignmentArgs) {
@@ -55,7 +55,7 @@ export class AssignmentsService {
 
   async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {
     const assignment = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: user },
+      filters: { [CRUD_FILTER]: { user } },
       populate: ['task'],
     });
 
@@ -81,7 +81,7 @@ export class AssignmentsService {
 
   async deleteOne(user: User, { id }: DeleteAssignmentArgs) {
     const assignment = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: user },
+      filters: { [CRUD_FILTER]: { user } },
       populate: ['task'],
     });
 

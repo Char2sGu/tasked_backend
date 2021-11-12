@@ -10,7 +10,7 @@ import { User } from 'src/users/entities/user.entity';
 @ObjectType()
 @Filter<Assignment>({
   name: CRUD_FILTER,
-  cond: (user: User) => ({
+  cond: ({ user }: { user: User }) => ({
     classroom: { deletedAt: null },
     $or: [
       { recipient: user },

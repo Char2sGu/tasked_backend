@@ -22,12 +22,12 @@ export class TasksService {
   ) {
     return this.crud.list(
       { $and: [query, isOwn != undefined ? { creator: user } : {}] },
-      { limit, offset, filters: { [CRUD_FILTER]: user } },
+      { limit, offset, filters: { [CRUD_FILTER]: { user } } },
     );
   }
 
   async queryOne(user: User, { id }: QueryTaskArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: user } });
+    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
   }
 
   async createOne(user: User, { data }: CreateTaskArgs) {
@@ -39,7 +39,7 @@ export class TasksService {
 
   async updateOne(user: User, { id, data }: UpdateTaskArgs) {
     const task = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: user },
+      filters: { [CRUD_FILTER]: { user } },
     });
 
     if (task.creator != user)
@@ -50,7 +50,7 @@ export class TasksService {
 
   async deleteOne(user: User, { id }: DeleteTaskArgs) {
     const task = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: user },
+      filters: { [CRUD_FILTER]: { user } },
     });
 
     if (task.creator != user)

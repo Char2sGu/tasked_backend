@@ -15,12 +15,12 @@ export class UsersService {
   async queryMany(user: User, { limit, offset }: QueryUsersArgs) {
     return this.crud.list(
       {},
-      { limit, offset, filters: { [CRUD_FILTER]: user } },
+      { limit, offset, filters: { [CRUD_FILTER]: { user } } },
     );
   }
 
   async queryOne(user: User, { id }: QueryUserArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: user } });
+    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
   }
 
   async createOne({ data }: CreateUserArgs) {
@@ -29,7 +29,7 @@ export class UsersService {
 
   async updateOne(user: User, { id, data }: UpdateUserArgs) {
     const entity = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: user },
+      filters: { [CRUD_FILTER]: { user } },
     });
 
     if (entity != user)

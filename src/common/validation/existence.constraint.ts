@@ -35,7 +35,7 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     return (await service.crud.retrieve(
       conditions?.(value, user, object) ?? {},
       {
-        filters: { [CRUD_FILTER]: user },
+        filters: { [CRUD_FILTER]: { user } },
         failHandler: false,
       },
     ))

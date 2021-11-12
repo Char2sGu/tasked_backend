@@ -11,7 +11,7 @@ import { Role } from './role.enum';
 @ObjectType()
 @Filter<Membership>({
   name: CRUD_FILTER,
-  cond: (user: User) => ({
+  cond: ({ user }: { user: User }) => ({
     classroom: { memberships: { owner: user }, deletedAt: null },
   }),
 })
