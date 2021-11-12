@@ -9,6 +9,7 @@ import { TasksModule } from 'src/tasks/tasks.module';
 import { User } from './entities/user.entity';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
+import { UsersFieldsResolver } from './users-fields.resolver';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { UsersService } from './users.service';
     forwardRef(() => TasksModule),
     forwardRef(() => AssignmentsModule),
   ],
-  providers: [UsersResolver, UsersService],
+  providers: [UsersResolver, UsersFieldsResolver, UsersService],
   exports: [UsersService],
 })
 export class UsersModule {}
