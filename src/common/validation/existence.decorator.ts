@@ -2,8 +2,8 @@ import { FilterQuery } from '@mikro-orm/core';
 import { Type } from '@nestjs/common';
 import { registerDecorator, ValidationOptions } from 'class-validator';
 
+import { CrudService } from '../../shared/crud.service';
 import { User } from '../../users/entities/user.entity';
-import { CrudService } from '../crud.service';
 import { ExistenceConstraint } from './existence.constraint';
 
 /**

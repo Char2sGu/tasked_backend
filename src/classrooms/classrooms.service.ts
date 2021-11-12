@@ -1,7 +1,7 @@
 import { FilterQuery, FindOneOrFailOptions } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/common/crud.service';
 import { Role } from 'src/memberships/entities/role.enum';
+import { CrudService } from 'src/shared/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateClassroomArgs } from './dto/create-classroom.args';

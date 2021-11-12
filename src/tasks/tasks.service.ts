@@ -1,6 +1,6 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/common/crud.service';
+import { CrudService } from 'src/shared/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';

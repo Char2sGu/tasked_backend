@@ -10,7 +10,7 @@ import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { NotFoundException, Type } from '@nestjs/common';
 
-import { BaseEntity } from './base-entity.entity';
+import { BaseEntity } from '../common/base-entity.entity';
 
 /**
  * A factory class to build common CRUD services.

@@ -1,8 +1,8 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/common/crud.service';
 import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { CrudService } from 'src/shared/crud.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
