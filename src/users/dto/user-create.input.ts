@@ -1,8 +1,8 @@
 import { InputType } from '@nestjs/graphql';
 import { Length, Matches } from 'class-validator';
-import { Field } from 'src/common/utilities/field.decorator';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
+import { Field } from 'src/shared/field.decorator';
 import { Gender } from 'src/users/entities/gender.enum';
 
 import { User } from '../entities/user.entity';

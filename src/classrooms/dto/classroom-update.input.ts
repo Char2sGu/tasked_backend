@@ -1,5 +1,5 @@
 import { InputType, PartialType } from '@nestjs/graphql';
-import { Field } from 'src/common/utilities/field.decorator';
+import { Field } from 'src/shared/field.decorator';
 
 import { ClassroomCreateInput } from './classroom-create.input';
 

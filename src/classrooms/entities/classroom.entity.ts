@@ -10,10 +10,10 @@ import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
-import { Field } from 'src/common/utilities/field.decorator';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { Field } from 'src/shared/field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()

@@ -1,7 +1,7 @@
 import { Type } from '@nestjs/common';
 import { Int, ObjectType } from '@nestjs/graphql';
 
-import { Field } from '../utilities/field.decorator';
+import { Field } from '../../shared/field.decorator';
 
 /**
  * A factory class to build DTO classes representing pagination results.
