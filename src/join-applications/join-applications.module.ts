@@ -6,11 +6,13 @@ import { MembershipsModule } from 'src/memberships/memberships.module';
 import { JoinApplication } from './entities/join-application.entity';
 import { JoinApplicationsResolver } from './join-applications.resolver';
 import { JoinApplicationsService } from './join-applications.service';
+import { JoinApplicationsFieldsResolver } from './join-applications-fields.resolver';
 
 @Module({
   imports: [MikroOrmModule.forFeature([JoinApplication]), MembershipsModule],
   providers: [
     JoinApplicationsResolver,
+    JoinApplicationsFieldsResolver,
     JoinApplicationsService,
     ExistenceConstraint,
   ],

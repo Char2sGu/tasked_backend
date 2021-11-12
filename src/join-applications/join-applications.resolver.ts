@@ -1,7 +1,4 @@
-import { Inject } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -18,69 +15,48 @@ import { JoinApplicationsService } from './join-applications.service';
 
 @Resolver(() => JoinApplication)
 export class JoinApplicationsResolver {
-  @Inject()
-  private service: JoinApplicationsService;
+  constructor(private service: JoinApplicationsService) {}
 
-  @Query(() => PaginatedJoinApplications, {
-    name: 'joinApplications',
-  })
-  async queryMany(
-    @ReqUser() user: User,
+  @Query(() => PaginatedJoinApplications)
+  async joinApplications(
     @Args() args: QueryJoinApplicationsArgs,
+    @ReqUser() user: User,
   ) {
     return this.service.queryMany(user, args);
   }
 
-  @Query(() => JoinApplication, {
-    name: 'joinApplication',
-  })
-  async queryOne(
-    @ReqUser() user: User,
+  @Query(() => JoinApplication)
+  async joinApplication(
     @Args() args: QueryJoinApplicationArgs,
+    @ReqUser() user: User,
   ) {
     return this.service.queryOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => JoinApplication, {
-    name: 'createJoinApplication',
-  })
-  async createOne(
-    @ReqUser() user: User,
+  @Mutation(() => JoinApplication)
+  async createJoinApplication(
     @Args() args: CreateJoinApplicationArgs,
+    @ReqUser() user: User,
   ) {
     return this.service.createOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => JoinApplication, {
-    name: 'rejectJoinApplication',
-  })
-  async rejectOne(
-    @ReqUser() user: User,
+  @Mutation(() => JoinApplication)
+  async rejectJoinApplication(
     @Args() args: RejectJoinApplicationArgs,
+    @ReqUser() user: User,
   ) {
     return this.service.rejectOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => AcceptJoinApplicationResult, {
-    name: 'acceptJoinApplication',
-  })
-  async acceptOne(
-    @ReqUser() user: User,
+  @Mutation(() => AcceptJoinApplicationResult)
+  async acceptJoinApplication(
     @Args() args: AcceptJoinApplicationArgs,
+    @ReqUser() user: User,
   ) {
     return this.service.acceptOne(user, args);
-  }
-
-  @ResolveField(() => JoinApplication, 'owner', () => User)
-  async resolveOwner(@Parent() entity: JoinApplication) {
-    return entity.owner.init();
-  }
-
-  @ResolveField(() => JoinApplication, 'classroom', () => Classroom)
-  async resolveClassroom(@Parent() entity: JoinApplication) {
-    return entity.classroom.init();
   }
 }
