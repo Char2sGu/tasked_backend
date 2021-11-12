@@ -6,6 +6,7 @@ import { MembershipsModule } from 'src/memberships/memberships.module';
 
 import { ClassroomsResolver } from './classrooms.resolver';
 import { ClassroomsService } from './classrooms.service';
+import { ClassroomsFieldsResolver } from './classrooms-fields.resolver';
 import { Classroom } from './entities/classroom.entity';
 
 @Module({
@@ -15,7 +16,7 @@ import { Classroom } from './entities/classroom.entity';
     forwardRef(() => MembershipsModule),
     forwardRef(() => AssignmentsModule),
   ],
-  providers: [ClassroomsResolver, ClassroomsService],
+  providers: [ClassroomsResolver, ClassroomsFieldsResolver, ClassroomsService],
   exports: [ClassroomsService],
 })
 export class ClassroomsModule {}

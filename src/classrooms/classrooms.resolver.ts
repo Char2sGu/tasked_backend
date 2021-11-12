@@ -1,16 +1,4 @@
-import { Inject } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { AssignmentsService } from 'src/assignments/assignments.service';
-import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
-import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
-import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
-import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
-import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
-import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
-import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
-import { Membership } from 'src/memberships/entities/membership.entity';
-import { MembershipsService } from 'src/memberships/memberships.service';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -26,98 +14,42 @@ import { Classroom } from './entities/classroom.entity';
 
 @Resolver(() => Classroom)
 export class ClassroomsResolver {
-  @Inject()
-  private service: ClassroomsService;
+  constructor(private service: ClassroomsService) {}
 
-  @Inject()
-  private joinApplications: JoinApplicationsService;
-
-  @Inject()
-  private memberships: MembershipsService;
-
-  @Inject()
-  private assignments: AssignmentsService;
-
-  @Query(() => PaginatedClassrooms, {
-    name: 'classrooms',
-  })
-  async queryMany(@ReqUser() user: User, @Args() args: QueryClassroomsArgs) {
+  @Query(() => PaginatedClassrooms)
+  async classrooms(@Args() args: QueryClassroomsArgs, @ReqUser() user: User) {
     return this.service.queryMany(user, args);
   }
 
-  @Query(() => Classroom, {
-    name: 'classroom',
-  })
-  async queryOne(@ReqUser() user: User, @Args() args: QueryClassroomArgs) {
+  @Query(() => Classroom)
+  async classroom(@Args() args: QueryClassroomArgs, @ReqUser() user: User) {
     return this.service.queryOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => Classroom, {
-    name: 'createClassroom',
-  })
-  async createOne(@ReqUser() user: User, @Args() args: CreateClassroomArgs) {
+  @Mutation(() => Classroom)
+  async createClassroom(
+    @Args() args: CreateClassroomArgs,
+    @ReqUser() user: User,
+  ) {
     return this.service.createOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => Classroom, {
-    name: 'updateClassroom',
-  })
-  async updateOne(@ReqUser() user: User, @Args() args: UpdateClassroomArgs) {
+  @Mutation(() => Classroom)
+  async updateClassroom(
+    @Args() args: UpdateClassroomArgs,
+    @ReqUser() user: User,
+  ) {
     return this.service.updateOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => Classroom, {
-    name: 'deleteClassroom',
-  })
-  async deleteOne(@ReqUser() user: User, @Args() args: DeleteClassroomArgs) {
+  @Mutation(() => Classroom)
+  async deleteClassroom(
+    @Args() args: DeleteClassroomArgs,
+    @ReqUser() user: User,
+  ) {
     return this.service.deleteOne(user, args);
-  }
-
-  @ResolveField(() => Classroom, 'creator', () => User)
-  async resolveCreator(@Parent() entity: Classroom) {
-    return entity.creator.init();
-  }
-
-  @ResolveField(() => Classroom, 'membership', () => Membership, {
-    nullable: true,
-  })
-  async resolveMembership(@ReqUser() user: User, @Parent() entity: Classroom) {
-    return entity.memberships
-      .matching({ where: { owner: user }, limit: 1 })
-      .then(([v]) => v);
-  }
-
-  @ResolveField(
-    () => Classroom,
-    'joinApplications',
-    () => PaginatedJoinApplications,
-  )
-  async resolveJoinApplications(
-    @ReqUser() user: User,
-    @Parent() entity: Classroom,
-    @Args() args: QueryJoinApplicationsArgs,
-  ) {
-    return this.joinApplications.queryMany(user, args, { classroom: entity });
-  }
-
-  @ResolveField(() => Classroom, 'memberships', () => PaginatedMemberships)
-  async resolveMemberships(
-    @ReqUser() user: User,
-    @Parent() entity: Classroom,
-    @Args() args: QueryMembershipsArgs,
-  ) {
-    return this.memberships.queryMany(user, args, { classroom: entity });
-  }
-
-  @ResolveField(() => Classroom, 'assignments', () => PaginatedAssignments)
-  async resolveAssignments(
-    @ReqUser() user: User,
-    @Parent() entity: Classroom,
-    @Args() args: QueryAssignmentsArgs,
-  ) {
-    return this.assignments.queryMany(user, args, { classroom: entity });
   }
 }
