@@ -10,6 +10,7 @@ import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
@@ -18,8 +19,8 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Classroom>({
-  name: 'visible',
-  cond: ({ user }: { user: User }) => ({
+  name: CRUD_FILTER,
+  cond: (user: User) => ({
     deletedAt: null,
     $or: [{ memberships: { owner: user } }, { isOpen: true }],
   }),

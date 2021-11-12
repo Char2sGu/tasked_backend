@@ -16,7 +16,10 @@ import { BaseEntity } from '../common/base-entity.entity';
 export abstract class CrudService<Entity> {
   repo: EntityRepository<Entity>;
 
-  async list(where: FilterQuery<Entity>, options?: FindOptions<Entity>) {
+  async list<Population extends string = never>(
+    where: FilterQuery<Entity>,
+    options?: FindOptions<Entity, Population>,
+  ) {
     const [results, total] = await this.repo.findAndCount(where, options);
     return { total, results };
   }

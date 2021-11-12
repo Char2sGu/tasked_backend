@@ -10,13 +10,14 @@ import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { Field } from 'src/shared/field.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Task>({
-  name: 'visible',
-  cond: ({ user }: { user: User }) => ({
+  name: CRUD_FILTER,
+  cond: (user: User) => ({
     assignments: { classroom: { deletedAt: null } },
     $or: [{ creator: user }, { assignments: { recipient: user } }],
   }),

@@ -2,14 +2,15 @@ import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { Field } from 'src/shared/field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Assignment>({
-  name: 'visible',
-  cond: ({ user }: { user: User }) => ({
+  name: CRUD_FILTER,
+  cond: (user: User) => ({
     classroom: { deletedAt: null },
     $or: [
       { recipient: user },

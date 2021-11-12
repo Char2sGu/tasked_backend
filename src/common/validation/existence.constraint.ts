@@ -4,6 +4,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 
 import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
@@ -34,7 +35,7 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     return (await service.crud.retrieve(
       conditions?.(value, user, object) ?? {},
       {
-        filters: { visible: { user } },
+        filters: { [CRUD_FILTER]: user },
         failHandler: false,
       },
     ))

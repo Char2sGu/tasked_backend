@@ -2,6 +2,7 @@ import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { isDefined } from 'class-validator';
 import { CrudService } from 'src/crud/crud.service';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
@@ -34,13 +35,13 @@ export class AssignmentsService {
         limit,
         offset,
         orderBy: { createdAt: QueryOrder.DESC },
-        filters: { visible: { user } },
+        filters: { [CRUD_FILTER]: user },
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryAssignmentArgs) {
-    return this.crud.retrieve(id, { filters: { visible: { user } } });
+    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: user } });
   }
 
   async createOne({ data }: CreateAssignmentArgs) {
@@ -54,7 +55,7 @@ export class AssignmentsService {
 
   async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {
     const assignment = await this.crud.retrieve(id, {
-      filters: { visible: { user } },
+      filters: { [CRUD_FILTER]: user },
       populate: ['task'],
     });
 
@@ -80,7 +81,7 @@ export class AssignmentsService {
 
   async deleteOne(user: User, { id }: DeleteAssignmentArgs) {
     const assignment = await this.crud.retrieve(id, {
-      filters: { visible: { user } },
+      filters: { [CRUD_FILTER]: user },
       populate: ['task'],
     });
 

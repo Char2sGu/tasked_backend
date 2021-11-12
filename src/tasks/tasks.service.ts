@@ -1,6 +1,7 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';
@@ -21,12 +22,12 @@ export class TasksService {
   ) {
     return this.crud.list(
       { $and: [query, isOwn != undefined ? { creator: user } : {}] },
-      { limit, offset, filters: { visible: { user } } },
+      { limit, offset, filters: { [CRUD_FILTER]: user } },
     );
   }
 
   async queryOne(user: User, { id }: QueryTaskArgs) {
-    return this.crud.retrieve(id, { filters: { visible: { user } } });
+    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: user } });
   }
 
   async createOne(user: User, { data }: CreateTaskArgs) {
@@ -38,7 +39,7 @@ export class TasksService {
 
   async updateOne(user: User, { id, data }: UpdateTaskArgs) {
     const task = await this.crud.retrieve(id, {
-      filters: { visible: { user } },
+      filters: { [CRUD_FILTER]: user },
     });
 
     if (task.creator != user)
@@ -49,7 +50,7 @@ export class TasksService {
 
   async deleteOne(user: User, { id }: DeleteTaskArgs) {
     const task = await this.crud.retrieve(id, {
-      filters: { visible: { user } },
+      filters: { [CRUD_FILTER]: user },
     });
 
     if (task.creator != user)

@@ -1,6 +1,7 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
@@ -21,21 +22,21 @@ export class MembershipsService {
     return this.crud.list(query, {
       limit,
       offset,
-      filters: { visible: { user } },
+      filters: { [CRUD_FILTER]: user },
     });
   }
 
   async queryOne(user: User, { id }: QueryMembershipArgs) {
-    return this.crud.retrieve(id, { filters: { visible: { user } } });
+    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: user } });
   }
 
   async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
     const target = await this.crud.retrieve(id, {
-      filters: { visible: { user } },
+      filters: { [CRUD_FILTER]: user },
     });
     const own = await this.crud.retrieve(
       { classroom: target.classroom, owner: user },
-      { filters: { visible: { user } } },
+      { filters: { [CRUD_FILTER]: user } },
     );
 
     if (data.role != undefined) {
@@ -54,7 +55,7 @@ export class MembershipsService {
 
   async deleteOne(user: User, { id }: DeleteMembershipArgs) {
     const targetMembership = await this.crud.retrieve(id, {
-      filters: { visible: { user } },
+      filters: { [CRUD_FILTER]: user },
       populate: ['classroom'],
     });
 
@@ -70,7 +71,7 @@ export class MembershipsService {
       const ownMembership = await targetMembership.classroom.memberships
         .matching({
           where: { owner: user },
-          filters: { visible: { user } },
+          filters: { [CRUD_FILTER]: user },
         })
         .then(([membership]) => membership);
 

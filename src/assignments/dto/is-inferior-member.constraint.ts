@@ -4,6 +4,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { ValidationArguments } from 'src/common/validation/validation-arguments.interface';
+import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 
@@ -33,7 +34,7 @@ export class IsInferiorMemberConstraint
         ([user, userId] as const).map((owner) =>
           this.service.crud.retrieve(
             { owner, classroom: classroomId },
-            { filters: { visible: { user } } },
+            { filters: { [CRUD_FILTER]: user } },
           ),
         ),
       );
