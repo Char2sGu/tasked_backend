@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
+import { FlushDbRequired } from 'src/common/flush-db/flush-db-required.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -41,7 +41,7 @@ export class JoinApplicationsResolver {
     return this.service.queryOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => JoinApplication, {
     name: 'createJoinApplication',
   })
@@ -52,7 +52,7 @@ export class JoinApplicationsResolver {
     return this.service.createOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => JoinApplication, {
     name: 'rejectJoinApplication',
   })
@@ -63,7 +63,7 @@ export class JoinApplicationsResolver {
     return this.service.rejectOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => AcceptJoinApplicationResult, {
     name: 'acceptJoinApplication',
   })

@@ -7,7 +7,7 @@ import { SkipAuth } from 'src/auth/guard/skip-auth.decorator';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { PaginatedClassrooms } from 'src/classrooms/dto/paginated-classrooms.dto';
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
-import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
+import { FlushDbRequired } from 'src/common/flush-db/flush-db-required.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
 import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
@@ -65,7 +65,7 @@ export class UsersResolver {
     return user;
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @SkipAuth()
   @Mutation(() => User, {
     name: 'createUser',
@@ -74,7 +74,7 @@ export class UsersResolver {
     return this.service.createOne(args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => User, {
     name: 'updateUser',
   })

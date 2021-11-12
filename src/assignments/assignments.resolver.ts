@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
+import { FlushDbRequired } from 'src/common/flush-db/flush-db-required.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -35,7 +35,7 @@ export class AssignmentsResolver {
     return this.service.queryOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => Assignment, {
     name: 'createAssignment',
   })
@@ -43,7 +43,7 @@ export class AssignmentsResolver {
     return this.service.createOne(args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => Assignment, {
     name: 'updateAssignment',
   })
@@ -51,7 +51,7 @@ export class AssignmentsResolver {
     return this.service.updateOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => Assignment, {
     name: 'deleteAssignment',
   })

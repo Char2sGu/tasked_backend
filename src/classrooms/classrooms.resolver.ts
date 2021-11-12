@@ -3,7 +3,7 @@ import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
+import { FlushDbRequired } from 'src/common/flush-db/flush-db-required.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
 import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
@@ -52,7 +52,7 @@ export class ClassroomsResolver {
     return this.service.queryOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => Classroom, {
     name: 'createClassroom',
   })
@@ -60,7 +60,7 @@ export class ClassroomsResolver {
     return this.service.createOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => Classroom, {
     name: 'updateClassroom',
   })
@@ -68,7 +68,7 @@ export class ClassroomsResolver {
     return this.service.updateOne(user, args);
   }
 
-  @FlushDb()
+  @FlushDbRequired()
   @Mutation(() => Classroom, {
     name: 'deleteClassroom',
   })
