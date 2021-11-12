@@ -1,7 +1,4 @@
-import { Inject } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -16,44 +13,32 @@ import { MembershipsService } from './memberships.service';
 
 @Resolver(() => Membership)
 export class MembershipsResolver {
-  @Inject()
-  private service: MembershipsService;
+  constructor(private service: MembershipsService) {}
 
-  @Query(() => PaginatedMemberships, {
-    name: 'memberships',
-  })
-  async queryMany(@ReqUser() user: User, @Args() args: QueryMembershipsArgs) {
+  @Query(() => PaginatedMemberships)
+  async memberships(@Args() args: QueryMembershipsArgs, @ReqUser() user: User) {
     return this.service.queryMany(user, args);
   }
 
-  @Query(() => Membership, {
-    name: 'membership',
-  })
-  async queryOne(@ReqUser() user: User, @Args() args: QueryMembershipArgs) {
+  @Query(() => Membership)
+  async membership(@Args() args: QueryMembershipArgs, @ReqUser() user: User) {
     return this.service.queryOne(user, args);
   }
+
   @FlushDbRequired()
-  @Mutation(() => Membership, {
-    name: 'updateMembership',
-  })
-  async updateOne(@ReqUser() user: User, @Args() args: UpdateMembershipArgs) {
+  @Mutation(() => Membership)
+  async updateMembership(
+    @Args() args: UpdateMembershipArgs,
+    @ReqUser() user: User,
+  ) {
     return this.service.updateOne(user, args);
   }
   @FlushDbRequired()
-  @Mutation(() => Membership, {
-    name: 'deleteMembership',
-  })
-  async deleteOne(@ReqUser() user: User, @Args() args: DeleteMembershipArgs) {
+  @Mutation(() => Membership)
+  async deleteMembership(
+    @Args() args: DeleteMembershipArgs,
+    @ReqUser() user: User,
+  ) {
     return this.service.deleteOne(user, args);
-  }
-
-  @ResolveField(() => Membership, 'owner', () => User)
-  async resolveOwner(@Parent() entity: Membership) {
-    return entity.owner.init();
-  }
-
-  @ResolveField(() => Membership, 'classroom', () => Classroom)
-  async resolveClassroom(@Parent() entity: Membership) {
-    return entity.classroom.init();
   }
 }
