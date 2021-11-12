@@ -1,9 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
-import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { ReqUser } from '../shared/req-user.decorator';
@@ -21,56 +18,37 @@ export class AssignmentsResolver {
   @Inject()
   private service: AssignmentsService;
 
-  @Query(() => PaginatedAssignments, {
-    name: 'assignments',
-  })
-  async queryMany(@ReqUser() user: User, @Args() args: QueryAssignmentsArgs) {
+  @Query(() => PaginatedAssignments)
+  async assignments(@Args() args: QueryAssignmentsArgs, @ReqUser() user: User) {
     return this.service.queryMany(user, args);
   }
 
-  @Query(() => Assignment, {
-    name: 'assignment',
-  })
-  async queryOne(@ReqUser() user: User, @Args() args: QueryAssignmentArgs) {
+  @Query(() => Assignment)
+  async assignment(@Args() args: QueryAssignmentArgs, @ReqUser() user: User) {
     return this.service.queryOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => Assignment, {
-    name: 'createAssignment',
-  })
-  async createOne(@Args() args: CreateAssignmentArgs) {
+  @Mutation(() => Assignment)
+  async createAssignment(@Args() args: CreateAssignmentArgs) {
     return this.service.createOne(args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => Assignment, {
-    name: 'updateAssignment',
-  })
-  async updateOne(@ReqUser() user: User, @Args() args: UpdateAssignmentArgs) {
+  @Mutation(() => Assignment)
+  async updateAssignment(
+    @Args() args: UpdateAssignmentArgs,
+    @ReqUser() user: User,
+  ) {
     return this.service.updateOne(user, args);
   }
 
   @FlushDbRequired()
-  @Mutation(() => Assignment, {
-    name: 'deleteAssignment',
-  })
-  async deleteOne(@ReqUser() user: User, @Args() args: DeleteAssignmentArgs) {
+  @Mutation(() => Assignment)
+  async deleteAssignment(
+    @Args() args: DeleteAssignmentArgs,
+    @ReqUser() user: User,
+  ) {
     return this.service.deleteOne(user, args);
-  }
-
-  @ResolveField(() => Assignment, 'recipient', () => User)
-  async resolveRecipient(@Parent() entity: Assignment) {
-    return entity.recipient.init();
-  }
-
-  @ResolveField(() => Assignment, 'classroom', () => Classroom)
-  async resolveClassroom(@Parent() entity: Assignment) {
-    return entity.classroom.init();
-  }
-
-  @ResolveField(() => Assignment, 'task', () => Task)
-  async resolveTask(@Parent() entity: Assignment) {
-    return entity.task.init();
   }
 }
