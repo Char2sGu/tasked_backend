@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { FlushDbRequired } from 'src/common/flush-db/flush-db-required.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
+import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 

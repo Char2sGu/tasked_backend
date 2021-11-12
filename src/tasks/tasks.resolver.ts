@@ -3,8 +3,8 @@ import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
-import { FlushDbRequired } from 'src/common/flush-db/flush-db-required.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
+import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 
