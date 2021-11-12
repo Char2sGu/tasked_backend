@@ -3,9 +3,9 @@ import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
-import { ReqUser } from 'src/common/decorators/req-user.decorator';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
+import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';

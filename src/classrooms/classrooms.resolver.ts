@@ -3,7 +3,6 @@ import { Args, Mutation, Parent, Query, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { ReqUser } from 'src/common/decorators/req-user.decorator';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
@@ -13,6 +12,7 @@ import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { ClassroomsService } from './classrooms.service';

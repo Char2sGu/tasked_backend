@@ -7,7 +7,6 @@ import { SkipAuth } from 'src/auth/guard/skip-auth.decorator';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { PaginatedClassrooms } from 'src/classrooms/dto/paginated-classrooms.dto';
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
-import { ReqUser } from 'src/common/decorators/req-user.decorator';
 import { FlushDb } from 'src/common/flush-db/flush-db.decorator';
 import { ResolveField } from 'src/common/utilities/resolve-field.decorator';
 import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
@@ -15,6 +14,7 @@ import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { ReqUser } from 'src/shared/req-user.decorator';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args';
 import { TasksService } from 'src/tasks/tasks.service';
