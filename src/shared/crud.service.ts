@@ -24,7 +24,7 @@ export abstract class CrudService<Entity> {
     return Service;
   }
 
-  protected readonly repo: EntityRepository<Entity>;
+  protected repo: EntityRepository<Entity>;
 
   async list(where: FilterQuery<Entity>, options?: FindOptions<Entity>) {
     const results = await this.repo.find(where, options);
