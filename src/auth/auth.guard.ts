@@ -10,8 +10,8 @@ import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 import { Request } from 'express';
 
-import { AuthService } from '../auth.service';
-import { SKIP_AUTH } from './skip-auth.symbol';
+import { AuthService } from './auth.service';
+import { AUTH_GUARD_SKIP } from './auth-guard-skip.symbol';
 
 /**
  * Prevent the endpoints from being accessed by unauthenticated users.
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const skipAuth = this.reflector.get<true | undefined>(
-      SKIP_AUTH,
+      AUTH_GUARD_SKIP,
       context.getHandler(),
     );
 

@@ -4,8 +4,8 @@ import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AssignmentsModule } from './assignments/assignments.module';
+import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
-import { AuthGuard } from './auth/guard/auth.guard';
 import { ClassroomsModule } from './classrooms/classrooms.module';
 import { CommonModule } from './common/common.module';
 import { ValidationContextInterceptor } from './common/validation/validation-context.interceptor';

@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { SkipAuth } from 'src/auth/guard/skip-auth.decorator';
+import { AuthGuardSkip } from 'src/auth/auth-guard-skip.decorator';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { ReqUser } from 'src/shared/req-user.decorator';
 
@@ -31,7 +31,7 @@ export class UsersResolver {
   }
 
   @FlushDbRequired()
-  @SkipAuth()
+  @AuthGuardSkip()
   @Mutation(() => User)
   async createUser(@Args() args: CreateUserArgs) {
     return this.service.createOne(args);

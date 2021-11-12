@@ -1,4 +1,4 @@
 /**
  * A symbol to store metadata for {@link SkipAuth}
  */
-export const SKIP_AUTH = Symbol('skip-auth');
+export const AUTH_GUARD_SKIP = Symbol('auth-guard-skip');
