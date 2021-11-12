@@ -43,7 +43,7 @@ export class ClassroomsService {
 
   async createOne(user: User, { data }: CreateClassroomArgs) {
     const QUOTA = 20;
-    const createdCount = await this.crud.count({ creator: user });
+    const createdCount = await this.crud.repo.count({ creator: user });
     if (createdCount >= QUOTA)
       throw new ForbiddenException(
         `Cannot create more than ${QUOTA} classrooms`,

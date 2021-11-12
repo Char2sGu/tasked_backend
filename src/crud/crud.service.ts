@@ -1,5 +1,4 @@
 import {
-  CountOptions,
   EntityData,
   FilterQuery,
   FindOneOptions as FindOneOptionsBase,
@@ -15,11 +14,10 @@ import { BaseEntity } from '../common/base-entity.entity';
  * A factory class to build common CRUD services.
  */
 export abstract class CrudService<Entity> {
-  protected repo: EntityRepository<Entity>;
+  repo: EntityRepository<Entity>;
 
   async list(where: FilterQuery<Entity>, options?: FindOptions<Entity>) {
-    const results = await this.repo.find(where, options);
-    const total = await this.count(where, options);
+    const [results, total] = await this.repo.findAndCount(where, options);
     return { total, results };
   }
 
@@ -59,10 +57,6 @@ export abstract class CrudService<Entity> {
     const entity = await this.retrieve(where, options);
     this.repo.remove(entity);
     return entity;
-  }
-
-  async count(where?: FilterQuery<Entity>, options?: CountOptions<Entity>) {
-    return this.repo.count(where, options);
   }
 }
 
