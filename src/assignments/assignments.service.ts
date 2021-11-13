@@ -1,8 +1,15 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { isDefined } from 'class-validator';
 import { CrudService } from 'src/crud/crud.service';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
+import { Role } from 'src/memberships/entities/role.enum';
+import { MembershipsService } from 'src/memberships/memberships.service';
+import { TasksService } from 'src/tasks/tasks.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
@@ -14,7 +21,11 @@ import { Assignment } from './entities/assignment.entity';
 
 @Injectable()
 export class AssignmentsService {
-  constructor(public crud: CrudService<Assignment>) {}
+  constructor(
+    public crud: CrudService<Assignment>,
+    private membershipsService: MembershipsService,
+    private tasksService: TasksService,
+  ) {}
 
   async queryMany(
     user: User,
@@ -44,7 +55,30 @@ export class AssignmentsService {
     return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
   }
 
-  async createOne({ data }: CreateAssignmentArgs) {
+  async createOne(user: User, { data }: CreateAssignmentArgs) {
+    await this.membershipsService.crud.retrieve(
+      {
+        owner: data.recipient,
+        role: Role.Student,
+      },
+      {
+        failHandler: () =>
+          new BadRequestException(
+            'recipient must be an ID of a user being a student in this classroom',
+          ),
+      },
+    );
+
+    await this.tasksService.crud.retrieve(
+      { id: data.task, creator: user },
+      {
+        failHandler: () =>
+          new BadRequestException(
+            'task must be an ID of a task created by you',
+          ),
+      },
+    );
+
     return this.crud.create({
       isPublic: false,
       isCompleted: false,

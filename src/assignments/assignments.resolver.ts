@@ -30,8 +30,11 @@ export class AssignmentsResolver {
 
   @FlushDbRequired()
   @Mutation(() => Assignment)
-  async createAssignment(@Args() args: CreateAssignmentArgs) {
-    return this.service.createOne(args);
+  async createAssignment(
+    @Args() args: CreateAssignmentArgs,
+    @ReqUser() user: User,
+  ) {
+    return this.service.createOne(user, args);
   }
 
   @FlushDbRequired()

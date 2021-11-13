@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { CrudModule } from 'src/crud/crud.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { SharedModule } from 'src/shared/shared.module';
+import { TasksModule } from 'src/tasks/tasks.module';
 
 import { AssignmentsResolver } from './assignments.resolver';
 import { AssignmentsService } from './assignments.service';
@@ -13,6 +14,7 @@ import { Assignment } from './entities/assignment.entity';
     SharedModule,
     CrudModule.forFeature(Assignment),
     forwardRef(() => MembershipsModule),
+    forwardRef(() => TasksModule),
   ],
   providers: [
     AssignmentsResolver,
