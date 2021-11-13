@@ -8,13 +8,13 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
 import { CommonModule } from './common/common.module';
-import { ValidationContextInterceptor } from './common/validation/validation-context.interceptor';
 import { DB_PATH } from './configurations';
 import { CrudModule } from './crud/crud.module';
 import { JoinApplicationsModule } from './join-applications/join-applications.module';
 import { MembershipsModule } from './memberships/memberships.module';
 import { FlushDbInterceptor } from './shared/flush-db.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { ValidationContextInterceptor } from './shared/validation-context.interceptor';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 

@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { ExistenceConstraint } from 'src/common/validation/existence.constraint';
 import { CrudModule } from 'src/crud/crud.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 
@@ -17,7 +16,6 @@ import { JoinApplicationsFieldsResolver } from './join-applications-fields.resol
     JoinApplicationsResolver,
     JoinApplicationsFieldsResolver,
     JoinApplicationsService,
-    ExistenceConstraint,
   ],
   exports: [JoinApplicationsService],
 })

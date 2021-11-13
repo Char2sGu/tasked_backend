@@ -1,10 +1,10 @@
 import { ID, InputType } from '@nestjs/graphql';
 import { Length, MaxLength } from 'class-validator';
-import { Existence } from 'src/common/validation/existence.decorator';
-import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { Existence } from 'src/shared/existence.decorator';
 import { Field } from 'src/shared/field.decorator';
+import { ValidationContextAttached } from 'src/shared/validation-context-attached.dto';
 
 @InputType()
 export class TaskCreateInput extends ValidationContextAttached {
