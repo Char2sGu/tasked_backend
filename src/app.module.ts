@@ -7,7 +7,6 @@ import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
-import { CommonModule } from './common/common.module';
 import { DB_PATH } from './configurations';
 import { CrudModule } from './crud/crud.module';
 import { JoinApplicationsModule } from './join-applications/join-applications.module';
@@ -30,7 +29,6 @@ import { ValidationContextInterceptor } from './validation/validation-context.in
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
-    CommonModule,
     SharedModule,
     CrudModule,
     AuthModule,
