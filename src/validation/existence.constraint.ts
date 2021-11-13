@@ -8,6 +8,7 @@ import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 
 import { Existence } from './existence.decorator';
 import { ValidationArguments } from './validation-arguments.interface';
+import { VALIDATION_CONTEXT } from './validation-context.symbol';
 
 /**
  * A custom class-validator validation constraint to check whether the target
@@ -25,7 +26,7 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     value: unknown,
     {
       object: {
-        _context: { user },
+        [VALIDATION_CONTEXT]: { user },
         ...object
       },
       constraints: [shouldExist, serviceType, conditions],

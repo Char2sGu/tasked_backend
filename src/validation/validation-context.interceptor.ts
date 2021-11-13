@@ -10,6 +10,7 @@ import { ExpressContext } from 'apollo-server-express';
 import { Request } from 'express';
 
 import { ValidationContext } from './validation-context.interface';
+import { VALIDATION_CONTEXT } from './validation-context.symbol';
 import { ValidationContextAttached } from './validation-context-attached.dto';
 
 /**
@@ -28,7 +29,7 @@ export class ValidationContextInterceptor implements NestInterceptor {
 
     const request = this.getRequest(context);
     const validationContext: ValidationContext = { user: request.user };
-    data._context = validationContext;
+    data[VALIDATION_CONTEXT] = validationContext;
 
     return next.handle();
   }
