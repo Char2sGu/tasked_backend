@@ -1,12 +1,12 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
+import { ReqUser } from 'src/common/req-user.decorator';
 import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
 import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
 import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { ReqUser } from 'src/shared/req-user.decorator';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args';
 import { TasksService } from 'src/tasks/tasks.service';
 import { User } from 'src/users/entities/user.entity';

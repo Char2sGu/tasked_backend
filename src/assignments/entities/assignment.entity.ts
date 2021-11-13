@@ -1,8 +1,8 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base-entity.entity';
+import { Field } from 'src/common/field.decorator';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
-import { Field } from 'src/shared/field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 

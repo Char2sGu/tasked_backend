@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { User } from 'src/users/entities/user.entity';
 
-import { ReqUser } from '../shared/req-user.decorator';
+import { ReqUser } from '../common/req-user.decorator';
 import { AssignmentsService } from './assignments.service';
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
 import { DeleteAssignmentArgs } from './dto/delete-assignment.args';

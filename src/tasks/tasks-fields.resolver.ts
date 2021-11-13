@@ -1,7 +1,7 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { ReqUser } from 'src/shared/req-user.decorator';
+import { ReqUser } from 'src/common/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { Task } from './entities/task.entity';

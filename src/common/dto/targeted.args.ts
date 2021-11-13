@@ -1,6 +1,6 @@
 import { ArgsType, ID } from '@nestjs/graphql';
 
-import { Field } from '../../shared/field.decorator';
+import { Field } from '../field.decorator';
 
 /**
  * A base class to derive DTO classes with a `id` field.

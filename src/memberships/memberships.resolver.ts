@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ReqUser } from 'src/common/req-user.decorator';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
-import { ReqUser } from 'src/shared/req-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';

@@ -1,6 +1,6 @@
 import { InputType } from '@nestjs/graphql';
 import { Length, MaxLength } from 'class-validator';
-import { Field } from 'src/shared/field.decorator';
+import { Field } from 'src/common/field.decorator';
 
 @InputType()
 export class ClassroomCreateInput {

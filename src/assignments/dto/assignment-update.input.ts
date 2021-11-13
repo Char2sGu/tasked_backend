@@ -1,5 +1,5 @@
 import { InputType, PartialType, PickType } from '@nestjs/graphql';
-import { Field } from 'src/shared/field.decorator';
+import { Field } from 'src/common/field.decorator';
 
 import { AssignmentCreateInput } from './assignment-create.input';
 
