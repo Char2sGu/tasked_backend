@@ -38,6 +38,7 @@ export class TasksService {
   async createOne(user: User, { data }: CreateTaskArgs) {
     return this.crud.create({
       creator: user,
+      isActive: true,
       ...data,
     });
   }
