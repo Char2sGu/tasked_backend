@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Type } from '@nestjs/common';
 import {
   Field as FieldBase,
   FieldOptions as FieldOptionsBase,
@@ -25,11 +25,16 @@ export const Field = (returnType?: ReturnTypeFunc, options?: FieldOptions) => {
   // class-transformer
   decorators.push(Expose());
   if (options?.nested)
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    decorators.push(TransformType(returnType as () => Function));
+    decorators.push(
+      TransformType(() => extractItemIfArray(returnType() as Type)),
+    );
 
   return applyDecorators(...decorators);
 };
+
+function extractItemIfArray<T>(value: T | T[]) {
+  return value instanceof Array ? value[0] : value;
+}
 
 interface FieldOptions extends FieldOptionsBase {
   nested?: boolean;
