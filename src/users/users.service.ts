@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 
@@ -24,6 +28,10 @@ export class UsersService {
   }
 
   async createOne({ data }: CreateUserArgs) {
+    await this.crud.retrieve(
+      { username: data.username },
+      { failHandler: () => new BadRequestException('username must be unique') },
+    );
     return this.crud.create(data);
   }
 

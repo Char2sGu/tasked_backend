@@ -2,21 +2,11 @@ import { InputType } from '@nestjs/graphql';
 import { Length, Matches } from 'class-validator';
 import { Field } from 'src/shared/field.decorator';
 import { Gender } from 'src/users/entities/gender.enum';
-import { Existence } from 'src/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
-
-import { User } from '../entities/user.entity';
-import { UsersService } from '../users.service';
 
 @InputType()
 export class UserCreateInput extends ValidationContextAttached {
   @Field(() => String)
-  @Existence<User>(
-    false,
-    () => UsersService,
-    (username: string) => ({ username }),
-    { message: 'Cannot specify a duplicate username' },
-  )
   @Matches(/^([a-zA-Z0-9_-])+$/)
   @Length(1, 15)
   username: string;

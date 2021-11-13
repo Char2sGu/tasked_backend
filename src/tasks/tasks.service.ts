@@ -1,7 +1,12 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
+import { MembershipsService } from 'src/memberships/memberships.service';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';
@@ -13,7 +18,10 @@ import { Task } from './entities/task.entity';
 
 @Injectable()
 export class TasksService {
-  constructor(public crud: CrudService<Task>) {}
+  constructor(
+    public crud: CrudService<Task>,
+    private membershipsService: MembershipsService,
+  ) {}
 
   async queryMany(
     user: User,
@@ -36,6 +44,18 @@ export class TasksService {
   }
 
   async createOne(user: User, { data }: CreateTaskArgs) {
+    await this.membershipsService.crud.retrieve(
+      {
+        owner: user,
+        classroom: data.classroom,
+      },
+      {
+        failHandler: () =>
+          new BadRequestException(
+            'classroom must be an ID of a classroom having your membership',
+          ),
+      },
+    );
     return this.crud.create({
       creator: user,
       isActive: true,

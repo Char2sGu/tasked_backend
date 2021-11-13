@@ -1,4 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { ClassroomsModule } from 'src/classrooms/classrooms.module';
 import { CrudModule } from 'src/crud/crud.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { SharedModule } from 'src/shared/shared.module';
@@ -13,6 +14,7 @@ import { JoinApplicationsFieldsResolver } from './join-applications-fields.resol
     SharedModule,
     CrudModule.forFeature(JoinApplication),
     forwardRef(() => MembershipsModule),
+    forwardRef(() => ClassroomsModule),
   ],
   providers: [
     JoinApplicationsResolver,

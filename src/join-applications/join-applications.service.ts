@@ -1,5 +1,10 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
+import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { CrudService } from 'src/crud/crud.service';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { Role } from 'src/memberships/entities/role.enum';
@@ -18,7 +23,8 @@ import { JoinApplication } from './entities/join-application.entity';
 export class JoinApplicationsService {
   constructor(
     public crud: CrudService<JoinApplication>,
-    private memberships: MembershipsService,
+    private membershipsService: MembershipsService,
+    private classroomsService: ClassroomsService,
   ) {}
 
   async queryMany(
@@ -53,6 +59,31 @@ export class JoinApplicationsService {
   }
 
   async createOne(user: User, { data }: CreateJoinApplicationArgs) {
+    await this.classroomsService.crud
+      .retrieve(
+        {
+          id: data.classroom,
+          $or: [
+            { joinApplications: { owner: user } },
+            { memberships: { owner: user } },
+          ],
+        },
+        { failHandler: false },
+      )
+      .then((result) => {
+        if (result)
+          throw new BadRequestException(
+            'classroom must be an ID of a classroom in which you have no membership or application',
+          );
+      });
+
+    await this.classroomsService.crud.retrieve(data.classroom, {
+      failHandler: () =>
+        new BadRequestException(
+          'classroom must be an ID of an existing classroom',
+        ),
+    });
+
     return this.crud.create({
       owner: user,
       status: ApplicationStatus.Pending,
@@ -85,7 +116,7 @@ export class JoinApplicationsService {
       status: ApplicationStatus.Accepted,
     });
 
-    const membership = await this.memberships.crud.create({
+    const membership = await this.membershipsService.crud.create({
       owner: application.owner,
       classroom: application.classroom,
       role: Role.Student,
