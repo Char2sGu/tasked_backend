@@ -77,13 +77,6 @@ export class JoinApplicationsService {
           );
       });
 
-    await this.classroomsService.crud.retrieve(data.classroom, {
-      failHandler: () =>
-        new BadRequestException(
-          'classroom must be an ID of an existing classroom',
-        ),
-    });
-
     return this.crud.create({
       owner: user,
       status: ApplicationStatus.Pending,
