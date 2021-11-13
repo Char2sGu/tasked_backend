@@ -6,8 +6,8 @@ import {
 } from 'class-validator';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 
+import { ValidationArguments } from '../validation/validation-arguments.interface';
 import { Existence } from './existence.decorator';
-import { ValidationArguments } from './validation-arguments.interface';
 
 /**
  * A custom class-validator validation constraint to check whether the target

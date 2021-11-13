@@ -6,8 +6,8 @@ import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { Existence } from 'src/shared/existence.decorator';
 import { Field } from 'src/shared/field.decorator';
-import { ValidationContextAttached } from 'src/shared/validation-context-attached.dto';
 import { User } from 'src/users/entities/user.entity';
+import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
 
 import { ApplicationStatus } from '../entities/application-status.enum';
 import { JoinApplication } from '../entities/join-application.entity';

@@ -1,5 +1,5 @@
 import { ValidationArguments as BaseValidationArguments } from 'class-validator';
-import { ValidationContextAttached } from 'src/shared/validation-context-attached.dto';
+import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
 
 /**
  * A wrap of class-validator's base `ValidationArguments` which provides better

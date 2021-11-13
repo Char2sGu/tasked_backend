@@ -14,9 +14,10 @@ import { JoinApplicationsModule } from './join-applications/join-applications.mo
 import { MembershipsModule } from './memberships/memberships.module';
 import { FlushDbInterceptor } from './shared/flush-db.interceptor';
 import { SharedModule } from './shared/shared.module';
-import { ValidationContextInterceptor } from './shared/validation-context.interceptor';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
+import { ValidationModule } from './validation/validation.module';
+import { ValidationContextInterceptor } from './validation/validation-context.interceptor';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { UsersModule } from './users/users.module';
     JoinApplicationsModule,
     TasksModule,
     AssignmentsModule,
+    ValidationModule,
   ],
   providers: [
     {

@@ -4,9 +4,9 @@ import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { Existence } from 'src/shared/existence.decorator';
 import { Field } from 'src/shared/field.decorator';
-import { ValidationContextAttached } from 'src/shared/validation-context-attached.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { TasksService } from 'src/tasks/tasks.service';
+import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
 
 @InputType()
 export class AssignmentCreateInput extends ValidationContextAttached {
