@@ -1,4 +1,4 @@
-import { FilterQuery } from '@mikro-orm/core';
+import { FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
@@ -22,7 +22,12 @@ export class TasksService {
   ) {
     return this.crud.list(
       { $and: [query, isOwn != undefined ? { creator: user } : {}] },
-      { limit, offset, filters: { [CRUD_FILTER]: { user } } },
+      {
+        limit,
+        offset,
+        orderBy: { id: QueryOrder.DESC },
+        filters: { [CRUD_FILTER]: { user } },
+      },
     );
   }
 
