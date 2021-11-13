@@ -57,6 +57,8 @@ export class ClassroomsFieldsResolver {
     @Parent() entity: Classroom,
     @ReqUser() user: User,
   ) {
-    return this.assignmentsService.queryMany(user, args, { classroom: entity });
+    return this.assignmentsService.queryMany(user, args, {
+      task: { classroom: entity },
+    });
   }
 }

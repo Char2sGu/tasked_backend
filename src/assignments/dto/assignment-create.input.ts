@@ -1,14 +1,12 @@
 import { ID, InputType } from '@nestjs/graphql';
-import { IsInt, Validate } from 'class-validator';
 import { Existence } from 'src/common/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/common/validation/validation-context-attached.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { Field } from 'src/shared/field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { TasksService } from 'src/tasks/tasks.service';
-
-import { IsInferiorMemberConstraint } from './is-inferior-member.constraint';
 
 @InputType()
 export class AssignmentCreateInput extends ValidationContextAttached {
@@ -16,22 +14,12 @@ export class AssignmentCreateInput extends ValidationContextAttached {
   @Existence<Membership>(
     true,
     () => MembershipsService,
-    (classroomId: number, user) => ({
-      owner: user,
-      classroom: classroomId,
-    }),
+    (userId: number) => ({ owner: userId, role: Role.Student }),
     {
-      message: 'classroom must be the ID of a classroom having your membership',
+      message:
+        'recipient must be the ID of a user having a student membership in this classroom',
     },
   )
-  classroom: number;
-
-  @Field(() => ID)
-  @Validate(IsInferiorMemberConstraint, {
-    message:
-      'owner must be the ID of a user which is an inferior member in the classroom',
-  })
-  @IsInt()
   recipient: number;
 
   @Field(() => ID)

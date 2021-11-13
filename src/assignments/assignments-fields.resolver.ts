@@ -10,11 +10,6 @@ export class AssignmentsFieldsResolver {
   }
 
   @ResolveField()
-  async classroom(@Parent() entity: Assignment) {
-    return entity.classroom.init();
-  }
-
-  @ResolveField()
   async task(@Parent() entity: Assignment) {
     return entity.task.init();
   }

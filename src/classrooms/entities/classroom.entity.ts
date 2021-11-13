@@ -8,13 +8,14 @@ import {
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
-import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Field } from 'src/shared/field.decorator';
+import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
+import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
@@ -60,12 +61,12 @@ export class Classroom extends BaseEntity<Classroom> {
   })
   memberships = new Collection<Membership>(this);
 
-  @Field(() => PaginatedAssignments)
+  @Field(() => PaginatedTasks)
   @OneToMany({
-    entity: () => Assignment,
-    mappedBy: (assignment) => assignment.classroom,
+    entity: () => Task,
+    mappedBy: (task) => task.classroom,
   })
-  assignments = new Collection<Assignment>(this);
+  tasks = new Collection<Task>(this);
 
   @Field(() => Date, { nullable: true })
   @Property({
@@ -75,4 +76,7 @@ export class Classroom extends BaseEntity<Classroom> {
 
   @Field(() => Membership, { nullable: true })
   membership: never;
+
+  @Field(() => PaginatedAssignments)
+  assignments: never;
 }

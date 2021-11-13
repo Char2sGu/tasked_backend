@@ -9,6 +9,7 @@ import {
 import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { Field } from 'src/shared/field.decorator';
@@ -18,7 +19,7 @@ import { User } from 'src/users/entities/user.entity';
 @Filter<Task>({
   name: CRUD_FILTER,
   cond: ({ user }: { user: User }) => ({
-    assignments: { classroom: { deletedAt: null } },
+    assignments: { task: { classroom: { deletedAt: null } } },
     $or: [{ creator: user }, { assignments: { recipient: user } }],
   }),
 })
@@ -29,6 +30,12 @@ export class Task extends BaseEntity<Task> {
     entity: () => User,
   })
   creator: User;
+
+  @Field(() => Classroom)
+  @ManyToOne({
+    entity: () => Classroom,
+  })
+  classroom: Classroom;
 
   @Field(() => String)
   @Property()

@@ -16,11 +16,16 @@ export class TasksFieldsResolver {
   }
 
   @ResolveField()
+  async classroom(@Parent() entity: Task) {
+    return entity.classroom.init();
+  }
+
+  @ResolveField()
   async assignments(
     @Args() args: QueryAssignmentsArgs,
     @Parent() entity: Task,
     @ReqUser() user: User,
   ) {
-    return this.assignmentsService.queryMany(user, args, { classroom: entity });
+    return this.assignmentsService.queryMany(user, args, { task: entity });
   }
 }
