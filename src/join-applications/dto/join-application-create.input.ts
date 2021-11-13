@@ -4,9 +4,9 @@ import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { Existence } from 'src/shared/existence.decorator';
 import { Field } from 'src/shared/field.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { Existence } from 'src/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
 
 import { ApplicationStatus } from '../entities/application-status.enum';

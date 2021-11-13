@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { ExistenceConstraint } from './existence.constraint';
+import { ExistenceConstraint } from '../validation/existence.constraint';
 
 @Module({
   providers: [ExistenceConstraint],

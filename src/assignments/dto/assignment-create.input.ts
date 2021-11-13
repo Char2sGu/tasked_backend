@@ -2,10 +2,10 @@ import { ID, InputType } from '@nestjs/graphql';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { Existence } from 'src/shared/existence.decorator';
 import { Field } from 'src/shared/field.decorator';
 import { Task } from 'src/tasks/entities/task.entity';
 import { TasksService } from 'src/tasks/tasks.service';
+import { Existence } from 'src/validation/existence.decorator';
 import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
 
 @InputType()
