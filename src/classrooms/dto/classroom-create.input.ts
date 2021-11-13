@@ -1,10 +1,9 @@
 import { InputType } from '@nestjs/graphql';
 import { Length, MaxLength } from 'class-validator';
 import { Field } from 'src/shared/field.decorator';
-import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
 
 @InputType()
-export class ClassroomCreateInput extends ValidationContextAttached {
+export class ClassroomCreateInput {
   @Field(() => String)
   @Length(1, 15)
   name: string;

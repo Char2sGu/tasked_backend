@@ -1,9 +1,8 @@
 import { ID, InputType } from '@nestjs/graphql';
 import { Field } from 'src/shared/field.decorator';
-import { ValidationContextAttached } from 'src/validation/validation-context-attached.dto';
 
 @InputType()
-export class AssignmentCreateInput extends ValidationContextAttached {
+export class AssignmentCreateInput {
   @Field(() => ID)
   recipient: number;
 
