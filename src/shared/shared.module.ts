@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { IsPrimaryKeyConstraint } from 'src/validation/is-primary-key.constraint';
-
-import { ExistenceConstraint } from '../validation/existence.constraint';
+import { ValidationModule } from 'src/validation/validation.module';
 
 @Module({
-  providers: [ExistenceConstraint, IsPrimaryKeyConstraint],
-  exports: [ExistenceConstraint, IsPrimaryKeyConstraint],
+  providers: [ValidationModule],
+  exports: [ValidationModule],
 })
 export class SharedModule {}
