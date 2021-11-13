@@ -24,7 +24,7 @@ export class IsPrimaryKeyConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage(context: IsPrimaryKeyValidationContext) {
-    const entityName = context.constraints[0].name;
+    const entityName = context.constraints[0]().name;
     return `${context.property} must be a primary key of an existing ${entityName} entity`;
   }
 }
