@@ -4,6 +4,7 @@ import { ClassroomsModule } from 'src/classrooms/classrooms.module';
 import { CrudModule } from 'src/crud/crud.module';
 import { JoinApplicationsModule } from 'src/join-applications/join-applications.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
+import { SharedModule } from 'src/shared/shared.module';
 import { TasksModule } from 'src/tasks/tasks.module';
 
 import { User } from './entities/user.entity';
@@ -13,6 +14,7 @@ import { UsersFieldsResolver } from './users-fields.resolver';
 
 @Module({
   imports: [
+    SharedModule,
     CrudModule.forFeature(User),
     forwardRef(() => ClassroomsModule),
     forwardRef(() => JoinApplicationsModule),
