@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { DB_PATH } from 'src/configurations';
 
 import { FlushDbInterceptor } from './flush-db.interceptor';
+import { MikroRequestContextInterceptor } from './mikro-request-context.interceptor';
 
 /**
  * Provide core providers and should only be imported in the {@link AppModule}.
@@ -16,12 +17,17 @@ import { FlushDbInterceptor } from './flush-db.interceptor';
       dbName: DB_PATH,
       autoLoadEntities: true,
       forceUndefined: true,
+      context: () => MikroRequestContextInterceptor.storage.getStore(),
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
   ],
   providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: MikroRequestContextInterceptor,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: FlushDbInterceptor,
