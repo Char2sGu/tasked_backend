@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -15,8 +14,7 @@ import { Assignment } from './entities/assignment.entity';
 
 @Resolver(() => Assignment)
 export class AssignmentsResolver {
-  @Inject()
-  private service: AssignmentsService;
+  constructor(private service: AssignmentsService) {}
 
   @Query(() => PaginatedAssignments)
   async assignments(@Args() args: QueryAssignmentsArgs, @ReqUser() user: User) {
@@ -34,7 +32,7 @@ export class AssignmentsResolver {
     @Args() args: CreateAssignmentArgs,
     @ReqUser() user: User,
   ) {
-    return this.service.createOne(user, args);
+    return await this.service.createOne(user, args);
   }
 
   @FlushDbRequired()

@@ -1,4 +1,4 @@
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthGuardSkip } from 'src/auth/auth-guard-skip.decorator';
 
@@ -8,8 +8,7 @@ import { QueryTokenArgs } from './dto/query-token.args';
 
 @Resolver()
 export class AuthResolver {
-  @Inject()
-  private service: AuthService;
+  constructor(private service: AuthService) {}
 
   @AuthGuardSkip()
   @Mutation(() => AuthResult, {

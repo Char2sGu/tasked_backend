@@ -2,7 +2,6 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import {
   CallHandler,
   ExecutionContext,
-  Inject,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
@@ -17,11 +16,7 @@ import { FLUSH_DB_REQUIRED } from './flush-db-required.symbol';
  */
 @Injectable()
 export class FlushDbInterceptor implements NestInterceptor {
-  @Inject()
-  private em: EntityManager;
-
-  @Inject()
-  private reflector: Reflector;
+  constructor(private reflector: Reflector, private em: EntityManager) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(

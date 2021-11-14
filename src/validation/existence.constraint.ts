@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import {
   ValidatorConstraint,
@@ -19,8 +19,7 @@ import { VALIDATION_CONTEXT } from './validation-context.symbol';
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class ExistenceConstraint implements ValidatorConstraintInterface {
-  @Inject()
-  private moduleRef: ModuleRef;
+  constructor(private moduleRef: ModuleRef) {}
 
   async validate(
     value: unknown,

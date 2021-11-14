@@ -1,7 +1,6 @@
 import {
   CanActivate,
   ExecutionContext,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -20,11 +19,7 @@ import { AUTH_GUARD_SKIP } from './auth-guard-skip.symbol';
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
-  @Inject()
-  private auth: AuthService;
-
-  @Inject()
-  private reflector: Reflector;
+  constructor(private reflector: Reflector, private auth: AuthService) {}
 
   async canActivate(context: ExecutionContext) {
     const skipAuth = this.reflector.get<true | undefined>(

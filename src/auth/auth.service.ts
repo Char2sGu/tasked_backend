@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
 import { IncomingHttpHeaders } from 'node:http';
@@ -9,11 +9,7 @@ import { AuthResult } from './dto/auth-result.dto';
 
 @Injectable()
 export class AuthService {
-  @Inject()
-  private users: UsersService;
-
-  @Inject()
-  private jwt: JwtService;
+  constructor(private users: UsersService, private jwt: JwtService) {}
 
   async obtainJwt(username: string, password: string): Promise<AuthResult> {
     try {
