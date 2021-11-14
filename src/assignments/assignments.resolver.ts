@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
+import { FlushDbRequired } from 'src/core/flush-db-required.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { ReqUser } from '../common/req-user.decorator';

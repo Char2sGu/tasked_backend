@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuardSkip } from 'src/auth/auth-guard-skip.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
-import { FlushDbRequired } from 'src/shared/flush-db-required.decorator';
+import { FlushDbRequired } from 'src/core/flush-db-required.decorator';
 
 import { CreateUserArgs } from './dto/create-user.args';
 import { PaginatedUsers } from './dto/paginated-users.dto';
