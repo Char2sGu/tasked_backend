@@ -1,10 +1,9 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AssignmentsModule } from './assignments/assignments.module';
-import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
 import { DB_PATH } from './configurations';
@@ -45,10 +44,6 @@ import { ValidationModule } from './validation/validation.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: FlushDbInterceptor,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
     },
   ],
 })
