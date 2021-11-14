@@ -1,6 +1,6 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Module, ValidationPipe } from '@nestjs/common';
-import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { Module } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AssignmentsModule } from './assignments/assignments.module';
@@ -17,7 +17,6 @@ import { SharedModule } from './shared/shared.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 import { ValidationModule } from './validation/validation.module';
-import { ValidationContextInterceptor } from './validation/validation-context.interceptor';
 
 @Module({
   imports: [
@@ -33,6 +32,7 @@ import { ValidationContextInterceptor } from './validation/validation-context.in
     CoreModule,
     SharedModule,
     CrudModule,
+    ValidationModule,
     AuthModule,
     UsersModule,
     ClassroomsModule,
@@ -40,27 +40,11 @@ import { ValidationContextInterceptor } from './validation/validation-context.in
     JoinApplicationsModule,
     TasksModule,
     AssignmentsModule,
-    ValidationModule,
   ],
   providers: [
     {
-      provide: APP_PIPE,
-      useValue: new ValidationPipe({
-        transform: true,
-        transformOptions: {
-          exposeDefaultValues: true, // `@Field(..., { defaultValue: ... })` cannot work in `@ResolveField()` (Bug)
-          exposeUnsetFields: false, // if `true`, update actions will unexpectedly assign an `undefined` value to the entity fields and cause error
-        },
-        whitelist: true,
-      }),
-    },
-    {
       provide: APP_INTERCEPTOR,
       useClass: FlushDbInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ValidationContextInterceptor,
     },
     {
       provide: APP_GUARD,
