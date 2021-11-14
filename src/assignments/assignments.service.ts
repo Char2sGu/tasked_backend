@@ -62,6 +62,7 @@ export class AssignmentsService {
         role: Role.Student,
       },
       {
+        filters: { [CRUD_FILTER]: { user } },
         failHandler: () =>
           new BadRequestException(
             'recipient must be an ID of a user being a student in this classroom',
@@ -72,6 +73,7 @@ export class AssignmentsService {
     await this.tasksService.crud.retrieve(
       { id: data.task, creator: user },
       {
+        filters: { [CRUD_FILTER]: { user } },
         failHandler: () =>
           new BadRequestException(
             'task must be an ID of a task created by you',

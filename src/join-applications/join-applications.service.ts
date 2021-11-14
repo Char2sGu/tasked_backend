@@ -68,7 +68,10 @@ export class JoinApplicationsService {
             { memberships: { owner: user } },
           ],
         },
-        { failHandler: false },
+        {
+          filters: { [CRUD_FILTER]: { user } },
+          failHandler: false,
+        },
       )
       .then((result) => {
         if (result)

@@ -36,9 +36,7 @@ export class UsersService {
   }
 
   async updateOne(user: User, { id, data }: UpdateUserArgs) {
-    const entity = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
-    });
+    const entity = await this.crud.retrieve(id);
 
     if (entity != user)
       throw new ForbiddenException('Cannot update other users');

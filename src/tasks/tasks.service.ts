@@ -50,6 +50,7 @@ export class TasksService {
         classroom: data.classroom,
       },
       {
+        filters: { [CRUD_FILTER]: { user } },
         failHandler: () =>
           new BadRequestException(
             'classroom must be an ID of a classroom having your membership',
