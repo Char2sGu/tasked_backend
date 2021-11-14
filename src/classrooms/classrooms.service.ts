@@ -1,4 +1,4 @@
-import { FilterQuery, FindOneOrFailOptions } from '@mikro-orm/core';
+import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
@@ -81,15 +81,7 @@ export class ClassroomsService {
         'Cannot delete classrooms not created by you',
       );
 
-    return this.crud.destroy(classroom);
-  }
-
-  async destroy(
-    where: FilterQuery<Classroom>,
-    options?: FindOneOrFailOptions<Classroom>,
-  ) {
-    const entity = await this.crud.retrieve(where, options);
-    entity.deletedAt = new Date();
-    return entity;
+    classroom.deletedAt = new Date();
+    return classroom;
   }
 }
