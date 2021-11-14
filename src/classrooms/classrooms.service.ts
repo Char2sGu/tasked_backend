@@ -81,7 +81,6 @@ export class ClassroomsService {
         'Cannot delete classrooms not created by you',
       );
 
-    classroom.deletedAt = new Date();
-    return classroom;
+    return this.crud.destroy(classroom);
   }
 }

@@ -1,27 +1,29 @@
 import { AnyEntity, EntityName, EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
-import { DynamicModule, Inject, Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
+
+import { CrudModuleOptions } from './crud-module-options.class';
 
 @Module({})
 export class CrudModule {
-  static forFeature(entity: EntityName<AnyEntity>): DynamicModule {
-    class CrudServiceConfigured extends CrudService<never> {
-      @Inject() repo: EntityRepository<never>;
-    }
-
+  static forFeature<Entity>(
+    entity: EntityName<Entity>,
+    options: CrudModuleOptions<Entity> = {},
+  ): DynamicModule {
     return {
       module: CrudModule,
-      imports: [MikroOrmModule.forFeature([entity])],
+      imports: [MikroOrmModule.forFeature([entity as EntityName<AnyEntity>])],
       providers: [
         {
           provide: EntityRepository,
           useExisting: getRepositoryToken(entity),
         },
         {
-          provide: CrudService,
-          useClass: CrudServiceConfigured,
+          provide: CrudModuleOptions,
+          useValue: options,
         },
+        CrudService,
       ],
       exports: [MikroOrmModule, EntityRepository, CrudService],
     };

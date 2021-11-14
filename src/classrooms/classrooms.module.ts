@@ -14,7 +14,7 @@ import { Classroom } from './entities/classroom.entity';
 @Module({
   imports: [
     SharedModule,
-    CrudModule.forFeature(Classroom),
+    CrudModule.forFeature(Classroom, { soft: 'deletedAt' }),
     forwardRef(() => JoinApplicationsModule),
     forwardRef(() => MembershipsModule),
     forwardRef(() => TasksModule),

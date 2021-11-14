@@ -6,15 +6,20 @@ import {
   FindOptions,
 } from '@mikro-orm/core';
 import { EntityRepository } from '@mikro-orm/core';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BaseEntity } from '../common/base-entity.entity';
+import { CrudModuleOptions } from './crud-module-options.class';
 
 /**
  * A factory class to build common CRUD services.
  */
-export abstract class CrudService<Entity> {
-  repo: EntityRepository<Entity>;
+@Injectable()
+export class CrudService<Entity> {
+  constructor(
+    public repo: EntityRepository<Entity>,
+    private options: CrudModuleOptions<Entity>,
+  ) {}
 
   async list<Population extends string = never>(
     where: FilterQuery<Entity>,
@@ -58,7 +63,8 @@ export abstract class CrudService<Entity> {
     options?: FindOneOptions<Entity, Population>,
   ) {
     const entity = await this.retrieve(where, options);
-    this.repo.remove(entity);
+    if (this.options?.soft) entity[this.options.soft] = new Date() as any;
+    else this.repo.remove(entity);
     return entity;
   }
 }
