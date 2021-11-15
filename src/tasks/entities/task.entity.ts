@@ -42,9 +42,7 @@ export class Task extends BaseEntity<Task> {
   title: string;
 
   @Field(() => String, { nullable: true })
-  @Property({
-    nullable: true,
-  })
+  @Property({ nullable: true })
   description?: string;
 
   @Field(() => Boolean)

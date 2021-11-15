@@ -27,15 +27,11 @@ import { Gender } from 'src/users/entities/gender.enum';
 @Entity()
 export class User extends BaseEntity<User> {
   @Field(() => String)
-  @Property({
-    unique: true,
-  })
+  @Property({ unique: true })
   username: string;
 
   @Field(() => String, { nullable: true })
-  @Property({
-    nullable: true,
-  })
+  @Property({ nullable: true })
   nickname?: string;
 
   @Property()

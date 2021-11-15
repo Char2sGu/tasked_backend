@@ -35,9 +35,7 @@ export class Classroom extends BaseEntity<Classroom> {
   name: string;
 
   @Field(() => String, { nullable: true })
-  @Property({
-    nullable: true,
-  })
+  @Property({ nullable: true })
   description?: string;
 
   @Field(() => Boolean)
@@ -71,9 +69,7 @@ export class Classroom extends BaseEntity<Classroom> {
   tasks = new Collection<Task>(this);
 
   @Field(() => Date, { nullable: true })
-  @Property({
-    nullable: true,
-  })
+  @Property({ nullable: true })
   deletedAt?: Date;
 
   @Field(() => Membership, { nullable: true })

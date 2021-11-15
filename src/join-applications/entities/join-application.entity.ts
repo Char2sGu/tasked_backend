@@ -31,9 +31,7 @@ export class JoinApplication extends BaseEntity<JoinApplication> {
   classroom: Classroom;
 
   @Field(() => String, { nullable: true })
-  @Property({
-    nullable: true,
-  })
+  @Property({ nullable: true })
   message?: string;
 
   @Field(() => ApplicationStatus)
