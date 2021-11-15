@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { CrudService } from 'src/crud/crud.service';
-import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';

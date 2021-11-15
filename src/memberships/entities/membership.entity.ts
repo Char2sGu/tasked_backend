@@ -3,7 +3,7 @@ import { ObjectType } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/field.decorator';
-import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
+import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { Role } from './role.enum';

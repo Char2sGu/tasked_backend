@@ -9,10 +9,10 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 import { Observable } from 'rxjs';
 
-import { CRUD_FILTER } from './crud-filter.constant';
+import { CRUD_FILTER } from './mikro-filters.constants';
 
 @Injectable()
-export class CrudEnableFilterInterceptor implements NestInterceptor {
+export class MikroFiltersInterceptor implements NestInterceptor {
   constructor(private em: EntityManager) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

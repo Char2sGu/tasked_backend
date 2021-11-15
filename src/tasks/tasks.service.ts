@@ -5,8 +5,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
-import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';

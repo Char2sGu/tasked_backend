@@ -1,6 +1,6 @@
 import { ID, InputType } from '@nestjs/graphql';
 import { Field } from 'src/common/field.decorator';
-import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
+import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 import { IsPrimaryKey } from 'src/validation/is-primary-key.decorator';
 

@@ -1,7 +1,7 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CrudService } from 'src/crud/crud.service';
-import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
+import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';

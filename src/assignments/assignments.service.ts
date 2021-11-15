@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { isDefined } from 'class-validator';
 import { CrudService } from 'src/crud/crud.service';
-import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 import { Role } from 'src/memberships/entities/role.enum';
 import { MembershipsService } from 'src/memberships/memberships.service';
+import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { TasksService } from 'src/tasks/tasks.service';
 import { User } from 'src/users/entities/user.entity';
 
