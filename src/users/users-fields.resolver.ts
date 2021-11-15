@@ -5,6 +5,7 @@ import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
 import { ReqUser } from 'src/common/req-user.decorator';
 import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
+import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args';
@@ -16,6 +17,7 @@ import { User } from './entities/user.entity';
 export class UsersFieldsResolver {
   constructor(
     private classroomsService: ClassroomsService,
+    private applicationsService: JoinApplicationsService,
     private membershipsService: MembershipsService,
     private tasksService: TasksService,
     private assignmentsService: AssignmentsService,
@@ -36,7 +38,7 @@ export class UsersFieldsResolver {
     @Parent() entity: User,
     @ReqUser() user: User,
   ) {
-    return this.membershipsService.queryMany(user, args, { owner: entity });
+    return this.applicationsService.queryMany(user, args, { owner: entity });
   }
 
   @ResolveField()
