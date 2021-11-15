@@ -29,7 +29,7 @@ export class TasksService {
     { limit, offset, isOwn }: QueryTasksArgs,
     query: FilterQuery<Task> = {},
   ) {
-    return this.repo.findAndCount(
+    return this.repo.findAndPaginate(
       { $and: [query, isOwn != undefined ? { creator: user } : {}] },
       {
         limit,

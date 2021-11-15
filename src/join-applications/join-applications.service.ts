@@ -38,7 +38,7 @@ export class JoinApplicationsService {
     { limit, offset, isPending }: QueryJoinApplicationsArgs,
     query: FilterQuery<JoinApplication> = {},
   ) {
-    return this.repo.findAndCount(
+    return this.repo.findAndPaginate(
       {
         $and: [
           query,

@@ -24,7 +24,7 @@ export class ClassroomsService {
     { limit, offset, isOpen, isJoined }: QueryClassroomsArgs,
     query: FilterQuery<Classroom> = {},
   ) {
-    return this.repo.findAndCount(
+    return this.repo.findAndPaginate(
       {
         $and: [
           query,

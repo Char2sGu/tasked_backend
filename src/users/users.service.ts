@@ -18,7 +18,7 @@ export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
   async queryMany(user: User, { limit, offset }: QueryUsersArgs) {
-    return this.repo.findAndCount(
+    return this.repo.findAndPaginate(
       {},
       { limit, offset, filters: [CRUD_FILTER] },
     );

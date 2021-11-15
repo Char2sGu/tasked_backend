@@ -38,7 +38,7 @@ export class AssignmentsService {
     { limit, offset, isOwn, ...filters }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
-    return this.repo.findAndCount(
+    return this.repo.findAndPaginate(
       {
         $and: [
           query,

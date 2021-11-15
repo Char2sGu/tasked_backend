@@ -23,7 +23,7 @@ export class MembershipsService {
     { limit, offset }: QueryMembershipsArgs,
     query: FilterQuery<Membership> = {},
   ) {
-    return this.repo.findAndCount(query, {
+    return this.repo.findAndPaginate(query, {
       limit,
       offset,
       filters: [CRUD_FILTER],
