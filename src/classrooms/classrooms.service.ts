@@ -32,14 +32,14 @@ export class ClassroomsService {
       {
         limit,
         offset,
-        filters: { [CRUD_FILTER]: { user } },
+        filters: [CRUD_FILTER],
         orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryClassroomArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
+    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateClassroomArgs) {
@@ -59,9 +59,7 @@ export class ClassroomsService {
   }
 
   async updateOne(user: User, { id, data }: UpdateClassroomArgs) {
-    const classroom = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
-    });
+    const classroom = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
 
     if (user != classroom.creator)
       throw new ForbiddenException(
@@ -72,9 +70,7 @@ export class ClassroomsService {
   }
 
   async deleteOne(user: User, { id }: DeleteClassroomArgs) {
-    const classroom = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
-    });
+    const classroom = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
 
     if (user != classroom.creator)
       throw new ForbiddenException(

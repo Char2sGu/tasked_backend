@@ -34,10 +34,7 @@ export class ExistenceConstraint implements ValidatorConstraintInterface {
     const service = this.moduleRef.get(serviceType(), { strict: false });
     return (await service.crud.retrieve(
       conditions?.(value, user, object) ?? {},
-      {
-        filters: { [CRUD_FILTER]: { user } },
-        failHandler: false,
-      },
+      { filters: [CRUD_FILTER], failHandler: false },
     ))
       ? shouldExist
       : !shouldExist;

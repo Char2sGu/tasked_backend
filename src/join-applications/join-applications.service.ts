@@ -48,14 +48,14 @@ export class JoinApplicationsService {
       {
         limit,
         offset,
-        filters: { [CRUD_FILTER]: { user } },
+        filters: [CRUD_FILTER],
         orderBy: { id: QueryOrder.DESC },
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryJoinApplicationArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
+    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateJoinApplicationArgs) {
@@ -68,10 +68,7 @@ export class JoinApplicationsService {
             { memberships: { owner: user } },
           ],
         },
-        {
-          filters: { [CRUD_FILTER]: { user } },
-          failHandler: false,
-        },
+        { filters: [CRUD_FILTER], failHandler: false },
       )
       .then((result) => {
         if (result)
@@ -89,7 +86,7 @@ export class JoinApplicationsService {
 
   async rejectOne(user: User, { id }: RejectJoinApplicationArgs) {
     const application = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
+      filters: [CRUD_FILTER],
     });
 
     if (application.status != ApplicationStatus.Pending)
@@ -102,7 +99,7 @@ export class JoinApplicationsService {
 
   async acceptOne(user: User, { id }: AcceptJoinApplicationArgs) {
     const application = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
+      filters: [CRUD_FILTER],
     });
 
     if (application.status != ApplicationStatus.Pending)

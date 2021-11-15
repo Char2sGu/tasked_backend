@@ -46,13 +46,13 @@ export class AssignmentsService {
         limit,
         offset,
         orderBy: { createdAt: QueryOrder.DESC },
-        filters: { [CRUD_FILTER]: { user } },
+        filters: [CRUD_FILTER],
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryAssignmentArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
+    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateAssignmentArgs) {
@@ -62,7 +62,7 @@ export class AssignmentsService {
         role: Role.Student,
       },
       {
-        filters: { [CRUD_FILTER]: { user } },
+        filters: [CRUD_FILTER],
         failHandler: () =>
           new BadRequestException(
             'recipient must be an ID of a user being a student in this classroom',
@@ -73,7 +73,7 @@ export class AssignmentsService {
     await this.tasksService.crud.retrieve(
       { id: data.task, creator: user },
       {
-        filters: { [CRUD_FILTER]: { user } },
+        filters: [CRUD_FILTER],
         failHandler: () =>
           new BadRequestException(
             'task must be an ID of a task created by you',
@@ -91,7 +91,7 @@ export class AssignmentsService {
 
   async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {
     const assignment = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
+      filters: [CRUD_FILTER],
       populate: ['task'],
     });
 
@@ -117,7 +117,7 @@ export class AssignmentsService {
 
   async deleteOne(user: User, { id }: DeleteAssignmentArgs) {
     const assignment = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
+      filters: [CRUD_FILTER],
       populate: ['task'],
     });
 

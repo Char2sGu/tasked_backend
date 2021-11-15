@@ -17,14 +17,11 @@ export class UsersService {
   constructor(public crud: CrudService<User>) {}
 
   async queryMany(user: User, { limit, offset }: QueryUsersArgs) {
-    return this.crud.list(
-      {},
-      { limit, offset, filters: { [CRUD_FILTER]: { user } } },
-    );
+    return this.crud.list({}, { limit, offset, filters: [CRUD_FILTER] });
   }
 
   async queryOne(user: User, { id }: QueryUserArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
+    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne({ data }: CreateUserArgs) {

@@ -34,13 +34,13 @@ export class TasksService {
         limit,
         offset,
         orderBy: { id: QueryOrder.DESC },
-        filters: { [CRUD_FILTER]: { user } },
+        filters: [CRUD_FILTER],
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryTaskArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
+    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateTaskArgs) {
@@ -50,7 +50,7 @@ export class TasksService {
         classroom: data.classroom,
       },
       {
-        filters: { [CRUD_FILTER]: { user } },
+        filters: [CRUD_FILTER],
         failHandler: () =>
           new BadRequestException(
             'classroom must be an ID of a classroom having your membership',
@@ -65,9 +65,7 @@ export class TasksService {
   }
 
   async updateOne(user: User, { id, data }: UpdateTaskArgs) {
-    const task = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
-    });
+    const task = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
 
     if (task.creator != user)
       throw new ForbiddenException('Cannot update tasks not created by you');
@@ -76,9 +74,7 @@ export class TasksService {
   }
 
   async deleteOne(user: User, { id }: DeleteTaskArgs) {
-    const task = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
-    });
+    const task = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
 
     if (task.creator != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');

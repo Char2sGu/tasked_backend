@@ -23,12 +23,12 @@ export class MembershipsService {
     return this.crud.list(query, {
       limit,
       offset,
-      filters: { [CRUD_FILTER]: { user } },
+      filters: [CRUD_FILTER],
     });
   }
 
   async queryOne(user: User, { id }: QueryMembershipArgs) {
-    return this.crud.retrieve(id, { filters: { [CRUD_FILTER]: { user } } });
+    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
   }
 
   async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
@@ -47,7 +47,7 @@ export class MembershipsService {
     action: string,
   ) {
     const targetMembership = await this.crud.retrieve(where, {
-      filters: { [CRUD_FILTER]: { user } },
+      filters: [CRUD_FILTER],
     });
     const ownMembership = await this.crud.retrieve({
       owner: user,

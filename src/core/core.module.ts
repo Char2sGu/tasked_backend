@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { DB_PATH } from 'src/configurations';
+import { CrudModule } from 'src/crud/crud.module';
 
 import { FlushDbInterceptor } from './flush-db.interceptor';
 import { MikroRequestContextInterceptor } from './mikro-request-context.interceptor';
@@ -22,6 +23,7 @@ import { MikroRequestContextInterceptor } from './mikro-request-context.intercep
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
+    CrudModule.forRoot(),
   ],
   providers: [
     {
