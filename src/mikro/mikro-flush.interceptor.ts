@@ -13,7 +13,7 @@ import { concatMap, from, map, Observable, of } from 'rxjs';
  * Invoke `em.flush()` after every mutations.
  */
 @Injectable()
-export class FlushDbInterceptor implements NestInterceptor {
+export class MikroFlushInterceptor implements NestInterceptor {
   constructor(private em: EntityManager) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

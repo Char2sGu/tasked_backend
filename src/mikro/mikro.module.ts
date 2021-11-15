@@ -5,6 +5,7 @@ import { DB_PATH } from 'src/configurations';
 import { Repository } from 'src/mikro/repository.class';
 
 import { MikroFiltersInterceptor } from './mikro-filters.interceptor';
+import { MikroFlushInterceptor } from './mikro-flush.interceptor';
 import { MikroQueryContextInterceptor } from './mikro-query-context.interceptor';
 
 @Module({
@@ -27,6 +28,10 @@ import { MikroQueryContextInterceptor } from './mikro-query-context.interceptor'
     {
       provide: APP_INTERCEPTOR,
       useClass: MikroFiltersInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: MikroFlushInterceptor,
     },
   ],
 })

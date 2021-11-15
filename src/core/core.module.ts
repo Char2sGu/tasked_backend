@@ -3,7 +3,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MikroModule } from 'src/mikro/mikro.module';
 
-import { FlushDbInterceptor } from './flush-db.interceptor';
 import { PaginationInterceptor } from './pagination.interceptor';
 
 /**
@@ -17,10 +16,6 @@ import { PaginationInterceptor } from './pagination.interceptor';
     }),
   ],
   providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: FlushDbInterceptor,
-    },
     {
       provide: APP_INTERCEPTOR,
       useClass: PaginationInterceptor,
