@@ -9,6 +9,7 @@ import { QueryMembershipArgs } from './dto/query-membership.args';
 import { QueryMembershipsArgs } from './dto/query-memberships.args';
 import { UpdateMembershipArgs } from './dto/update-membership.args';
 import { Membership } from './entities/membership.entity';
+import { Role } from './entities/role.enum';
 
 @Injectable()
 export class MembershipsService {
@@ -31,59 +32,44 @@ export class MembershipsService {
   }
 
   async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
-    const target = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
-    });
-    const own = await this.crud.retrieve(
-      { classroom: target.classroom, owner: user },
-      { filters: { [CRUD_FILTER]: { user } } },
-    );
-
-    if (data.role != undefined) {
-      if (target == own)
-        throw new ForbiddenException(
-          'Cannot update "role" of your own membership',
-        );
-      if ((await own.getWeight()) <= (await target.getWeight()))
-        throw new ForbiddenException(
-          'Cannot update "role" of memberships not inferior to you',
-        );
-    }
-
+    const [target] = await this.canWrite(user, id, 'update');
     return this.crud.update(target, data);
   }
 
   async deleteOne(user: User, { id }: DeleteMembershipArgs) {
-    const targetMembership = await this.crud.retrieve(id, {
-      filters: { [CRUD_FILTER]: { user } },
-      populate: ['classroom'],
-    });
+    const [target] = await this.canWrite(user, id, 'delete');
+    return this.crud.destroy(target);
+  }
 
-    if (targetMembership.owner == targetMembership.classroom.creator)
+  private async canWrite(
+    user: User,
+    where: FilterQuery<Membership>,
+    action: string,
+  ) {
+    const targetMembership = await this.crud.retrieve(where, {
+      filters: { [CRUD_FILTER]: { user } },
+    });
+    const ownMembership = await this.crud.retrieve({
+      owner: user,
+      classroom: targetMembership.classroom,
+    });
+    const classroom = await ownMembership.classroom.init();
+
+    if (targetMembership.owner == classroom.creator)
       throw new ForbiddenException(
-        'Cannot delete the membership of the creator',
+        `Cannot ${action} the membership of the creator`,
       );
 
-    if (
-      targetMembership.classroom.creator != user &&
-      targetMembership.owner != user
-    ) {
-      const ownMembership = await targetMembership.classroom.memberships
-        .matching({
-          where: { owner: user },
-          filters: { [CRUD_FILTER]: { user } },
-        })
-        .then(([membership]) => membership);
-
-      const ownWeight = await ownMembership.getWeight();
-      const targetWeight = await targetMembership.getWeight();
-
-      if (ownWeight <= targetWeight)
+    if (ownMembership.owner == classroom.creator) {
+    } else if (ownMembership.role == Role.Teacher) {
+      if (targetMembership.role != Role.Student)
         throw new ForbiddenException(
-          'Cannot delete memberships of superior members',
+          `Cannot ${action} memberships of teachers`,
         );
+    } else if (ownMembership.role == Role.Student) {
+      throw new ForbiddenException(`Cannot ${action} memberships as a student`);
     }
 
-    return this.crud.destroy(targetMembership);
+    return [targetMembership, ownMembership];
   }
 }
