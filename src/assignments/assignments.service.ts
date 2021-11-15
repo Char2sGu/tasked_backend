@@ -1,15 +1,16 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
 import { isDefined } from 'class-validator';
-import { CrudService } from 'src/crud/crud.service';
+import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
-import { MembershipsService } from 'src/memberships/memberships.service';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
-import { TasksService } from 'src/tasks/tasks.service';
+import { Repository } from 'src/mikro/repository.class';
+import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
@@ -22,9 +23,14 @@ import { Assignment } from './entities/assignment.entity';
 @Injectable()
 export class AssignmentsService {
   constructor(
-    public crud: CrudService<Assignment>,
-    private membershipsService: MembershipsService,
-    private tasksService: TasksService,
+    @InjectRepository(Assignment)
+    private repo: Repository<Assignment>,
+
+    @InjectRepository(Membership)
+    private membershipRepo: Repository<Membership>,
+
+    @InjectRepository(Task)
+    private taskRepo: Repository<Task>,
   ) {}
 
   async queryMany(
@@ -32,7 +38,7 @@ export class AssignmentsService {
     { limit, offset, isOwn, ...filters }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
-    return this.crud.list(
+    return this.repo.findAndCount(
       {
         $and: [
           query,
@@ -52,11 +58,11 @@ export class AssignmentsService {
   }
 
   async queryOne(user: User, { id }: QueryAssignmentArgs) {
-    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateAssignmentArgs) {
-    await this.membershipsService.crud.retrieve(
+    await this.membershipRepo.findOneOrFail(
       {
         owner: data.recipient,
         role: Role.Student,
@@ -70,7 +76,7 @@ export class AssignmentsService {
       },
     );
 
-    await this.tasksService.crud.retrieve(
+    await this.taskRepo.findOneOrFail(
       { id: data.task, creator: user },
       {
         filters: [CRUD_FILTER],
@@ -81,7 +87,7 @@ export class AssignmentsService {
       },
     );
 
-    return this.crud.create({
+    return this.repo.create({
       isPublic: false,
       isCompleted: false,
       isImportant: false,
@@ -90,7 +96,7 @@ export class AssignmentsService {
   }
 
   async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {
-    const assignment = await this.crud.retrieve(id, {
+    const assignment = await this.repo.findOneOrFail(id, {
       filters: [CRUD_FILTER],
       populate: ['task'],
     });
@@ -112,11 +118,11 @@ export class AssignmentsService {
         );
     }
 
-    return this.crud.update(assignment, data);
+    return assignment.assign(data);
   }
 
   async deleteOne(user: User, { id }: DeleteAssignmentArgs) {
-    const assignment = await this.crud.retrieve(id, {
+    const assignment = await this.repo.findOneOrFail(id, {
       filters: [CRUD_FILTER],
       populate: ['task'],
     });
@@ -126,6 +132,6 @@ export class AssignmentsService {
         'Cannot delete assignments not created by you',
       );
 
-    return this.crud.destroy(assignment);
+    return this.repo.delete(assignment);
   }
 }

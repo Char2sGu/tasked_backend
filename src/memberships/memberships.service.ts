@@ -1,7 +1,8 @@
 import { FilterQuery } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/crud/crud.service';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { Repository } from 'src/mikro/repository.class';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
@@ -13,14 +14,16 @@ import { Role } from './entities/role.enum';
 
 @Injectable()
 export class MembershipsService {
-  constructor(public crud: CrudService<Membership>) {}
+  constructor(
+    @InjectRepository(Membership) private repo: Repository<Membership>,
+  ) {}
 
   async queryMany(
     user: User,
     { limit, offset }: QueryMembershipsArgs,
     query: FilterQuery<Membership> = {},
   ) {
-    return this.crud.list(query, {
+    return this.repo.findAndCount(query, {
       limit,
       offset,
       filters: [CRUD_FILTER],
@@ -28,17 +31,17 @@ export class MembershipsService {
   }
 
   async queryOne(user: User, { id }: QueryMembershipArgs) {
-    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
   }
 
   async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
     const [target] = await this.canWrite(user, id, 'update');
-    return this.crud.update(target, data);
+    return target.assign(data);
   }
 
   async deleteOne(user: User, { id }: DeleteMembershipArgs) {
     const [target] = await this.canWrite(user, id, 'delete');
-    return this.crud.destroy(target);
+    return this.repo.delete(target);
   }
 
   private async canWrite(
@@ -46,10 +49,10 @@ export class MembershipsService {
     where: FilterQuery<Membership>,
     action: string,
   ) {
-    const targetMembership = await this.crud.retrieve(where, {
+    const targetMembership = await this.repo.findOneOrFail(where, {
       filters: [CRUD_FILTER],
     });
-    const ownMembership = await this.crud.retrieve({
+    const ownMembership = await this.repo.findOneOrFail({
       owner: user,
       classroom: targetMembership.classroom,
     });

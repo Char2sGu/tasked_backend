@@ -1,12 +1,13 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { CrudService } from 'src/crud/crud.service';
-import { MembershipsService } from 'src/memberships/memberships.service';
+import { Membership } from 'src/memberships/entities/membership.entity';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { Repository } from 'src/mikro/repository.class';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';
@@ -19,8 +20,8 @@ import { Task } from './entities/task.entity';
 @Injectable()
 export class TasksService {
   constructor(
-    public crud: CrudService<Task>,
-    private membershipsService: MembershipsService,
+    @InjectRepository(Task) private repo: Repository<Task>,
+    @InjectRepository(Membership) private memRepo: Repository<Membership>,
   ) {}
 
   async queryMany(
@@ -28,7 +29,7 @@ export class TasksService {
     { limit, offset, isOwn }: QueryTasksArgs,
     query: FilterQuery<Task> = {},
   ) {
-    return this.crud.list(
+    return this.repo.findAndCount(
       { $and: [query, isOwn != undefined ? { creator: user } : {}] },
       {
         limit,
@@ -40,11 +41,11 @@ export class TasksService {
   }
 
   async queryOne(user: User, { id }: QueryTaskArgs) {
-    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateTaskArgs) {
-    await this.membershipsService.crud.retrieve(
+    await this.memRepo.findOneOrFail(
       {
         owner: user,
         classroom: data.classroom,
@@ -57,7 +58,7 @@ export class TasksService {
           ),
       },
     );
-    return this.crud.create({
+    return this.repo.create({
       creator: user,
       isActive: true,
       ...data,
@@ -65,20 +66,20 @@ export class TasksService {
   }
 
   async updateOne(user: User, { id, data }: UpdateTaskArgs) {
-    const task = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    const task = await this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
 
     if (task.creator != user)
       throw new ForbiddenException('Cannot update tasks not created by you');
 
-    return this.crud.update(task, data);
+    return task.assign(data);
   }
 
   async deleteOne(user: User, { id }: DeleteTaskArgs) {
-    const task = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    const task = await this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
 
     if (task.creator != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');
 
-    return this.crud.destroy(task);
+    return this.repo.delete(task);
   }
 }

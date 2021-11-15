@@ -1,7 +1,7 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { ClassroomsModule } from 'src/classrooms/classrooms.module';
-import { CrudModule } from 'src/crud/crud.module';
-import { MembershipsModule } from 'src/memberships/memberships.module';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { Module } from '@nestjs/common';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
+import { Membership } from 'src/memberships/entities/membership.entity';
 import { SharedModule } from 'src/shared/shared.module';
 
 import { JoinApplication } from './entities/join-application.entity';
@@ -12,9 +12,7 @@ import { JoinApplicationsFieldsResolver } from './join-applications-fields.resol
 @Module({
   imports: [
     SharedModule,
-    CrudModule.forFeature(JoinApplication),
-    forwardRef(() => MembershipsModule),
-    forwardRef(() => ClassroomsModule),
+    MikroOrmModule.forFeature([JoinApplication, Membership, Classroom]),
   ],
   providers: [
     JoinApplicationsResolver,

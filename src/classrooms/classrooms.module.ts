@@ -1,6 +1,6 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { forwardRef, Module } from '@nestjs/common';
 import { AssignmentsModule } from 'src/assignments/assignments.module';
-import { CrudModule } from 'src/crud/crud.module';
 import { JoinApplicationsModule } from 'src/join-applications/join-applications.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { SharedModule } from 'src/shared/shared.module';
@@ -14,7 +14,7 @@ import { Classroom } from './entities/classroom.entity';
 @Module({
   imports: [
     SharedModule,
-    CrudModule.forFeature(Classroom, { soft: 'deletedAt' }),
+    MikroOrmModule.forFeature([Classroom]),
     forwardRef(() => JoinApplicationsModule),
     forwardRef(() => MembershipsModule),
     forwardRef(() => TasksModule),

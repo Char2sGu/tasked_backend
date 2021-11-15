@@ -1,14 +1,15 @@
 import { FilterQuery, QueryOrder } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { ClassroomsService } from 'src/classrooms/classrooms.service';
-import { CrudService } from 'src/crud/crud.service';
+import { Classroom } from 'src/classrooms/entities/classroom.entity';
+import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
-import { MembershipsService } from 'src/memberships/memberships.service';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { Repository } from 'src/mikro/repository.class';
 import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
@@ -22,9 +23,14 @@ import { JoinApplication } from './entities/join-application.entity';
 @Injectable()
 export class JoinApplicationsService {
   constructor(
-    public crud: CrudService<JoinApplication>,
-    private membershipsService: MembershipsService,
-    private classroomsService: ClassroomsService,
+    @InjectRepository(JoinApplication)
+    private repo: Repository<JoinApplication>,
+
+    @InjectRepository(Membership)
+    private membershipRepo: Repository<Membership>,
+
+    @InjectRepository(Classroom)
+    private classroomRepo: Repository<Classroom>,
   ) {}
 
   async queryMany(
@@ -32,7 +38,7 @@ export class JoinApplicationsService {
     { limit, offset, isPending }: QueryJoinApplicationsArgs,
     query: FilterQuery<JoinApplication> = {},
   ) {
-    return this.crud.list(
+    return this.repo.findAndCount(
       {
         $and: [
           query,
@@ -55,12 +61,12 @@ export class JoinApplicationsService {
   }
 
   async queryOne(user: User, { id }: QueryJoinApplicationArgs) {
-    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateJoinApplicationArgs) {
-    await this.classroomsService.crud
-      .retrieve(
+    await this.classroomRepo
+      .findOne(
         {
           id: data.classroom,
           $or: [
@@ -68,7 +74,7 @@ export class JoinApplicationsService {
             { memberships: { owner: user } },
           ],
         },
-        { filters: [CRUD_FILTER], failHandler: false },
+        { filters: [CRUD_FILTER] },
       )
       .then((result) => {
         if (result)
@@ -77,7 +83,7 @@ export class JoinApplicationsService {
           );
       });
 
-    return this.crud.create({
+    return this.repo.create({
       owner: user,
       status: ApplicationStatus.Pending,
       ...data,
@@ -85,31 +91,31 @@ export class JoinApplicationsService {
   }
 
   async rejectOne(user: User, { id }: RejectJoinApplicationArgs) {
-    const application = await this.crud.retrieve(id, {
+    const application = await this.repo.findOneOrFail(id, {
       filters: [CRUD_FILTER],
     });
 
     if (application.status != ApplicationStatus.Pending)
       throw new ForbiddenException('Cannot reject resulted applications');
 
-    return this.crud.update(application, {
+    return application.assign({
       status: ApplicationStatus.Rejected,
     });
   }
 
   async acceptOne(user: User, { id }: AcceptJoinApplicationArgs) {
-    const application = await this.crud.retrieve(id, {
+    const application = await this.repo.findOneOrFail(id, {
       filters: [CRUD_FILTER],
     });
 
     if (application.status != ApplicationStatus.Pending)
       throw new ForbiddenException('Cannot accept resulted applications');
 
-    await this.crud.update(application, {
+    application.assign({
       status: ApplicationStatus.Accepted,
     });
 
-    const membership = await this.membershipsService.crud.create({
+    const membership = this.membershipRepo.create({
       owner: application.owner,
       classroom: application.classroom,
       role: Role.Student,

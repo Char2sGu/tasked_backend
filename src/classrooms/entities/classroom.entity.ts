@@ -14,6 +14,7 @@ import { JoinApplication } from 'src/join-applications/entities/join-application
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { SoftDeletable } from 'src/mikro/soft-deletable.decorator';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -26,6 +27,7 @@ import { User } from 'src/users/entities/user.entity';
     $or: [{ memberships: { owner: user } }, { isOpen: true }],
   }),
 })
+@SoftDeletable<Classroom>('deletedAt')
 @Entity()
 export class Classroom extends BaseEntity<Classroom> {
   @Field(() => String)

@@ -1,8 +1,9 @@
 import { FilterQuery } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CrudService } from 'src/crud/crud.service';
 import { Role } from 'src/memberships/entities/role.enum';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { Repository } from 'src/mikro/repository.class';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateClassroomArgs } from './dto/create-classroom.args';
@@ -14,14 +15,16 @@ import { Classroom } from './entities/classroom.entity';
 
 @Injectable()
 export class ClassroomsService {
-  constructor(public crud: CrudService<Classroom>) {}
+  constructor(
+    @InjectRepository(Classroom) private repo: Repository<Classroom>,
+  ) {}
 
   async queryMany(
     user: User,
     { limit, offset, isOpen, isJoined }: QueryClassroomsArgs,
     query: FilterQuery<Classroom> = {},
   ) {
-    return this.crud.list(
+    return this.repo.findAndCount(
       {
         $and: [
           query,
@@ -39,18 +42,18 @@ export class ClassroomsService {
   }
 
   async queryOne(user: User, { id }: QueryClassroomArgs) {
-    return this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
   }
 
   async createOne(user: User, { data }: CreateClassroomArgs) {
     const QUOTA = 20;
-    const createdCount = await this.crud.repo.count({ creator: user });
+    const createdCount = await this.repo.count({ creator: user });
     if (createdCount >= QUOTA)
       throw new ForbiddenException(
         `Cannot create more than ${QUOTA} classrooms`,
       );
 
-    return this.crud.create({
+    return this.repo.create({
       creator: user,
       memberships: [{ owner: user, role: Role.Teacher }],
       isOpen: true,
@@ -59,24 +62,28 @@ export class ClassroomsService {
   }
 
   async updateOne(user: User, { id, data }: UpdateClassroomArgs) {
-    const classroom = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    const classroom = await this.repo.findOneOrFail(id, {
+      filters: [CRUD_FILTER],
+    });
 
     if (user != classroom.creator)
       throw new ForbiddenException(
         'Cannot update classrooms not created by you',
       );
 
-    return this.crud.update(classroom, data);
+    return classroom.assign(data);
   }
 
   async deleteOne(user: User, { id }: DeleteClassroomArgs) {
-    const classroom = await this.crud.retrieve(id, { filters: [CRUD_FILTER] });
+    const classroom = await this.repo.findOneOrFail(id, {
+      filters: [CRUD_FILTER],
+    });
 
     if (user != classroom.creator)
       throw new ForbiddenException(
         'Cannot delete classrooms not created by you',
       );
 
-    return this.crud.destroy(classroom);
+    return this.repo.delete(classroom);
   }
 }
