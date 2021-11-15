@@ -82,14 +82,14 @@ import { Observable } from 'rxjs';
  * won't do that in guards.
  */
 @Injectable()
-export class MikroRequestContextInterceptor implements NestInterceptor {
+export class MikroQueryContextInterceptor implements NestInterceptor {
   static storage = new AsyncLocalStorage<EntityManager>();
 
   constructor(private em: EntityManager) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return new Observable((subscriber) => {
-      MikroRequestContextInterceptor.storage.run(
+      MikroQueryContextInterceptor.storage.run(
         this.em.fork({ clear: false, useContext: true }),
         () => next.handle().subscribe(subscriber),
       );

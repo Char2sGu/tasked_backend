@@ -5,7 +5,7 @@ import { DB_PATH } from 'src/configurations';
 import { Repository } from 'src/mikro/repository.class';
 
 import { MikroFiltersInterceptor } from './mikro-filters.interceptor';
-import { MikroRequestContextInterceptor } from './mikro-request-context.interceptor';
+import { MikroQueryContextInterceptor } from './mikro-query-context.interceptor';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { MikroRequestContextInterceptor } from './mikro-request-context.intercep
       dbName: DB_PATH,
       autoLoadEntities: true,
       forceUndefined: true,
-      context: () => MikroRequestContextInterceptor.storage.getStore(),
+      context: () => MikroQueryContextInterceptor.storage.getStore(),
       findOneOrFailHandler: () => new NotFoundException(),
       entityRepository: Repository,
     }),
@@ -22,7 +22,7 @@ import { MikroRequestContextInterceptor } from './mikro-request-context.intercep
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: MikroRequestContextInterceptor,
+      useClass: MikroQueryContextInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
