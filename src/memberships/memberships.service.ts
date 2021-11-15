@@ -1,6 +1,7 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { Repository } from 'src/mikro/repository.class';
 import { User } from 'src/users/entities/user.entity';
@@ -15,7 +16,11 @@ import { Role } from './entities/role.enum';
 @Injectable()
 export class MembershipsService {
   constructor(
-    @InjectRepository(Membership) private repo: Repository<Membership>,
+    @InjectRepository(Membership)
+    private repo: Repository<Membership>,
+
+    @InjectRepository(Assignment)
+    private assignmentRepo: Repository<Assignment>,
   ) {}
 
   async queryMany(
@@ -41,6 +46,14 @@ export class MembershipsService {
 
   async deleteOne(user: User, { id }: DeleteMembershipArgs) {
     const [target] = await this.canWrite(user, id, 'delete');
+    await this.assignmentRepo
+      .find({
+        recipient: target.owner,
+        task: { classroom: target.classroom },
+      })
+      .then((result) =>
+        result.forEach((item) => this.assignmentRepo.delete(item)),
+      );
     return this.repo.delete(target);
   }
 
