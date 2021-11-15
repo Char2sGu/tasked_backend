@@ -12,6 +12,8 @@ import { Observable } from 'rxjs';
  * Create a query scoped context for each query when there is multiple queries
  * in a single request.
  *
+ * ### MikroORM's Default Behavior
+ *
  * MikroORM uses the _UnitOfWork_ and _IdentityMap_ pattern, which require the
  * {@link EntityManager} to be isolated between actions to provide a clean
  * _IdentityMap_ for each request handler.
@@ -47,7 +49,9 @@ import { Observable } from 'rxjs';
  * achieve the isolation, which works well in most common use cases when there
  * is only one action in one request.
  *
- * But GraphQL supports multi-query requests. The client can send multiple
+ * ### The Issue in GraphQL's Multi-Query Requests
+ *
+ * But GraphQL supports multi-query requests. The client may send multiple
  * queries or mutations using an array and get an array of results. In a
  * multi-query request, multiple resolver methods will be invoked to execute
  * multiple actions. Guards, interceptors and so on will be invoked for each
@@ -57,37 +61,44 @@ import { Observable } from 'rxjs';
  * mutations because {@link EntityManager.flush} may be invoked when another
  * flush has not completed and cause errors.
  *
- * To solve this, we must create the context in interceptors because this is
- * the only place where we can get the `next` object for each query in a
- * single request. And also we should make this interceptor to be invoked
- * before any other interceptors to ensure the other interceptors to be scoped
- * to the context. And because interceptors are invoked after guards, so DB
- * operations in guards are still not scoped to the context created in the
- * interceptor. Therefore, we must use both a middleware and an interceptor
- * to create both a request scoped context and a query scoped context, and
- * create the context with `clear` set to `false`, so that the DB operations in
- * guards will be scoped to the request scoped context and those in other
- * places will be scoped to the query scoped context. And because we have set
- * `clear` to `false`, the query scoped contexts will inherit the _UnitOfWork_
- * and _IdentityMap_ of the request scoped one, so that the `request.user`
- * object defined in guards will not be cleared from the _IdentityMap_. We
- * cannot use the {@link RequestContext} provided by MikroORM because it sets
- * `clear` to `true`. Note that because guards are still in a request scoped
- * context, we should avoid invoking {@link EntityManager.flush} because it
- * may probably cause some flush conflicts when there are multiple mutations.
+ * ### Solution: Query Scoped Contexts
  *
- * But there are still some potential issues. Nest applies interceptors to root
- * resolvers but not to the field resolvers. It means the `Observable` returned
- * by `next.handle()` will be finished after the root resolver is invoked.
- * Therefore, field resolvers will still be in the request scoped context. It
- * usually doesn't matter because usually we won't call
- * {@link EntityManager.flush} in field resolvers and also the uncleared
- * _UnitOfWork_ and _IdentityMap_ won't have much affect on our works. But when
- * we use {@link EntityManager.setFilterParams} inside an interceptor, we must
- * make the interceptor be executed before the query context interceptor, so
- * that the filter params will be defined in the request scoped context and
- * there won't be an `Error: No argument provided for filter ...` when field
- * resolver try to enable the filters.
+ * To solve this, we must create a query scoped context for each query of a
+ * multi-query request. The only place we can implement this is interceptors
+ * because this is the only place where we can get the `next` object of every
+ * queries in the request to make them invoked in a query scoped context. We
+ * should make this interceptor to be invoked before any other interceptors to
+ * ensure the other interceptors are also inside the query scoped context. But
+ * because interceptors are invoked after guards, so DB operations in guards
+ * are still not scoped to the query scoped contexts. Therefore, we should not
+ * abandon the request scoped context created by MikroORM's built-in
+ * middleware, but to use both of the middleware and our interceptor to create
+ * both a request scoped context and query scoped contexts, so that the DB
+ * operations in guards will be scoped to the request scoped context and those
+ * in other places will be scoped to query scoped contexts. Moreover, query
+ * scoped contexts should be created with `clear` set to `false`, so the query
+ * scoped contexts will inherit the _UnitOfWork_ and _IdentityMap_ of the
+ * request scoped one and objects like `request.user` defined in guards will
+ * not be cleared from the _IdentityMap_. So we cannot use the
+ * {@link RequestContext} provided by MikroORM because it sets `clear` to
+ * `true`. Note that because guards are still in a request scoped context, we
+ * should avoid invoking {@link EntityManager.flush} for it may probably cause
+ * conflicts when there are multiple mutations.
+ *
+ * ### Potential Issues
+ *
+ * There are still some potential issues. Nest applies interceptors to root
+ * resolvers but not to field resolvers. It means the `Observable` returned
+ * by `next.handle()` will be finished just after the root resolver is invoked.
+ * Therefore, field resolvers will still be in the request scoped context
+ * instead of a query scoped one. It usually doesn't matter because usually we
+ * won't invoke {@link EntityManager.flush} in field resolvers and the
+ * uncleared _UnitOfWork_ and _IdentityMap_ also won't have much effect. But
+ * when we use {@link EntityManager.setFilterParams} in an interceptor, we must
+ * make that interceptor executed before the query context interceptor, so that
+ * the filter params will be defined in the request scoped context to avoid
+ * `Error: No argument provided for filter ...` when field resolvers try to
+ * enable the filter.
  */
 @Injectable()
 export class MikroQueryContextInterceptor implements NestInterceptor {
