@@ -8,6 +8,7 @@ import { CrudModule } from 'src/crud/crud.module';
 import { FlushDbInterceptor } from './flush-db.interceptor';
 import { MikroRequestContextInterceptor } from './mikro-request-context.interceptor';
 import { PaginationInterceptor } from './pagination.interceptor';
+import { Repository } from './repository.class';
 
 /**
  * Provide core providers and should only be imported in the {@link AppModule}.
@@ -21,6 +22,7 @@ import { PaginationInterceptor } from './pagination.interceptor';
       forceUndefined: true,
       context: () => MikroRequestContextInterceptor.storage.getStore(),
       findOneOrFailHandler: () => new NotFoundException(),
+      entityRepository: Repository,
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

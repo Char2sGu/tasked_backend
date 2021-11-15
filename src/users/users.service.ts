@@ -1,10 +1,10 @@
-import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { Repository } from 'src/core/repository.class';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
 
 import { CreateUserArgs } from './dto/create-user.args';
@@ -15,7 +15,7 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo: EntityRepository<User>) {}
+  constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
   async queryMany(user: User, { limit, offset }: QueryUsersArgs) {
     return this.repo.find({}, { limit, offset, filters: [CRUD_FILTER] });
@@ -29,9 +29,7 @@ export class UsersService {
     await this.repo.findOne({ username: data.username }).then((result) => {
       if (result) throw new BadRequestException('username must be unique');
     });
-    const entity = new User().assign(data);
-    this.repo.persist(entity);
-    return entity;
+    return this.repo.create(data);
   }
 
   async updateOne(user: User, { id, data }: UpdateUserArgs) {
