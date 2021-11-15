@@ -19,12 +19,14 @@ export class IsPrimaryKeyConstraint implements ValidatorConstraintInterface {
     value: FilterQuery<AnyEntity>,
     context: IsPrimaryKeyValidationContext,
   ) {
-    const [entityType] = context.constraints;
-    return this.em.findOne(entityType(), value).then((result) => !!result);
+    const [entityType, filters] = context.constraints;
+    return this.em
+      .findOne(entityType(), value, { filters })
+      .then((result) => !!result);
   }
 
   defaultMessage(context: IsPrimaryKeyValidationContext) {
     const entityName = context.constraints[0]().name;
-    return `${context.property} must be a primary key of an existing ${entityName} entity`;
+    return `${context.property} must be a primary key of an existing or accessible ${entityName} entity`;
   }
 }
