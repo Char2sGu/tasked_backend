@@ -1,6 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ReqUser } from 'src/common/req-user.decorator';
-import { FlushDbRequired } from 'src/core/flush-db-required.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
@@ -33,7 +32,6 @@ export class JoinApplicationsResolver {
     return this.service.queryOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => JoinApplication)
   async createJoinApplication(
     @Args() args: CreateJoinApplicationArgs,
@@ -42,7 +40,6 @@ export class JoinApplicationsResolver {
     return this.service.createOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => JoinApplication)
   async rejectJoinApplication(
     @Args() args: RejectJoinApplicationArgs,
@@ -51,7 +48,6 @@ export class JoinApplicationsResolver {
     return this.service.rejectOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => AcceptJoinApplicationResult)
   async acceptJoinApplication(
     @Args() args: AcceptJoinApplicationArgs,

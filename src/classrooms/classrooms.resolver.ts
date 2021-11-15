@@ -1,6 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ReqUser } from 'src/common/req-user.decorator';
-import { FlushDbRequired } from 'src/core/flush-db-required.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { ClassroomsService } from './classrooms.service';
@@ -26,7 +25,6 @@ export class ClassroomsResolver {
     return this.service.queryOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Classroom)
   async createClassroom(
     @Args() args: CreateClassroomArgs,
@@ -35,7 +33,6 @@ export class ClassroomsResolver {
     return this.service.createOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Classroom)
   async updateClassroom(
     @Args() args: UpdateClassroomArgs,
@@ -44,7 +41,6 @@ export class ClassroomsResolver {
     return this.service.updateOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Classroom)
   async deleteClassroom(
     @Args() args: DeleteClassroomArgs,

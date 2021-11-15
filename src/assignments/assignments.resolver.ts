@@ -1,5 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { FlushDbRequired } from 'src/core/flush-db-required.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { ReqUser } from '../common/req-user.decorator';
@@ -26,7 +25,6 @@ export class AssignmentsResolver {
     return this.service.queryOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Assignment)
   async createAssignment(
     @Args() args: CreateAssignmentArgs,
@@ -35,7 +33,6 @@ export class AssignmentsResolver {
     return await this.service.createOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Assignment)
   async updateAssignment(
     @Args() args: UpdateAssignmentArgs,
@@ -44,7 +41,6 @@ export class AssignmentsResolver {
     return this.service.updateOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Assignment)
   async deleteAssignment(
     @Args() args: DeleteAssignmentArgs,

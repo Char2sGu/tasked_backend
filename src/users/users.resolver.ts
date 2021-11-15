@@ -1,7 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuardSkip } from 'src/auth/auth-guard-skip.decorator';
 import { ReqUser } from 'src/common/req-user.decorator';
-import { FlushDbRequired } from 'src/core/flush-db-required.decorator';
 
 import { CreateUserArgs } from './dto/create-user.args';
 import { PaginatedUsers } from './dto/paginated-users.dto';
@@ -30,14 +29,12 @@ export class UsersResolver {
     return user;
   }
 
-  @FlushDbRequired()
   @AuthGuardSkip()
   @Mutation(() => User)
   async createUser(@Args() args: CreateUserArgs) {
     return this.service.createOne(args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => User)
   async updateUser(@Args() args: UpdateUserArgs, @ReqUser() user: User) {
     return this.service.updateOne(user, args);

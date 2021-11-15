@@ -5,27 +5,25 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 import { concatMap, from, map, Observable, of } from 'rxjs';
 
-import { FLUSH_DB_REQUIRED } from './flush-db-required.symbol';
-
 /**
- * Flush mikro-orm database changes by calling EntityManager.flush() after
- * each routing method applied a {@link FlushDb @FlushDb()} is over.
+ * Invoke `em.flush()` after every mutations.
  */
 @Injectable()
 export class FlushDbInterceptor implements NestInterceptor {
-  constructor(private reflector: Reflector, private em: EntityManager) {}
+  constructor(private em: EntityManager) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const operation =
+      GqlExecutionContext.create(context).getInfo<GraphQLResolveInfo>()
+        .operation.operation;
+
     return next.handle().pipe(
       concatMap((value) => {
-        const required: true | undefined = this.reflector.get(
-          FLUSH_DB_REQUIRED,
-          context.getHandler(),
-        );
-        return required
+        return operation == 'mutation'
           ? from(this.em.flush()).pipe(map(() => value))
           : of(value);
       }),

@@ -1,6 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ReqUser } from 'src/common/req-user.decorator';
-import { FlushDbRequired } from 'src/core/flush-db-required.decorator';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
@@ -25,7 +24,6 @@ export class MembershipsResolver {
     return this.service.queryOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Membership)
   async updateMembership(
     @Args() args: UpdateMembershipArgs,
@@ -34,7 +32,6 @@ export class MembershipsResolver {
     return this.service.updateOne(user, args);
   }
 
-  @FlushDbRequired()
   @Mutation(() => Membership)
   async deleteMembership(
     @Args() args: DeleteMembershipArgs,
