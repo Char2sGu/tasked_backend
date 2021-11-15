@@ -7,6 +7,7 @@ import { CrudModule } from 'src/crud/crud.module';
 
 import { FlushDbInterceptor } from './flush-db.interceptor';
 import { MikroRequestContextInterceptor } from './mikro-request-context.interceptor';
+import { NoReturnAsNotFoundInterceptor } from './no-return-as-not-found.interceptor';
 import { PaginationInterceptor } from './pagination.interceptor';
 
 /**
@@ -38,6 +39,10 @@ import { PaginationInterceptor } from './pagination.interceptor';
     {
       provide: APP_INTERCEPTOR,
       useClass: PaginationInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: NoReturnAsNotFoundInterceptor,
     },
   ],
 })
