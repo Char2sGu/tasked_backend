@@ -28,10 +28,11 @@ export class UsersService {
   }
 
   async createOne({ data }: CreateUserArgs) {
-    await this.crud.retrieve(
-      { username: data.username },
-      { failHandler: () => new BadRequestException('username must be unique') },
-    );
+    await this.crud
+      .retrieve({ username: data.username }, { failHandler: false })
+      .then((result) => {
+        if (result) throw new BadRequestException('username must be unique');
+      });
     return this.crud.create(data);
   }
 
