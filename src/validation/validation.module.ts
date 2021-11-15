@@ -1,14 +1,10 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_PIPE } from '@nestjs/core';
 
-import { ExistenceConstraint } from './existence.constraint';
 import { IsPrimaryKeyConstraint } from './is-primary-key.constraint';
-import { ValidationContextInterceptor } from './validation-context.interceptor';
 
 @Module({
   providers: [
-    ExistenceConstraint,
-    IsPrimaryKeyConstraint,
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
@@ -20,11 +16,8 @@ import { ValidationContextInterceptor } from './validation-context.interceptor';
         whitelist: true,
       }),
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ValidationContextInterceptor,
-    },
+    IsPrimaryKeyConstraint,
   ],
-  exports: [ExistenceConstraint, IsPrimaryKeyConstraint],
+  exports: [IsPrimaryKeyConstraint],
 })
 export class ValidationModule {}
