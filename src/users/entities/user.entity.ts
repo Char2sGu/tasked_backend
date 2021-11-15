@@ -81,8 +81,7 @@ export class User extends BaseEntity<User> {
   assignments = new Collection<Assignment>(this);
 
   get isUpdatedRecently() {
-    const DAYS = 3;
-    return dayjs(this.updatedAt).isAfter(dayjs().subtract(DAYS, 'd'));
+    return dayjs(this.updatedAt).isAfter(dayjs().subtract(5, 'minute'));
   }
 
   @BeforeCreate()
