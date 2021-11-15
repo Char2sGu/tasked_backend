@@ -4,8 +4,8 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Repository } from 'src/core/repository.class';
 import { CRUD_FILTER } from 'src/crud/crud-filter.constant';
+import { Repository } from 'src/mikro/repository.class';
 
 import { CreateUserArgs } from './dto/create-user.args';
 import { QueryUserArgs } from './dto/query-user.args';
