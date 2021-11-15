@@ -23,11 +23,11 @@ import { MikroQueryContextInterceptor } from './mikro-query-context.interceptor'
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: MikroQueryContextInterceptor,
+      useClass: MikroFiltersInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: MikroFiltersInterceptor,
+      useClass: MikroQueryContextInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
