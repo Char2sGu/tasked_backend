@@ -55,19 +55,21 @@ export class MembershipsService {
     });
     const classroom = await ownMembership.classroom.init();
 
-    if (targetMembership.owner == classroom.creator)
-      throw new ForbiddenException(
-        `Cannot ${action} the membership of the creator`,
-      );
-
     if (ownMembership.owner == classroom.creator) {
+      if (ownMembership == targetMembership)
+        throw new ForbiddenException(
+          `Cannot ${action} the membership of the creator`,
+        );
     } else if (ownMembership.role == Role.Teacher) {
       if (targetMembership.role != Role.Student)
         throw new ForbiddenException(
           `Cannot ${action} memberships of teachers`,
         );
     } else if (ownMembership.role == Role.Student) {
-      throw new ForbiddenException(`Cannot ${action} memberships as a student`);
+      if (ownMembership != targetMembership)
+        throw new ForbiddenException(
+          `Cannot ${action} memberships as a student`,
+        );
     }
 
     return [targetMembership, ownMembership];

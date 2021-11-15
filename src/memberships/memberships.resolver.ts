@@ -33,6 +33,7 @@ export class MembershipsResolver {
   ) {
     return this.service.updateOne(user, args);
   }
+
   @FlushDbRequired()
   @Mutation(() => Membership)
   async deleteMembership(
