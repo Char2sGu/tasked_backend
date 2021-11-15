@@ -10,4 +10,9 @@ export class Repository<Entity> extends EntityRepository<Entity> {
     if (persist) this.persist(result);
     return result;
   }
+
+  delete(entity: Entity) {
+    this.remove(entity);
+    return entity;
+  }
 }
