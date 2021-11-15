@@ -1,5 +1,5 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Module } from '@nestjs/common';
+import { Module, NotFoundException } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { DB_PATH } from 'src/configurations';
@@ -7,7 +7,6 @@ import { CrudModule } from 'src/crud/crud.module';
 
 import { FlushDbInterceptor } from './flush-db.interceptor';
 import { MikroRequestContextInterceptor } from './mikro-request-context.interceptor';
-import { NoReturnAsNotFoundInterceptor } from './no-return-as-not-found.interceptor';
 import { PaginationInterceptor } from './pagination.interceptor';
 
 /**
@@ -21,6 +20,7 @@ import { PaginationInterceptor } from './pagination.interceptor';
       autoLoadEntities: true,
       forceUndefined: true,
       context: () => MikroRequestContextInterceptor.storage.getStore(),
+      findOneOrFailHandler: () => new NotFoundException(),
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
@@ -39,10 +39,6 @@ import { PaginationInterceptor } from './pagination.interceptor';
     {
       provide: APP_INTERCEPTOR,
       useClass: PaginationInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: NoReturnAsNotFoundInterceptor,
     },
   ],
 })
