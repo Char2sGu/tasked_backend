@@ -7,6 +7,7 @@ import { CrudModule } from 'src/crud/crud.module';
 
 import { FlushDbInterceptor } from './flush-db.interceptor';
 import { MikroRequestContextInterceptor } from './mikro-request-context.interceptor';
+import { PaginationInterceptor } from './pagination.interceptor';
 
 /**
  * Provide core providers and should only be imported in the {@link AppModule}.
@@ -33,6 +34,10 @@ import { MikroRequestContextInterceptor } from './mikro-request-context.intercep
     {
       provide: APP_INTERCEPTOR,
       useClass: FlushDbInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: PaginationInterceptor,
     },
   ],
 })
