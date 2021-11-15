@@ -1,37 +1,34 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { EntityRepository } from '@mikro-orm/knex';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
 import { IncomingHttpHeaders } from 'node:http';
 import { User } from 'src/users/entities/user.entity';
 
-import { UsersService } from '../users/users.service';
 import { AuthResult } from './dto/auth-result.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private users: UsersService, private jwt: JwtService) {}
+  constructor(
+    @InjectRepository(User) private userRepo: EntityRepository<User>,
+    private jwt: JwtService,
+  ) {}
 
   async obtainJwt(username: string, password: string): Promise<AuthResult> {
-    try {
-      const user = await this.users.crud.retrieve({ username });
-      const isValid = await bcryptjs.compare(password, user.password);
-      if (isValid) {
-        const token = await this.signJwt(user);
-        return { token, user };
-      }
-    } catch (error) {
-      if (error instanceof NotFoundException) return;
-      throw error;
+    const user = await this.userRepo.findOne({ username });
+    if (!user) return;
+
+    const isValid = await bcryptjs.compare(password, user.password);
+    if (isValid) {
+      const token = await this.signJwt(user);
+      return { token, user };
     }
   }
 
   async verifyJwt(token: string) {
-    try {
-      const { id } = await this.jwt.verifyAsync<JwtData>(token);
-      return this.users.crud.retrieve(id);
-    } catch (error) {
-      return;
-    }
+    const { id } = await this.jwt.verifyAsync<JwtData>(token);
+    return this.userRepo.findOne(id);
   }
 
   getJwtFromHeaders(headers: IncomingHttpHeaders): string | undefined {
