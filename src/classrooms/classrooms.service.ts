@@ -84,6 +84,13 @@ export class ClassroomsService {
         'Cannot delete classrooms not created by you',
       );
 
+    await this.repo.populate(classroom, [
+      'joinApplications',
+      'memberships',
+      'tasks',
+      'tasks.assignments',
+    ]);
+
     return this.repo.delete(classroom);
   }
 }

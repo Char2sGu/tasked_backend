@@ -7,8 +7,6 @@ import {
 } from '@mikro-orm/core';
 import { EntityRepository } from '@mikro-orm/knex';
 
-import { SOFT_DELETABLE } from './soft-deletable.symbol';
-
 export class Repository<Entity> extends EntityRepository<Entity> {
   async findAndPaginate<Population extends string = never>(
     where: FilterQuery<Entity>,
@@ -28,12 +26,7 @@ export class Repository<Entity> extends EntityRepository<Entity> {
   }
 
   delete(entity: Entity) {
-    const softDeletableField: keyof Entity | undefined = Reflect.getMetadata(
-      SOFT_DELETABLE,
-      entity.constructor,
-    );
-    if (!softDeletableField) this.remove(entity);
-    else entity[softDeletableField] = new Date() as any;
+    this.remove(entity);
     return entity;
   }
 }

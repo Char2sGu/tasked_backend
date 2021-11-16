@@ -12,7 +12,7 @@ import { Role } from './role.enum';
 @Filter<Membership>({
   name: CRUD_FILTER,
   cond: ({ user }: { user: User }) => ({
-    classroom: { memberships: { owner: user }, deletedAt: null },
+    classroom: { memberships: { owner: user } },
   }),
 })
 @Entity()
