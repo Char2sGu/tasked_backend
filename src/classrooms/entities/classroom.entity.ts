@@ -66,7 +66,4 @@ export class Classroom extends BaseEntity<Classroom> {
     orphanRemoval: true,
   })
   tasks = new Collection<Task>(this);
-
-  @Property({ nullable: true })
-  deletedAt?: Date;
 }

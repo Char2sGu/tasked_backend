@@ -1,5 +1,6 @@
 import { BaseEntity as Base, PrimaryKey, Property } from '@mikro-orm/core';
 import { ID, ObjectType } from '@nestjs/graphql';
+import { SoftDeletable } from 'src/mikro/soft-deletable.decorator';
 
 import { Field } from './field.decorator';
 
@@ -8,6 +9,7 @@ import { Field } from './field.decorator';
  * in this project.
  */
 @ObjectType()
+@SoftDeletable(() => BaseEntity, 'deletedAt', () => new Date())
 export class BaseEntity<T extends BaseEntity<T>> extends Base<T, 'id'> {
   @Field(() => ID)
   @PrimaryKey()
@@ -20,4 +22,7 @@ export class BaseEntity<T extends BaseEntity<T>> extends Base<T, 'id'> {
   @Field(() => Date)
   @Property({ onCreate: () => new Date(), onUpdate: () => new Date() })
   readonly updatedAt: Date;
+
+  @Property({ nullable: true })
+  readonly deletedAt?: Date;
 }
