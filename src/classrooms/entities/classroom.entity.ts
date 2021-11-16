@@ -51,6 +51,7 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => JoinApplication,
     mappedBy: (application) => application.classroom,
+    orphanRemoval: true,
   })
   joinApplications = new Collection<JoinApplication>(this);
 
@@ -58,6 +59,7 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (membership) => membership.classroom,
+    orphanRemoval: true,
   })
   memberships = new Collection<Membership>(this);
 
@@ -65,6 +67,7 @@ export class Classroom extends BaseEntity<Classroom> {
   @OneToMany({
     entity: () => Task,
     mappedBy: (task) => task.classroom,
+    orphanRemoval: true,
   })
   tasks = new Collection<Task>(this);
 

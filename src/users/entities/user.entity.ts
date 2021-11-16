@@ -1,6 +1,7 @@
 import {
   BeforeCreate,
   BeforeUpdate,
+  Cascade,
   Collection,
   Entity,
   OneToMany,
@@ -45,6 +46,8 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Classroom,
     mappedBy: (classroom) => classroom.creator,
+    orphanRemoval: true,
+    cascade: [Cascade.REMOVE],
   })
   classrooms = new Collection<Classroom>(this);
 
@@ -52,6 +55,7 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => JoinApplication,
     mappedBy: (application) => application.owner,
+    orphanRemoval: true,
   })
   joinApplications = new Collection<JoinApplication>(this);
 
@@ -59,6 +63,7 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (memberships) => memberships.owner,
+    orphanRemoval: true,
   })
   memberships = new Collection<Membership>(this);
 
@@ -66,6 +71,7 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Task,
     mappedBy: (task) => task.creator,
+    orphanRemoval: true,
   })
   tasks = new Collection<Task>(this);
 
@@ -73,6 +79,7 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.recipient,
+    orphanRemoval: true,
   })
   assignments = new Collection<Assignment>(this);
 

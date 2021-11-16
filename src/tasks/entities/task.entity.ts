@@ -53,6 +53,7 @@ export class Task extends BaseEntity<Task> {
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.task,
+    orphanRemoval: true,
   })
   assignments = new Collection<Assignment>(this);
 }
