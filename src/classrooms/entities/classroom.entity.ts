@@ -67,7 +67,6 @@ export class Classroom extends BaseEntity<Classroom> {
   })
   tasks = new Collection<Task>(this);
 
-  @Field(() => Date, { nullable: true })
   @Property({ nullable: true })
   deletedAt?: Date;
 }
