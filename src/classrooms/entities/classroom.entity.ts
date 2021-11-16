@@ -7,11 +7,11 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
-import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/field.decorator';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';

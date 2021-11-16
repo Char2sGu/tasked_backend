@@ -10,8 +10,8 @@ import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/field.decorator';
+import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 
