@@ -10,8 +10,6 @@ import {
 import { ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcryptjs';
 import dayjs from 'dayjs';
-import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
-import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { PaginatedClassrooms } from 'src/classrooms/dto/paginated-classrooms.dto';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Field } from 'src/common/field.decorator';
@@ -74,14 +72,6 @@ export class User extends BaseEntity<User> {
     orphanRemoval: true,
   })
   tasks = new Collection<Task>(this);
-
-  @Field(() => PaginatedAssignments)
-  @OneToMany({
-    entity: () => Assignment,
-    mappedBy: (assignment) => assignment.recipient,
-    orphanRemoval: true,
-  })
-  assignments = new Collection<Assignment>(this);
 
   get isUpdatedRecently() {
     return dayjs(this.updatedAt).isAfter(dayjs().subtract(5, 'minute'));

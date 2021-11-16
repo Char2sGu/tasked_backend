@@ -63,15 +63,12 @@ export class AssignmentsService {
 
   async createOne(user: User, { data }: CreateAssignmentArgs) {
     await this.membershipRepo.findOneOrFail(
-      {
-        owner: data.recipient,
-        role: Role.Student,
-      },
+      { id: data.recipient, role: Role.Student },
       {
         filters: [CRUD_FILTER],
         failHandler: () =>
           new BadRequestException(
-            'recipient must be an ID of a user being a student in this classroom',
+            'recipient must be an ID of a student membership in this classroom',
           ),
       },
     );
@@ -107,7 +104,7 @@ export class AssignmentsService {
           'Cannot update publicness of assignments not created by you',
         );
     }
-    if (user != assignment.recipient) {
+    if (user != assignment.recipient.owner) {
       if (isDefined(data.isCompleted))
         throw new ForbiddenException(
           'Cannot update completeness of assignments not assigned to you',

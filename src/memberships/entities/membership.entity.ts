@@ -1,5 +1,14 @@
-import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  Filter,
+  ManyToOne,
+  OneToMany,
+  Property,
+} from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
+import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
+import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Field } from 'src/common/field.decorator';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
@@ -28,6 +37,14 @@ export class Membership extends BaseEntity<Membership> {
     entity: () => Classroom,
   })
   classroom: Classroom;
+
+  @Field(() => PaginatedAssignments)
+  @OneToMany({
+    entity: () => Assignment,
+    mappedBy: (assignment) => assignment.recipient,
+    orphanRemoval: true,
+  })
+  assignments = new Collection<Assignment>(this);
 
   @Field(() => Role)
   @Property()

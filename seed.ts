@@ -13,6 +13,7 @@ export default (em: EntityManager) => {
 
   entities.push(
     em.create(Classroom, {
+      id: 1,
       name: 'Classroom',
       description:
         'This is an example classroom, so there is nothing to write in the description.',
@@ -24,10 +25,12 @@ export default (em: EntityManager) => {
       },
       memberships: [
         {
+          id: 1,
           owner: 1,
           role: Role.Teacher,
         },
         {
+          id: 2,
           owner: {
             id: 2,
             username: 'teacher',
@@ -37,6 +40,7 @@ export default (em: EntityManager) => {
           role: Role.Teacher,
         },
         {
+          id: 3,
           owner: {
             id: 3,
             username: 'student',
@@ -48,12 +52,14 @@ export default (em: EntityManager) => {
       ],
       tasks: [
         {
+          id: 1,
           creator: 1,
           title: 'Task',
           description: 'Description',
           isActive: true,
           assignments: [
             {
+              id: 1,
               recipient: 3,
               isCompleted: false,
               isImportant: false,
@@ -64,6 +70,7 @@ export default (em: EntityManager) => {
       ],
       joinApplications: [
         {
+          id: 1,
           owner: {
             id: 4,
             username: 'new-comer',

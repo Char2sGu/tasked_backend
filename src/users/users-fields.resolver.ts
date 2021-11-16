@@ -1,5 +1,6 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
+import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
@@ -59,12 +60,14 @@ export class UsersFieldsResolver {
     return this.tasksService.queryMany(user, args, { creator: entity });
   }
 
-  @ResolveField()
+  @ResolveField(() => PaginatedAssignments)
   async assignments(
     @Args() args: QueryAssignmentsArgs,
     @Parent() entity: User,
     @ReqUser() user: User,
   ) {
-    return this.assignmentsService.queryMany(user, args, { recipient: entity });
+    return this.assignmentsService.queryMany(user, args, {
+      recipient: { owner: entity },
+    });
   }
 }
