@@ -1,8 +1,9 @@
 import { EntityRepository } from '@mikro-orm/knex';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
+import { TokenExpiredError } from 'jsonwebtoken';
 import { IncomingHttpHeaders } from 'node:http';
 import { User } from 'src/users/entities/user.entity';
 
@@ -27,8 +28,12 @@ export class AuthService {
   }
 
   async verifyJwt(token: string) {
-    const { id } = await this.jwt.verifyAsync<JwtData>(token);
-    return this.userRepo.findOne(id);
+    try {
+      const { id } = await this.jwt.verifyAsync<JwtData>(token);
+      return this.userRepo.findOne(id);
+    } catch (error) {
+      if (error instanceof TokenExpiredError) throw new UnauthorizedException();
+    }
   }
 
   getJwtFromHeaders(headers: IncomingHttpHeaders): string | undefined {
