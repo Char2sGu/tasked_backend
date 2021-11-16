@@ -75,14 +75,12 @@ export class TasksService {
   }
 
   async deleteOne(user: User, { id }: DeleteTaskArgs) {
-    const task = await this.repo.findOneOrFail(id, {
-      filters: [CRUD_FILTER],
-      populate: ['assignments'],
-    });
+    const task = await this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
 
     if (task.creator != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');
 
+    await this.repo.populate(task, ['assignments']);
     return this.repo.delete(task);
   }
 }
