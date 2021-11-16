@@ -7,7 +7,6 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
-import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { Field } from 'src/common/field.decorator';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
@@ -74,10 +73,4 @@ export class Classroom extends BaseEntity<Classroom> {
   @Field(() => Date, { nullable: true })
   @Property({ nullable: true })
   deletedAt?: Date;
-
-  @Field(() => Membership, { nullable: true })
-  membership: never;
-
-  @Field(() => PaginatedAssignments)
-  assignments: never;
 }
