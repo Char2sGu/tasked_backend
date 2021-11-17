@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ContextModule } from 'src/context/context.module';
 import { MikroModule } from 'src/mikro/mikro.module';
 
 /**
@@ -7,6 +8,7 @@ import { MikroModule } from 'src/mikro/mikro.module';
  */
 @Module({
   imports: [
+    ContextModule.forRoot(),
     MikroModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true,
