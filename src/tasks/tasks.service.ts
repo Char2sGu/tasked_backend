@@ -6,8 +6,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Membership } from 'src/memberships/entities/membership.entity';
-import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { Repository } from 'src/mikro/repository.class';
+import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';

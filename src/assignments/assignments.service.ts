@@ -8,8 +8,8 @@ import {
 import { isDefined } from 'class-validator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
-import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { Repository } from 'src/mikro/repository.class';
+import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
