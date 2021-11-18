@@ -16,6 +16,8 @@ export class ContextInterceptor implements NestInterceptor {
     const request =
       GqlExecutionContext.create(context).getContext<ExpressContext>().req;
 
-    return new Context(request).apply(() => next.handle());
+    return new Observable((subscriber) =>
+      new Context(request).apply(() => next.handle().subscribe(subscriber)),
+    );
   }
 }

@@ -107,9 +107,11 @@ export class MikroQueryContextInterceptor implements NestInterceptor {
   constructor(private em: EntityManager) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return MikroQueryContextInterceptor.storage.run(
-      this.em.fork({ clear: false, useContext: true }),
-      () => next.handle(),
-    );
+    return new Observable((subscriber) => {
+      MikroQueryContextInterceptor.storage.run(
+        this.em.fork({ clear: false, useContext: true }),
+        () => next.handle().subscribe(subscriber),
+      );
+    });
   }
 }
