@@ -2,7 +2,7 @@ import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Repository } from 'src/mikro/repository.class';
-import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';

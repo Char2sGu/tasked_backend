@@ -13,10 +13,10 @@ import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { Quota } from 'src/mikro/quota.decorator';
-import {
-  CRUD_FILTER,
-  QUOTA_FILTER,
-} from 'src/mikro-filters/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
+import { CrudFilterArgs } from 'src/mikro-filters/crud-filter-args.interface';
+import { QUOTA_FILTER } from 'src/mikro-filters/quota-filter.constant';
+import { QuotaFilterArgs } from 'src/mikro-filters/quota-filter-args.interface';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -25,13 +25,13 @@ import { User } from 'src/users/entities/user.entity';
 @Quota(20, [QUOTA_FILTER])
 @Filter<Classroom>({
   name: QUOTA_FILTER,
-  cond: ({ user }: { user: User }) => ({
+  cond: ({ user }: QuotaFilterArgs) => ({
     creator: user,
   }),
 })
 @Filter<Classroom>({
   name: CRUD_FILTER,
-  cond: ({ user }: { user: User }) => ({
+  cond: ({ user }: CrudFilterArgs) => ({
     $or: [{ memberships: { owner: user } }, { isOpen: true }],
   }),
 })

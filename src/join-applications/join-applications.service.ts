@@ -9,7 +9,7 @@ import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { Repository } from 'src/mikro/repository.class';
-import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';

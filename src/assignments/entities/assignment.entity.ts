@@ -3,14 +3,14 @@ import { ObjectType } from '@nestjs/graphql';
 import { Field } from 'src/common/field.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
-import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
+import { CrudFilterArgs } from 'src/mikro-filters/crud-filter-args.interface';
 import { Task } from 'src/tasks/entities/task.entity';
-import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Assignment>({
   name: CRUD_FILTER,
-  cond: ({ user }: { user: User }) => ({
+  cond: ({ user }: CrudFilterArgs) => ({
     $or: [
       { recipient: { owner: user } },
       { task: { creator: user } },

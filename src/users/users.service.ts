@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Repository } from 'src/mikro/repository.class';
-import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 
 import { CreateUserArgs } from './dto/create-user.args';
 import { QueryUserArgs } from './dto/query-user.args';

@@ -9,7 +9,8 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 import { Observable } from 'rxjs';
 
-import { CRUD_FILTER, QUOTA_FILTER } from './mikro-filters.constants';
+import { CRUD_FILTER } from './crud-filter.constant';
+import { QUOTA_FILTER } from './quota-filter.constant';
 
 @Injectable()
 export class MikroFiltersInterceptor implements NestInterceptor {
