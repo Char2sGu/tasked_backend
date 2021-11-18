@@ -2,11 +2,8 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { ContextInterceptor } from './context.interceptor';
-import { ContextService } from './context.service';
 
-@Module({
-  providers: [ContextService],
-})
+@Module({})
 export class ContextModule {
   static forRoot(): DynamicModule {
     return {
@@ -17,14 +14,6 @@ export class ContextModule {
           useClass: ContextInterceptor,
         },
       ],
-    };
-  }
-
-  static forFeature(): DynamicModule {
-    return {
-      module: ContextModule,
-      providers: [ContextService],
-      exports: [ContextService],
     };
   }
 }
