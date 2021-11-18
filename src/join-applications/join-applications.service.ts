@@ -6,10 +6,10 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
+import { FilterName } from 'src/common/filter-name.enum';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { Repository } from 'src/mikro/repository.class';
-import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
@@ -54,14 +54,14 @@ export class JoinApplicationsService {
       {
         limit,
         offset,
-        filters: [CRUD_FILTER],
+        filters: [FilterName.CRUD],
         orderBy: { id: QueryOrder.DESC },
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryJoinApplicationArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
   async createOne(user: User, { data }: CreateJoinApplicationArgs) {
@@ -74,7 +74,7 @@ export class JoinApplicationsService {
             { memberships: { owner: user } },
           ],
         },
-        { filters: [CRUD_FILTER] },
+        { filters: [FilterName.CRUD] },
       )
       .then((result) => {
         if (result)
@@ -92,7 +92,7 @@ export class JoinApplicationsService {
 
   async rejectOne(user: User, { id }: RejectJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
-      filters: [CRUD_FILTER],
+      filters: [FilterName.CRUD],
     });
 
     if (application.status != ApplicationStatus.Pending)
@@ -105,7 +105,7 @@ export class JoinApplicationsService {
 
   async acceptOne(user: User, { id }: AcceptJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
-      filters: [CRUD_FILTER],
+      filters: [FilterName.CRUD],
     });
 
     if (application.status != ApplicationStatus.Pending)

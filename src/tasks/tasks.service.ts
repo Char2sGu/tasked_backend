@@ -5,9 +5,9 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { FilterName } from 'src/common/filter-name.enum';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Repository } from 'src/mikro/repository.class';
-import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';
@@ -35,13 +35,13 @@ export class TasksService {
         limit,
         offset,
         orderBy: { id: QueryOrder.DESC },
-        filters: [CRUD_FILTER],
+        filters: [FilterName.CRUD],
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryTaskArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
   async createOne(user: User, { data }: CreateTaskArgs) {
@@ -51,7 +51,7 @@ export class TasksService {
         classroom: data.classroom,
       },
       {
-        filters: [CRUD_FILTER],
+        filters: [FilterName.CRUD],
         failHandler: () =>
           new BadRequestException(
             'classroom must be an ID of a classroom having your membership',
@@ -66,7 +66,9 @@ export class TasksService {
   }
 
   async updateOne(user: User, { id, data }: UpdateTaskArgs) {
-    const task = await this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
+    const task = await this.repo.findOneOrFail(id, {
+      filters: [FilterName.CRUD],
+    });
 
     if (task.creator != user)
       throw new ForbiddenException('Cannot update tasks not created by you');
@@ -75,7 +77,9 @@ export class TasksService {
   }
 
   async deleteOne(user: User, { id }: DeleteTaskArgs) {
-    const task = await this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
+    const task = await this.repo.findOneOrFail(id, {
+      filters: [FilterName.CRUD],
+    });
 
     if (task.creator != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');

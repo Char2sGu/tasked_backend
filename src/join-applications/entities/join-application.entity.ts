@@ -2,16 +2,16 @@ import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Field } from 'src/common/field.decorator';
+import { FilterName } from 'src/common/filter-name.enum';
 import { Context } from 'src/context/context.class';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
-import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { ApplicationStatus } from './application-status.enum';
 
 @ObjectType()
 @Filter<JoinApplication>({
-  name: CRUD_FILTER,
+  name: FilterName.CRUD,
   cond: () => ({
     $or: [
       { owner: Context.current.user },

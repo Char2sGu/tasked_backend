@@ -6,10 +6,10 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { isDefined } from 'class-validator';
+import { FilterName } from 'src/common/filter-name.enum';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { Repository } from 'src/mikro/repository.class';
-import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
@@ -52,20 +52,20 @@ export class AssignmentsService {
         limit,
         offset,
         orderBy: { createdAt: QueryOrder.DESC },
-        filters: [CRUD_FILTER],
+        filters: [FilterName.CRUD],
       },
     );
   }
 
   async queryOne(user: User, { id }: QueryAssignmentArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
   async createOne(user: User, { data }: CreateAssignmentArgs) {
     await this.membershipRepo.findOneOrFail(
       { id: data.recipient, role: Role.Student },
       {
-        filters: [CRUD_FILTER],
+        filters: [FilterName.CRUD],
         failHandler: () =>
           new BadRequestException(
             'recipient must be an ID of a student membership in this classroom',
@@ -76,7 +76,7 @@ export class AssignmentsService {
     await this.taskRepo.findOneOrFail(
       { id: data.task, creator: user },
       {
-        filters: [CRUD_FILTER],
+        filters: [FilterName.CRUD],
         failHandler: () =>
           new BadRequestException(
             'task must be an ID of a task created by you',
@@ -94,7 +94,7 @@ export class AssignmentsService {
 
   async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {
     const assignment = await this.repo.findOneOrFail(id, {
-      filters: [CRUD_FILTER],
+      filters: [FilterName.CRUD],
       populate: ['task'],
     });
 
@@ -120,7 +120,7 @@ export class AssignmentsService {
 
   async deleteOne(user: User, { id }: DeleteAssignmentArgs) {
     const assignment = await this.repo.findOneOrFail(id, {
-      filters: [CRUD_FILTER],
+      filters: [FilterName.CRUD],
       populate: ['task'],
     });
 

@@ -1,8 +1,8 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { FilterName } from 'src/common/filter-name.enum';
 import { Repository } from 'src/mikro/repository.class';
-import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
 import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
@@ -27,12 +27,12 @@ export class MembershipsService {
     return this.repo.findAndPaginate(query, {
       limit,
       offset,
-      filters: [CRUD_FILTER],
+      filters: [FilterName.CRUD],
     });
   }
 
   async queryOne(user: User, { id }: QueryMembershipArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CRUD_FILTER] });
+    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
   async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
@@ -52,7 +52,7 @@ export class MembershipsService {
     action: string,
   ) {
     const targetMembership = await this.repo.findOneOrFail(where, {
-      filters: [CRUD_FILTER],
+      filters: [FilterName.CRUD],
     });
     const ownMembership = await this.repo.findOneOrFail({
       owner: user,

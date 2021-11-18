@@ -8,27 +8,26 @@ import {
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { Field } from 'src/common/field.decorator';
+import { FilterName } from 'src/common/filter-name.enum';
 import { Context } from 'src/context/context.class';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { Quota } from 'src/mikro/quota.decorator';
-import { CRUD_FILTER } from 'src/mikro-filters/crud-filter.constant';
-import { QUOTA_FILTER } from 'src/mikro-filters/quota-filter.constant';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
-@Quota(20, [QUOTA_FILTER])
+@Quota(20, [FilterName.QUOTA])
 @Filter<Classroom>({
-  name: QUOTA_FILTER,
+  name: FilterName.QUOTA,
   cond: () => ({ creator: Context.current.user }),
   args: false,
 })
 @Filter<Classroom>({
-  name: CRUD_FILTER,
+  name: FilterName.CRUD,
   cond: () => ({
     $or: [{ memberships: { owner: Context.current.user } }, { isOpen: true }],
   }),
