@@ -3,7 +3,7 @@ import { ObjectType } from '@nestjs/graphql';
 import { Field } from 'src/common/field.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
-import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 

@@ -1,7 +1,7 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { Repository } from 'src/mikro/repository.class';
 import { User } from 'src/users/entities/user.entity';
 

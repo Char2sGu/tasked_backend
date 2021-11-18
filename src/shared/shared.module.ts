@@ -3,7 +3,7 @@ import { ContextModule } from 'src/context/context.module';
 import { ValidationModule } from 'src/validation/validation.module';
 
 /**
- * provide shared providers for every feature providers.
+ * Provide shared providers for every feature providers.
  */
 @Module({
   imports: [ValidationModule.forFeature(), ContextModule.forFeature()],

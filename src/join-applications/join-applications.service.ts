@@ -8,7 +8,7 @@ import {
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
-import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
+import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { Repository } from 'src/mikro/repository.class';
 import { User } from 'src/users/entities/user.entity';
 

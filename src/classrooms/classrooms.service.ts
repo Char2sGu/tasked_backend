@@ -2,8 +2,8 @@ import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Role } from 'src/memberships/entities/role.enum';
-import { CRUD_FILTER } from 'src/mikro/mikro-filters.constants';
 import { Repository } from 'src/mikro/repository.class';
+import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { CreateClassroomArgs } from './dto/create-classroom.args';
