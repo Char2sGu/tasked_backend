@@ -6,6 +6,7 @@ import { Repository } from 'src/mikro/repository.class';
 
 import { MikroFlushInterceptor } from './mikro-flush.interceptor';
 import { MikroQueryContextInterceptor } from './mikro-query-context.interceptor';
+import { QuotaService } from './quota.service';
 
 @Module({})
 export class MikroModule {
@@ -33,6 +34,14 @@ export class MikroModule {
           useClass: MikroFlushInterceptor,
         },
       ],
+    };
+  }
+
+  static forFeature(): DynamicModule {
+    return {
+      module: MikroModule,
+      providers: [QuotaService],
+      exports: [QuotaService],
     };
   }
 }

@@ -9,7 +9,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
 import { Observable } from 'rxjs';
 
-import { CRUD_FILTER } from './mikro-filters.constants';
+import { CRUD_FILTER, QUOTA_FILTER } from './mikro-filters.constants';
 
 @Injectable()
 export class MikroFiltersInterceptor implements NestInterceptor {
@@ -18,8 +18,12 @@ export class MikroFiltersInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request =
       GqlExecutionContext.create(context).getContext<ExpressContext>().req;
-    if (request.user)
+
+    if (request.user) {
       this.em.setFilterParams(CRUD_FILTER, { user: request.user });
+      this.em.setFilterParams(QUOTA_FILTER, { user: request.user });
+    }
+
     return next.handle();
   }
 }
