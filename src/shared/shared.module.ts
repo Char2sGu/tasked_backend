@@ -6,7 +6,7 @@ import { ValidationModule } from 'src/validation/validation.module';
  * provide shared providers for every feature providers.
  */
 @Module({
-  imports: [ValidationModule, ContextModule.forFeature()],
+  imports: [ValidationModule.forFeature(), ContextModule.forFeature()],
   exports: [ValidationModule, ContextModule],
 })
 export class SharedModule {}
