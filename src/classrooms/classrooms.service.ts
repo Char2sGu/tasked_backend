@@ -2,6 +2,7 @@ import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Role } from 'src/memberships/entities/role.enum';
+import { QuotaService } from 'src/mikro/quota.service';
 import { Repository } from 'src/mikro/repository.class';
 import { CRUD_FILTER } from 'src/mikro-filters/mikro-filters.constants';
 import { User } from 'src/users/entities/user.entity';
@@ -17,6 +18,7 @@ import { Classroom } from './entities/classroom.entity';
 export class ClassroomsService {
   constructor(
     @InjectRepository(Classroom) private repo: Repository<Classroom>,
+    private quotaService: QuotaService,
   ) {}
 
   async queryMany(
@@ -46,13 +48,7 @@ export class ClassroomsService {
   }
 
   async createOne(user: User, { data }: CreateClassroomArgs) {
-    const QUOTA = 20;
-    const createdCount = await this.repo.count({ creator: user });
-    if (createdCount >= QUOTA)
-      throw new ForbiddenException(
-        `Cannot create more than ${QUOTA} classrooms`,
-      );
-
+    await this.quotaService.check(Classroom);
     return this.repo.create({
       creator: user,
       memberships: [{ owner: user, role: Role.Teacher }],
