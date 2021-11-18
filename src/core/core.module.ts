@@ -9,7 +9,7 @@ import { MikroModule } from 'src/mikro/mikro.module';
 @Module({
   imports: [
     ContextModule.forRoot(),
-    MikroModule,
+    MikroModule.forRoot(),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
