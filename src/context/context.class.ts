@@ -1,6 +1,5 @@
 import { AsyncLocalStorage } from 'async_hooks';
 import { Request } from 'express';
-import { User } from 'src/users/entities/user.entity';
 
 export class Context {
   static get current() {
@@ -9,10 +8,10 @@ export class Context {
 
   private static storage = new AsyncLocalStorage<Context>();
 
-  public user?: User;
+  constructor(private request: Request) {}
 
-  constructor(request: Request) {
-    this.user = request.user;
+  get user() {
+    return this.request.user;
   }
 
   apply<T>(fn: () => T) {
