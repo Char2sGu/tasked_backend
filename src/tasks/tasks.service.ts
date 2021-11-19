@@ -6,9 +6,9 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { FilterName } from 'src/common/filter-name.enum';
+import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Repository } from 'src/mikro/repository.class';
-import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';
 import { DeleteTaskArgs } from './dto/delete-task.args';
@@ -25,10 +25,10 @@ export class TasksService {
   ) {}
 
   async queryMany(
-    user: User,
     { limit, offset, isOwn }: QueryTasksArgs,
     query: FilterQuery<Task> = {},
   ) {
+    const user = Context.current.user;
     return this.repo.findAndPaginate(
       { $and: [query, isOwn != undefined ? { creator: user } : {}] },
       {
@@ -40,11 +40,13 @@ export class TasksService {
     );
   }
 
-  async queryOne(user: User, { id }: QueryTaskArgs) {
+  async queryOne({ id }: QueryTaskArgs) {
     return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
-  async createOne(user: User, { data }: CreateTaskArgs) {
+  async createOne({ data }: CreateTaskArgs) {
+    const user = Context.current.user;
+
     await this.memRepo.findOneOrFail(
       {
         owner: user,
@@ -65,7 +67,9 @@ export class TasksService {
     });
   }
 
-  async updateOne(user: User, { id, data }: UpdateTaskArgs) {
+  async updateOne({ id, data }: UpdateTaskArgs) {
+    const user = Context.current.user;
+
     const task = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
     });
@@ -76,7 +80,9 @@ export class TasksService {
     return task.assign(data);
   }
 
-  async deleteOne(user: User, { id }: DeleteTaskArgs) {
+  async deleteOne({ id }: DeleteTaskArgs) {
+    const user = Context.current.user;
+
     const task = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
     });

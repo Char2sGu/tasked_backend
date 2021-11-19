@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { isDefined } from 'class-validator';
 import { FilterName } from 'src/common/filter-name.enum';
+import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { Repository } from 'src/mikro/repository.class';
 import { Task } from 'src/tasks/entities/task.entity';
-import { User } from 'src/users/entities/user.entity';
 
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
 import { DeleteAssignmentArgs } from './dto/delete-assignment.args';
@@ -34,10 +34,11 @@ export class AssignmentsService {
   ) {}
 
   async queryMany(
-    user: User,
     { limit, offset, isOwn, ...filters }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
+    const user = Context.current.user;
+
     return this.repo.findAndPaginate(
       {
         $and: [
@@ -57,11 +58,13 @@ export class AssignmentsService {
     );
   }
 
-  async queryOne(user: User, { id }: QueryAssignmentArgs) {
+  async queryOne({ id }: QueryAssignmentArgs) {
     return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
-  async createOne(user: User, { data }: CreateAssignmentArgs) {
+  async createOne({ data }: CreateAssignmentArgs) {
+    const user = Context.current.user;
+
     await this.membershipRepo.findOneOrFail(
       { id: data.recipient, role: Role.Student },
       {
@@ -92,7 +95,9 @@ export class AssignmentsService {
     });
   }
 
-  async updateOne(user: User, { id, data }: UpdateAssignmentArgs) {
+  async updateOne({ id, data }: UpdateAssignmentArgs) {
+    const user = Context.current.user;
+
     const assignment = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
       populate: ['task'],
@@ -118,7 +123,9 @@ export class AssignmentsService {
     return assignment.assign(data);
   }
 
-  async deleteOne(user: User, { id }: DeleteAssignmentArgs) {
+  async deleteOne({ id }: DeleteAssignmentArgs) {
+    const user = Context.current.user;
+
     const assignment = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
       populate: ['task'],

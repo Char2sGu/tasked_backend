@@ -1,6 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ReqUser } from 'src/common/req-user.decorator';
-import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
 import { AcceptJoinApplicationResult } from './dto/accept-join-application-result.dto';
@@ -17,42 +15,27 @@ export class JoinApplicationsResolver {
   constructor(private service: JoinApplicationsService) {}
 
   @Query(() => PaginatedJoinApplications)
-  async joinApplications(
-    @Args() args: QueryJoinApplicationsArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.queryMany(user, args);
+  async joinApplications(@Args() args: QueryJoinApplicationsArgs) {
+    return this.service.queryMany(args);
   }
 
   @Query(() => JoinApplication)
-  async joinApplication(
-    @Args() args: QueryJoinApplicationArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.queryOne(user, args);
+  async joinApplication(@Args() args: QueryJoinApplicationArgs) {
+    return this.service.queryOne(args);
   }
 
   @Mutation(() => JoinApplication)
-  async createJoinApplication(
-    @Args() args: CreateJoinApplicationArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.createOne(user, args);
+  async createJoinApplication(@Args() args: CreateJoinApplicationArgs) {
+    return this.service.createOne(args);
   }
 
   @Mutation(() => JoinApplication)
-  async rejectJoinApplication(
-    @Args() args: RejectJoinApplicationArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.rejectOne(user, args);
+  async rejectJoinApplication(@Args() args: RejectJoinApplicationArgs) {
+    return this.service.rejectOne(args);
   }
 
   @Mutation(() => AcceptJoinApplicationResult)
-  async acceptJoinApplication(
-    @Args() args: AcceptJoinApplicationArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.acceptOne(user, args);
+  async acceptJoinApplication(@Args() args: AcceptJoinApplicationArgs) {
+    return this.service.acceptOne(args);
   }
 }

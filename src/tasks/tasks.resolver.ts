@@ -1,6 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ReqUser } from 'src/common/req-user.decorator';
-import { User } from 'src/users/entities/user.entity';
 
 import { CreateTaskArgs } from './dto/create-task.args';
 import { DeleteTaskArgs } from './dto/delete-task.args';
@@ -16,27 +14,27 @@ export class TasksResolver {
   constructor(private service: TasksService) {}
 
   @Query(() => PaginatedTasks)
-  async tasks(@Args() args: QueryTasksArgs, @ReqUser() user: User) {
-    return this.service.queryMany(user, args);
+  async tasks(@Args() args: QueryTasksArgs) {
+    return this.service.queryMany(args);
   }
 
   @Query(() => Task)
-  async task(@Args() args: QueryTaskArgs, @ReqUser() user: User) {
-    return this.service.queryOne(user, args);
+  async task(@Args() args: QueryTaskArgs) {
+    return this.service.queryOne(args);
   }
 
   @Mutation(() => Task)
-  async createTask(@Args() args: CreateTaskArgs, @ReqUser() user: User) {
-    return this.service.createOne(user, args);
+  async createTask(@Args() args: CreateTaskArgs) {
+    return this.service.createOne(args);
   }
 
   @Mutation(() => Task)
-  async updateTask(@Args() args: UpdateTaskArgs, @ReqUser() user: User) {
-    return this.service.updateOne(user, args);
+  async updateTask(@Args() args: UpdateTaskArgs) {
+    return this.service.updateOne(args);
   }
 
   @Mutation(() => Task)
-  async deleteTask(@Args() args: DeleteTaskArgs, @ReqUser() user: User) {
-    return this.service.deleteOne(user, args);
+  async deleteTask(@Args() args: DeleteTaskArgs) {
+    return this.service.deleteOne(args);
   }
 }

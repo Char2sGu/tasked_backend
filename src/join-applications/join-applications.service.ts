@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { FilterName } from 'src/common/filter-name.enum';
+import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { Repository } from 'src/mikro/repository.class';
-import { User } from 'src/users/entities/user.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
 import { CreateJoinApplicationArgs } from './dto/create-join-application.args';
@@ -34,7 +34,6 @@ export class JoinApplicationsService {
   ) {}
 
   async queryMany(
-    user: User,
     { limit, offset, isPending }: QueryJoinApplicationsArgs,
     query: FilterQuery<JoinApplication> = {},
   ) {
@@ -60,11 +59,13 @@ export class JoinApplicationsService {
     );
   }
 
-  async queryOne(user: User, { id }: QueryJoinApplicationArgs) {
+  async queryOne({ id }: QueryJoinApplicationArgs) {
     return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
-  async createOne(user: User, { data }: CreateJoinApplicationArgs) {
+  async createOne({ data }: CreateJoinApplicationArgs) {
+    const user = Context.current.user;
+
     await this.classroomRepo
       .findOne(
         {
@@ -90,7 +91,7 @@ export class JoinApplicationsService {
     });
   }
 
-  async rejectOne(user: User, { id }: RejectJoinApplicationArgs) {
+  async rejectOne({ id }: RejectJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
     });
@@ -103,7 +104,7 @@ export class JoinApplicationsService {
     });
   }
 
-  async acceptOne(user: User, { id }: AcceptJoinApplicationArgs) {
+  async acceptOne({ id }: AcceptJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
     });

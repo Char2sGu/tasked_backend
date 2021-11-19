@@ -1,6 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ReqUser } from 'src/common/req-user.decorator';
-import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
 import { PaginatedMemberships } from './dto/paginated-memberships.dto';
@@ -15,28 +13,22 @@ export class MembershipsResolver {
   constructor(private service: MembershipsService) {}
 
   @Query(() => PaginatedMemberships)
-  async memberships(@Args() args: QueryMembershipsArgs, @ReqUser() user: User) {
-    return this.service.queryMany(user, args);
+  async memberships(@Args() args: QueryMembershipsArgs) {
+    return this.service.queryMany(args);
   }
 
   @Query(() => Membership)
-  async membership(@Args() args: QueryMembershipArgs, @ReqUser() user: User) {
-    return this.service.queryOne(user, args);
+  async membership(@Args() args: QueryMembershipArgs) {
+    return this.service.queryOne(args);
   }
 
   @Mutation(() => Membership)
-  async updateMembership(
-    @Args() args: UpdateMembershipArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.updateOne(user, args);
+  async updateMembership(@Args() args: UpdateMembershipArgs) {
+    return this.service.updateOne(args);
   }
 
   @Mutation(() => Membership)
-  async deleteMembership(
-    @Args() args: DeleteMembershipArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.deleteOne(user, args);
+  async deleteMembership(@Args() args: DeleteMembershipArgs) {
+    return this.service.deleteOne(args);
   }
 }

@@ -4,7 +4,6 @@ import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { ClassroomsService } from 'src/classrooms/classrooms.service';
 import { QueryClassroomsArgs } from 'src/classrooms/dto/query-classrooms.args';
-import { ReqUser } from 'src/common/req-user.decorator';
 import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
 import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
@@ -25,48 +24,37 @@ export class UsersFieldsResolver {
   ) {}
 
   @ResolveField()
-  async classrooms(
-    @Args() args: QueryClassroomsArgs,
-    @Parent() entity: User,
-    @ReqUser() user: User,
-  ) {
-    return this.classroomsService.queryMany(user, args, { creator: entity });
+  async classrooms(@Args() args: QueryClassroomsArgs, @Parent() entity: User) {
+    return this.classroomsService.queryMany(args, { creator: entity });
   }
 
   @ResolveField()
   async joinApplications(
     @Args() args: QueryJoinApplicationsArgs,
     @Parent() entity: User,
-    @ReqUser() user: User,
   ) {
-    return this.applicationsService.queryMany(user, args, { owner: entity });
+    return this.applicationsService.queryMany(args, { owner: entity });
   }
 
   @ResolveField()
   async memberships(
     @Args() args: QueryMembershipsArgs,
     @Parent() entity: User,
-    @ReqUser() user: User,
   ) {
-    return this.membershipsService.queryMany(user, args, { owner: entity });
+    return this.membershipsService.queryMany(args, { owner: entity });
   }
 
   @ResolveField()
-  async tasks(
-    @Args() args: QueryTasksArgs,
-    @Parent() entity: User,
-    @ReqUser() user: User,
-  ) {
-    return this.tasksService.queryMany(user, args, { creator: entity });
+  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: User) {
+    return this.tasksService.queryMany(args, { creator: entity });
   }
 
   @ResolveField(() => PaginatedAssignments)
   async assignments(
     @Args() args: QueryAssignmentsArgs,
     @Parent() entity: User,
-    @ReqUser() user: User,
   ) {
-    return this.assignmentsService.queryMany(user, args, {
+    return this.assignmentsService.queryMany(args, {
       recipient: { owner: entity },
     });
   }

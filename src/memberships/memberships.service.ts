@@ -2,8 +2,8 @@ import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { FilterName } from 'src/common/filter-name.enum';
+import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
-import { User } from 'src/users/entities/user.entity';
 
 import { DeleteMembershipArgs } from './dto/delete-membership.args';
 import { QueryMembershipArgs } from './dto/query-membership.args';
@@ -20,7 +20,6 @@ export class MembershipsService {
   ) {}
 
   async queryMany(
-    user: User,
     { limit, offset }: QueryMembershipsArgs,
     query: FilterQuery<Membership> = {},
   ) {
@@ -31,31 +30,27 @@ export class MembershipsService {
     });
   }
 
-  async queryOne(user: User, { id }: QueryMembershipArgs) {
+  async queryOne({ id }: QueryMembershipArgs) {
     return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
-  async updateOne(user: User, { id, data }: UpdateMembershipArgs) {
-    const [target] = await this.canWrite(user, id, 'update');
+  async updateOne({ id, data }: UpdateMembershipArgs) {
+    const [target] = await this.canWrite(id, 'update');
     return target.assign(data);
   }
 
-  async deleteOne(user: User, { id }: DeleteMembershipArgs) {
-    const [target] = await this.canWrite(user, id, 'delete');
+  async deleteOne({ id }: DeleteMembershipArgs) {
+    const [target] = await this.canWrite(id, 'delete');
     await this.repo.populate(target, ['assignments']);
     return this.repo.delete(target);
   }
 
-  private async canWrite(
-    user: User,
-    where: FilterQuery<Membership>,
-    action: string,
-  ) {
+  private async canWrite(where: FilterQuery<Membership>, action: string) {
     const targetMembership = await this.repo.findOneOrFail(where, {
       filters: [FilterName.CRUD],
     });
     const ownMembership = await this.repo.findOneOrFail({
-      owner: user,
+      owner: Context.current.user,
       classroom: targetMembership.classroom,
     });
     const classroom = await ownMembership.classroom.init();

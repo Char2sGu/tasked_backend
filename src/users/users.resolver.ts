@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuardSkip } from 'src/auth/auth-guard-skip.decorator';
-import { ReqUser } from 'src/common/req-user.decorator';
+import { Context } from 'src/context/context.class';
 
 import { CreateUserArgs } from './dto/create-user.args';
 import { PaginatedUsers } from './dto/paginated-users.dto';
@@ -15,18 +15,18 @@ export class UsersResolver {
   constructor(private service: UsersService) {}
 
   @Query(() => PaginatedUsers)
-  async users(@Args() args: QueryUsersArgs, @ReqUser() user: User) {
-    return this.service.queryMany(user, args);
+  async users(@Args() args: QueryUsersArgs) {
+    return this.service.queryMany(args);
   }
 
   @Query(() => User)
-  async user(@Args() args: QueryUserArgs, @ReqUser() user: User) {
-    return this.service.queryOne(user, args);
+  async user(@Args() args: QueryUserArgs) {
+    return this.service.queryOne(args);
   }
 
   @Query(() => User)
-  async me(@ReqUser() user: User) {
-    return user;
+  async me() {
+    return Context.current.user;
   }
 
   @AuthGuardSkip()
@@ -36,7 +36,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  async updateUser(@Args() args: UpdateUserArgs, @ReqUser() user: User) {
-    return this.service.updateOne(user, args);
+  async updateUser(@Args() args: UpdateUserArgs) {
+    return this.service.updateOne(args);
   }
 }

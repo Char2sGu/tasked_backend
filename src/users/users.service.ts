@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { FilterName } from 'src/common/filter-name.enum';
+import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
 
 import { CreateUserArgs } from './dto/create-user.args';
@@ -17,14 +18,14 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  async queryMany(user: User, { limit, offset }: QueryUsersArgs) {
+  async queryMany({ limit, offset }: QueryUsersArgs) {
     return this.repo.findAndPaginate(
       {},
       { limit, offset, filters: [FilterName.CRUD] },
     );
   }
 
-  async queryOne(user: User, { id }: QueryUserArgs) {
+  async queryOne({ id }: QueryUserArgs) {
     return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
@@ -35,7 +36,8 @@ export class UsersService {
     return this.repo.create(data);
   }
 
-  async updateOne(user: User, { id, data }: UpdateUserArgs) {
+  async updateOne({ id, data }: UpdateUserArgs) {
+    const user = Context.current.user;
     const entity = await this.repo.findOneOrFail(id);
 
     if (entity != user)

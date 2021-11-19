@@ -1,8 +1,6 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { ReqUser } from 'src/common/req-user.decorator';
-import { User } from 'src/users/entities/user.entity';
 
 import { Task } from './entities/task.entity';
 
@@ -24,8 +22,7 @@ export class TasksFieldsResolver {
   async assignments(
     @Args() args: QueryAssignmentsArgs,
     @Parent() entity: Task,
-    @ReqUser() user: User,
   ) {
-    return this.assignmentsService.queryMany(user, args, { task: entity });
+    return this.assignmentsService.queryMany(args, { task: entity });
   }
 }

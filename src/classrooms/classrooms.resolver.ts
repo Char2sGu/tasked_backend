@@ -1,6 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ReqUser } from 'src/common/req-user.decorator';
-import { User } from 'src/users/entities/user.entity';
 
 import { ClassroomsService } from './classrooms.service';
 import { CreateClassroomArgs } from './dto/create-classroom.args';
@@ -16,36 +14,27 @@ export class ClassroomsResolver {
   constructor(private service: ClassroomsService) {}
 
   @Query(() => PaginatedClassrooms)
-  async classrooms(@Args() args: QueryClassroomsArgs, @ReqUser() user: User) {
-    return this.service.queryMany(user, args);
+  async classrooms(@Args() args: QueryClassroomsArgs) {
+    return this.service.queryMany(args);
   }
 
   @Query(() => Classroom)
-  async classroom(@Args() args: QueryClassroomArgs, @ReqUser() user: User) {
-    return this.service.queryOne(user, args);
+  async classroom(@Args() args: QueryClassroomArgs) {
+    return this.service.queryOne(args);
   }
 
   @Mutation(() => Classroom)
-  async createClassroom(
-    @Args() args: CreateClassroomArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.createOne(user, args);
+  async createClassroom(@Args() args: CreateClassroomArgs) {
+    return this.service.createOne(args);
   }
 
   @Mutation(() => Classroom)
-  async updateClassroom(
-    @Args() args: UpdateClassroomArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.updateOne(user, args);
+  async updateClassroom(@Args() args: UpdateClassroomArgs) {
+    return this.service.updateOne(args);
   }
 
   @Mutation(() => Classroom)
-  async deleteClassroom(
-    @Args() args: DeleteClassroomArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.deleteOne(user, args);
+  async deleteClassroom(@Args() args: DeleteClassroomArgs) {
+    return this.service.deleteOne(args);
   }
 }

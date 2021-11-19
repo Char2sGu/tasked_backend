@@ -2,10 +2,10 @@ import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { FilterName } from 'src/common/filter-name.enum';
+import { Context } from 'src/context/context.class';
 import { Role } from 'src/memberships/entities/role.enum';
 import { QuotaService } from 'src/mikro/quota.service';
 import { Repository } from 'src/mikro/repository.class';
-import { User } from 'src/users/entities/user.entity';
 
 import { CreateClassroomArgs } from './dto/create-classroom.args';
 import { DeleteClassroomArgs } from './dto/delete-classroom.args';
@@ -22,10 +22,11 @@ export class ClassroomsService {
   ) {}
 
   async queryMany(
-    user: User,
     { limit, offset, isOpen, isJoined }: QueryClassroomsArgs,
     query: FilterQuery<Classroom> = {},
   ) {
+    const user = Context.current.user;
+
     return this.repo.findAndPaginate(
       {
         $and: [
@@ -43,11 +44,12 @@ export class ClassroomsService {
     );
   }
 
-  async queryOne(user: User, { id }: QueryClassroomArgs) {
+  async queryOne({ id }: QueryClassroomArgs) {
     return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
   }
 
-  async createOne(user: User, { data }: CreateClassroomArgs) {
+  async createOne({ data }: CreateClassroomArgs) {
+    const user = Context.current.user;
     await this.quotaService.check(Classroom);
     return this.repo.create({
       creator: user,
@@ -57,7 +59,9 @@ export class ClassroomsService {
     });
   }
 
-  async updateOne(user: User, { id, data }: UpdateClassroomArgs) {
+  async updateOne({ id, data }: UpdateClassroomArgs) {
+    const user = Context.current.user;
+
     const classroom = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
     });
@@ -70,7 +74,9 @@ export class ClassroomsService {
     return classroom.assign(data);
   }
 
-  async deleteOne(user: User, { id }: DeleteClassroomArgs) {
+  async deleteOne({ id }: DeleteClassroomArgs) {
+    const user = Context.current.user;
+
     const classroom = await this.repo.findOneOrFail(id, {
       filters: [FilterName.CRUD],
     });

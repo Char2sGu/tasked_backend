@@ -1,7 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from 'src/users/entities/user.entity';
 
-import { ReqUser } from '../common/req-user.decorator';
 import { AssignmentsService } from './assignments.service';
 import { CreateAssignmentArgs } from './dto/create-assignment.args';
 import { DeleteAssignmentArgs } from './dto/delete-assignment.args';
@@ -16,36 +14,27 @@ export class AssignmentsResolver {
   constructor(private service: AssignmentsService) {}
 
   @Query(() => PaginatedAssignments)
-  async assignments(@Args() args: QueryAssignmentsArgs, @ReqUser() user: User) {
-    return this.service.queryMany(user, args);
+  async assignments(@Args() args: QueryAssignmentsArgs) {
+    return this.service.queryMany(args);
   }
 
   @Query(() => Assignment)
-  async assignment(@Args() args: QueryAssignmentArgs, @ReqUser() user: User) {
-    return this.service.queryOne(user, args);
+  async assignment(@Args() args: QueryAssignmentArgs) {
+    return this.service.queryOne(args);
   }
 
   @Mutation(() => Assignment)
-  async createAssignment(
-    @Args() args: CreateAssignmentArgs,
-    @ReqUser() user: User,
-  ) {
-    return await this.service.createOne(user, args);
+  async createAssignment(@Args() args: CreateAssignmentArgs) {
+    return await this.service.createOne(args);
   }
 
   @Mutation(() => Assignment)
-  async updateAssignment(
-    @Args() args: UpdateAssignmentArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.updateOne(user, args);
+  async updateAssignment(@Args() args: UpdateAssignmentArgs) {
+    return this.service.updateOne(args);
   }
 
   @Mutation(() => Assignment)
-  async deleteAssignment(
-    @Args() args: DeleteAssignmentArgs,
-    @ReqUser() user: User,
-  ) {
-    return this.service.deleteOne(user, args);
+  async deleteAssignment(@Args() args: DeleteAssignmentArgs) {
+    return this.service.deleteOne(args);
   }
 }
