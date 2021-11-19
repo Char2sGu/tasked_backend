@@ -10,6 +10,7 @@ import { FilterName } from 'src/common/filter-name.enum';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
+import { QuotaService } from 'src/mikro/quota.service';
 import { Repository } from 'src/mikro/repository.class';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
@@ -31,6 +32,8 @@ export class JoinApplicationsService {
 
     @InjectRepository(Classroom)
     private classroomRepo: Repository<Classroom>,
+
+    private quotaService: QuotaService,
   ) {}
 
   async queryMany(
@@ -83,6 +86,11 @@ export class JoinApplicationsService {
             'classroom must be an ID of a classroom in which you have no membership or application',
           );
       });
+
+    const classroom = await this.classroomRepo.findOne(data.classroom, {
+      populate: ['memberships'],
+    });
+    await this.quotaService.check(classroom);
 
     return this.repo.create({
       owner: user,
