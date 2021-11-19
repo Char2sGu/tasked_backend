@@ -1,6 +1,4 @@
-import { UseFilters } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { QuotaFilter } from 'src/mikro/quota.filter';
 
 import { ClassroomsService } from './classrooms.service';
 import { CreateClassroomArgs } from './dto/create-classroom.args';
@@ -25,7 +23,6 @@ export class ClassroomsResolver {
     return this.service.queryOne(args);
   }
 
-  @UseFilters(QuotaFilter)
   @Mutation(() => Classroom)
   async createClassroom(@Args() args: CreateClassroomArgs) {
     return this.service.createOne(args);

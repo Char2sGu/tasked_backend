@@ -1,11 +1,12 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { DynamicModule, Module, NotFoundException } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { DB_PATH } from 'src/configurations';
 import { Repository } from 'src/mikro/repository.class';
 
 import { MikroFlushInterceptor } from './mikro-flush.interceptor';
 import { MikroQueryContextInterceptor } from './mikro-query-context.interceptor';
+import { QuotaFilter } from './quota.filter';
 import { QuotaService } from './quota.service';
 
 @Module({})
@@ -32,6 +33,10 @@ export class MikroModule {
         {
           provide: APP_INTERCEPTOR,
           useClass: MikroFlushInterceptor,
+        },
+        {
+          provide: APP_FILTER,
+          useClass: QuotaFilter,
         },
       ],
     };
