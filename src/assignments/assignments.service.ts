@@ -52,7 +52,7 @@ export class AssignmentsService {
       {
         limit,
         offset,
-        orderBy: { createdAt: QueryOrder.DESC },
+        orderBy: { id: QueryOrder.DESC },
         filters: [FilterName.CRUD],
       },
     );
@@ -88,7 +88,6 @@ export class AssignmentsService {
     );
 
     return this.repo.create({
-      isPublic: false,
       isCompleted: false,
       isImportant: false,
       ...data,
@@ -103,12 +102,6 @@ export class AssignmentsService {
       populate: ['task'],
     });
 
-    if (user != assignment.task.creator) {
-      if (isDefined(data.isPublic))
-        throw new ForbiddenException(
-          'Cannot update publicness of assignments not created by you',
-        );
-    }
     if (user != assignment.recipient.owner) {
       if (isDefined(data.isCompleted))
         throw new ForbiddenException(

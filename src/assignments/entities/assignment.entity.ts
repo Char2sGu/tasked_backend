@@ -13,14 +13,7 @@ import { Task } from 'src/tasks/entities/task.entity';
   cond: () => {
     const user = Context.current.user;
     return {
-      $or: [
-        { recipient: { owner: user } },
-        { task: { creator: user } },
-        {
-          isPublic: true,
-          task: { classroom: { memberships: { owner: user } } },
-        },
-      ],
+      $or: [{ recipient: { owner: user } }, { task: { creator: user } }],
     };
   },
   args: false,
@@ -38,10 +31,6 @@ export class Assignment extends BaseEntity<Assignment> {
     entity: () => Task,
   })
   task: Task;
-
-  @Field(() => Boolean)
-  @Property()
-  isPublic: boolean;
 
   @Field(() => Boolean)
   @Property()

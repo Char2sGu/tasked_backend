@@ -5,7 +5,7 @@ import { AssignmentCreateInput } from './assignment-create.input';
 
 @InputType()
 export class AssignmentUpdateInput extends PartialType(
-  PickType(AssignmentCreateInput, ['isPublic', 'isImportant'] as const),
+  PickType(AssignmentCreateInput, ['isImportant'] as const),
 ) {
   @Field(() => Boolean, { nullable: true })
   isCompleted?: boolean;

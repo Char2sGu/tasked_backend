@@ -15,8 +15,5 @@ export class AssignmentCreateInput {
   task: number;
 
   @Field(() => Boolean, { nullable: true })
-  isPublic?: boolean;
-
-  @Field(() => Boolean, { nullable: true })
   isImportant?: boolean;
 }

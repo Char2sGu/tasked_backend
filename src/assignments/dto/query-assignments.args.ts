@@ -8,8 +8,5 @@ export class QueryAssignmentsArgs extends PaginationArgs {
   isCompleted?: boolean;
 
   @Field(() => Boolean, { nullable: true })
-  isPublic?: boolean;
-
-  @Field(() => Boolean, { nullable: true })
   isOwn?: boolean;
 }
