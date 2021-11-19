@@ -14,18 +14,11 @@ import { JoinApplication } from 'src/join-applications/entities/join-application
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
-import { Quota } from 'src/mikro/quota.decorator';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
-@Quota(20, [FilterName.QUOTA])
-@Filter<Classroom>({
-  name: FilterName.QUOTA,
-  cond: () => ({ creator: Context.current.user }),
-  args: false,
-})
 @Filter<Classroom>({
   name: FilterName.CRUD,
   cond: () => ({

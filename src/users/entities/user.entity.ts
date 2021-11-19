@@ -17,6 +17,7 @@ import { JoinApplication } from 'src/join-applications/entities/join-application
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
+import { Quota } from 'src/mikro/quota.decorator';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { Gender } from 'src/users/entities/gender.enum';
@@ -39,6 +40,7 @@ export class User extends BaseEntity<User> {
   @Property()
   gender: Gender = Gender.Unknown;
 
+  @Quota(3)
   @Field(() => PaginatedClassrooms)
   @OneToMany({
     entity: () => Classroom,

@@ -1,4 +1,4 @@
-import { FilterQuery } from '@mikro-orm/core';
+import { EntityManager, FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { FilterName } from 'src/common/filter-name.enum';
@@ -17,6 +17,7 @@ import { Classroom } from './entities/classroom.entity';
 @Injectable()
 export class ClassroomsService {
   constructor(
+    private em: EntityManager,
     @InjectRepository(Classroom) private repo: Repository<Classroom>,
     private quotaService: QuotaService,
   ) {}
@@ -50,7 +51,8 @@ export class ClassroomsService {
 
   async createOne({ data }: CreateClassroomArgs) {
     const user = Context.current.user;
-    await this.quotaService.check(Classroom);
+    await this.em.populate(user, ['classrooms']);
+    await this.quotaService.check(user);
     return this.repo.create({
       creator: user,
       memberships: [{ owner: user, role: Role.Teacher }],
