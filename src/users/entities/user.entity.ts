@@ -1,7 +1,6 @@
 import {
   BeforeCreate,
   BeforeUpdate,
-  Cascade,
   Collection,
   Entity,
   OneToMany,
@@ -45,7 +44,6 @@ export class User extends BaseEntity<User> {
     entity: () => Classroom,
     mappedBy: (classroom) => classroom.creator,
     orphanRemoval: true,
-    cascade: [Cascade.REMOVE],
   })
   classrooms = new Collection<Classroom>(this);
 
