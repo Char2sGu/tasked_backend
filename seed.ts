@@ -63,7 +63,6 @@ export default (em: EntityManager) => {
               recipient: 3,
               isCompleted: false,
               isImportant: false,
-              isPublic: false,
             },
           ],
         },
