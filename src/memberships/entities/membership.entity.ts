@@ -26,7 +26,6 @@ import { Role } from './role.enum';
       memberships: { owner: Context.current.user, deletedAt: null },
     },
   }),
-  args: false,
 })
 @Entity()
 export class Membership extends BaseEntity<Membership> {

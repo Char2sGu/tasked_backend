@@ -34,7 +34,6 @@ export const SoftDeletable =
             ? ({ $ne: null } as OperatorMap<Entity[Field]>)
             : null,
         } as FilterQuery<Entity>),
-      args: false,
       default: true,
     })(type);
   };

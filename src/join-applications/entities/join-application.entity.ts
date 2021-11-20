@@ -18,7 +18,6 @@ import { ApplicationStatus } from './application-status.enum';
       { classroom: { creator: Context.current.user } },
     ],
   }),
-  args: false,
 })
 @Entity()
 export class JoinApplication extends BaseEntity<JoinApplication> {

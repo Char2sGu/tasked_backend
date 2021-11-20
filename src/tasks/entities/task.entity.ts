@@ -25,7 +25,6 @@ import { User } from 'src/users/entities/user.entity';
       { assignments: { recipient: Context.current.user, deletedAt: null } },
     ],
   }),
-  args: false,
 })
 @Entity()
 export class Task extends BaseEntity<Task> {

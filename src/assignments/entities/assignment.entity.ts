@@ -16,7 +16,6 @@ import { Task } from 'src/tasks/entities/task.entity';
       $or: [{ recipient: { owner: user } }, { task: { creator: user } }],
     };
   },
-  args: false,
 })
 @Entity()
 export class Assignment extends BaseEntity<Assignment> {

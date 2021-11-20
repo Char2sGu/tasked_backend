@@ -28,7 +28,6 @@ import { User } from 'src/users/entities/user.entity';
       { isOpen: true },
     ],
   }),
-  args: false,
 })
 @Entity()
 export class Classroom extends BaseEntity<Classroom> {
