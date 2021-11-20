@@ -1,9 +1,5 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
@@ -30,9 +26,6 @@ export class UsersService {
   }
 
   async createOne({ data }: CreateUserArgs) {
-    await this.repo.findOne({ username: data.username }).then((result) => {
-      if (result) throw new BadRequestException('username must be unique');
-    });
     return this.repo.create(data);
   }
 
