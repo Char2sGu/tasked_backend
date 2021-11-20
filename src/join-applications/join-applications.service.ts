@@ -74,7 +74,12 @@ export class JoinApplicationsService {
         {
           id: data.classroom,
           $or: [
-            { joinApplications: { owner: user } },
+            {
+              joinApplications: {
+                owner: user,
+                status: ApplicationStatus.Pending,
+              },
+            },
             { memberships: { owner: user } },
           ],
         },
