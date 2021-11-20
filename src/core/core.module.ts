@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { DEBUG } from 'src/configurations';
 import { ContextModule } from 'src/context/context.module';
+import { DEBUG } from 'src/env.constants';
 import { MikroModule } from 'src/mikro/mikro.module';
 import { ValidationModule } from 'src/validation/validation.module';
 

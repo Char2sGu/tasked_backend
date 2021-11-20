@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { DynamicModule, Module, NotFoundException } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { DB_PATH, DEBUG } from 'src/configurations';
+import { DB_PATH, DEBUG } from 'src/env.constants';
 import { Repository } from 'src/mikro/repository.class';
 
 import { MikroFlushInterceptor } from './mikro-flush.interceptor';
