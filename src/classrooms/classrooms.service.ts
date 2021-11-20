@@ -4,7 +4,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Role } from 'src/memberships/entities/role.enum';
-import { QuotaService } from 'src/mikro/quota.service';
+import { QuotaService } from 'src/mikro/quota/quota.service';
 import { Repository } from 'src/mikro/repository.class';
 
 import { ClassroomFilter } from './classroom-filter.enum';

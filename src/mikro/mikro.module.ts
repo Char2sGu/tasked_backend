@@ -4,10 +4,10 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { DB_PATH, DEBUG } from 'src/env.constants';
 import { Repository } from 'src/mikro/repository.class';
 
-import { MikroFlushInterceptor } from './mikro-flush.interceptor';
-import { MikroQueryContextInterceptor } from './mikro-query-context.interceptor';
-import { QuotaFilter } from './quota.filter';
-import { QuotaService } from './quota.service';
+import { MikroFlushInterceptor } from './mikro-flush/mikro-flush.interceptor';
+import { MikroQueryContextInterceptor } from './mikro-query-context/mikro-query-context.interceptor';
+import { QuotaFilter } from './quota/quota.filter';
+import { QuotaService } from './quota/quota.service';
 
 @Module({})
 export class MikroModule {
