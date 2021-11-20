@@ -3,5 +3,6 @@ declare namespace NodeJS {
   interface ProcessEnv {
     DB_PATH: string;
     SECRET_KEY: string;
+    DEBUG: string;
   }
 }
