@@ -6,7 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { isDefined } from 'class-validator';
-import { FilterName } from 'src/common/filter-name.enum';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
@@ -53,13 +53,13 @@ export class AssignmentsService {
         limit,
         offset,
         orderBy: { id: QueryOrder.DESC },
-        filters: [FilterName.CRUD],
+        filters: [CommonFilter.CRUD],
       },
     );
   }
 
   async queryOne({ id }: QueryAssignmentArgs) {
-    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
   }
 
   async createOne({ data }: CreateAssignmentArgs) {
@@ -68,7 +68,7 @@ export class AssignmentsService {
     await this.membershipRepo.findOneOrFail(
       { id: data.recipient, role: Role.Student },
       {
-        filters: [FilterName.CRUD],
+        filters: [CommonFilter.CRUD],
         failHandler: () =>
           new BadRequestException(
             'recipient must be an ID of a student membership in this classroom',
@@ -79,7 +79,7 @@ export class AssignmentsService {
     await this.taskRepo.findOneOrFail(
       { id: data.task, creator: user },
       {
-        filters: [FilterName.CRUD],
+        filters: [CommonFilter.CRUD],
         failHandler: () =>
           new BadRequestException(
             'task must be an ID of a task created by you',
@@ -98,7 +98,7 @@ export class AssignmentsService {
     const user = Context.current.user;
 
     const assignment = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
       populate: ['task'],
     });
 
@@ -120,7 +120,7 @@ export class AssignmentsService {
     const user = Context.current.user;
 
     const assignment = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
       populate: ['task'],
     });
 

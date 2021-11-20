@@ -7,8 +7,8 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
-import { FilterName } from 'src/common/filter-name.enum';
 import { Context } from 'src/context/context.class';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
@@ -21,7 +21,7 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Classroom>({
-  name: FilterName.CRUD,
+  name: CommonFilter.CRUD,
   cond: () => ({
     $or: [
       { memberships: { owner: Context.current.user, deletedAt: null } },

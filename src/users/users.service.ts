@@ -4,7 +4,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { FilterName } from 'src/common/filter-name.enum';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
 
@@ -21,12 +21,12 @@ export class UsersService {
   async queryMany({ limit, offset }: QueryUsersArgs) {
     return this.repo.findAndPaginate(
       {},
-      { limit, offset, filters: [FilterName.CRUD] },
+      { limit, offset, filters: [CommonFilter.CRUD] },
     );
   }
 
   async queryOne({ id }: QueryUserArgs) {
-    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
   }
 
   async createOne({ data }: CreateUserArgs) {

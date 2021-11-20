@@ -1,7 +1,7 @@
 import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { FilterName } from 'src/common/filter-name.enum';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
 
@@ -26,12 +26,12 @@ export class MembershipsService {
     return this.repo.findAndPaginate(query, {
       limit,
       offset,
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
   }
 
   async queryOne({ id }: QueryMembershipArgs) {
-    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
   }
 
   async updateOne({ id, data }: UpdateMembershipArgs) {
@@ -47,7 +47,7 @@ export class MembershipsService {
 
   private async canWrite(where: FilterQuery<Membership>, action: string) {
     const targetMembership = await this.repo.findOneOrFail(where, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
     const ownMembership = await this.repo.findOneOrFail({
       owner: Context.current.user,

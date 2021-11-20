@@ -1,7 +1,7 @@
 import { EntityManager, FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { FilterName } from 'src/common/filter-name.enum';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Role } from 'src/memberships/entities/role.enum';
 import { QuotaService } from 'src/mikro/quota.service';
@@ -39,14 +39,14 @@ export class ClassroomsService {
       {
         limit,
         offset,
-        filters: [FilterName.CRUD],
+        filters: [CommonFilter.CRUD],
         orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
       },
     );
   }
 
   async queryOne({ id }: QueryClassroomArgs) {
-    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
   }
 
   async createOne({ data }: CreateClassroomArgs) {
@@ -65,7 +65,7 @@ export class ClassroomsService {
     const user = Context.current.user;
 
     const classroom = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
 
     if (user != classroom.creator)
@@ -80,7 +80,7 @@ export class ClassroomsService {
     const user = Context.current.user;
 
     const classroom = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
 
     if (user != classroom.creator)

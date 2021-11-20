@@ -1,8 +1,8 @@
 import { ID, InputType } from '@nestjs/graphql';
 import { Length, MaxLength } from 'class-validator';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
-import { FilterName } from 'src/common/filter-name.enum';
 import { IsPrimaryKey } from 'src/validation/is-primary-key.decorator';
 
 @InputType()
@@ -16,6 +16,6 @@ export class TaskCreateInput {
   description?: string;
 
   @Field(() => ID)
-  @IsPrimaryKey(() => Classroom, [FilterName.CRUD])
+  @IsPrimaryKey(() => Classroom, [CommonFilter.CRUD])
   classroom: number;
 }

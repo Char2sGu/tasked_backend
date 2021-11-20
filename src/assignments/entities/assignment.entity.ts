@@ -1,7 +1,7 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
-import { FilterName } from 'src/common/filter-name.enum';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
@@ -9,7 +9,7 @@ import { Task } from 'src/tasks/entities/task.entity';
 
 @ObjectType()
 @Filter<Assignment>({
-  name: FilterName.CRUD,
+  name: CommonFilter.CRUD,
   cond: () => {
     const user = Context.current.user;
     return {

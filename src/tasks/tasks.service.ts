@@ -5,7 +5,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { FilterName } from 'src/common/filter-name.enum';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Repository } from 'src/mikro/repository.class';
@@ -35,13 +35,13 @@ export class TasksService {
         limit,
         offset,
         orderBy: { id: QueryOrder.DESC },
-        filters: [FilterName.CRUD],
+        filters: [CommonFilter.CRUD],
       },
     );
   }
 
   async queryOne({ id }: QueryTaskArgs) {
-    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
   }
 
   async createOne({ data }: CreateTaskArgs) {
@@ -53,7 +53,7 @@ export class TasksService {
         classroom: data.classroom,
       },
       {
-        filters: [FilterName.CRUD],
+        filters: [CommonFilter.CRUD],
         failHandler: () =>
           new BadRequestException(
             'classroom must be an ID of a classroom having your membership',
@@ -71,7 +71,7 @@ export class TasksService {
     const user = Context.current.user;
 
     const task = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
 
     if (task.creator != user)
@@ -84,7 +84,7 @@ export class TasksService {
     const user = Context.current.user;
 
     const task = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
 
     if (task.creator != user)

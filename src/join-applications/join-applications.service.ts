@@ -6,7 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
-import { FilterName } from 'src/common/filter-name.enum';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
@@ -56,14 +56,14 @@ export class JoinApplicationsService {
       {
         limit,
         offset,
-        filters: [FilterName.CRUD],
+        filters: [CommonFilter.CRUD],
         orderBy: { id: QueryOrder.DESC },
       },
     );
   }
 
   async queryOne({ id }: QueryJoinApplicationArgs) {
-    return this.repo.findOneOrFail(id, { filters: [FilterName.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
   }
 
   async createOne({ data }: CreateJoinApplicationArgs) {
@@ -83,7 +83,7 @@ export class JoinApplicationsService {
             { memberships: { owner: user } },
           ],
         },
-        { filters: [FilterName.CRUD] },
+        { filters: [CommonFilter.CRUD] },
       )
       .then((result) => {
         if (result)
@@ -106,7 +106,7 @@ export class JoinApplicationsService {
 
   async rejectOne({ id }: RejectJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
 
     if (application.status != ApplicationStatus.Pending)
@@ -119,7 +119,7 @@ export class JoinApplicationsService {
 
   async acceptOne({ id }: AcceptJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
-      filters: [FilterName.CRUD],
+      filters: [CommonFilter.CRUD],
     });
 
     if (application.status != ApplicationStatus.Pending)

@@ -1,8 +1,8 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { Classroom } from 'src/classrooms/entities/classroom.entity';
+import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
-import { FilterName } from 'src/common/filter-name.enum';
 import { Context } from 'src/context/context.class';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -11,7 +11,7 @@ import { ApplicationStatus } from './application-status.enum';
 
 @ObjectType()
 @Filter<JoinApplication>({
-  name: FilterName.CRUD,
+  name: CommonFilter.CRUD,
   cond: () => ({
     $or: [
       { owner: Context.current.user },
