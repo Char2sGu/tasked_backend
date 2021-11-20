@@ -19,7 +19,8 @@ import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
-@ObjectType()
+import { ClassroomFilter } from '../classroom-filter.enum';
+
 @Filter<Classroom>({
   name: CommonFilter.CRUD,
   cond: () => ({
@@ -29,7 +30,19 @@ import { User } from 'src/users/entities/user.entity';
     ],
   }),
 })
+@Filter<Classroom>({
+  name: ClassroomFilter.IsJoined,
+  cond: () => ({
+    memberships: { owner: Context.current.user, deletedAt: null },
+  }),
+})
+@Filter<Classroom>({
+  name: ClassroomFilter.IsOpen,
+  cond: (args: { value?: boolean }) =>
+    args.value == undefined ? {} : { isOpen: args.value },
+})
 @Entity()
+@ObjectType()
 export class Classroom extends BaseEntity<Classroom> {
   @Field(() => String)
   @Property()

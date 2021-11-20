@@ -7,6 +7,7 @@ import { Role } from 'src/memberships/entities/role.enum';
 import { QuotaService } from 'src/mikro/quota.service';
 import { Repository } from 'src/mikro/repository.class';
 
+import { ClassroomFilter } from './classroom-filter.enum';
 import { CreateClassroomArgs } from './dto/create-classroom.args';
 import { DeleteClassroomArgs } from './dto/delete-classroom.args';
 import { QueryClassroomArgs } from './dto/query-classroom.args';
@@ -26,23 +27,16 @@ export class ClassroomsService {
     { limit, offset, isOpen, isJoined }: QueryClassroomsArgs,
     query: FilterQuery<Classroom> = {},
   ) {
-    const user = Context.current.user;
-
-    return this.repo.findAndPaginate(
-      {
-        $and: [
-          query,
-          isOpen != undefined ? { isOpen } : {},
-          isJoined != undefined ? { memberships: { owner: user } } : {},
-        ],
+    return this.repo.findAndPaginate(query, {
+      limit,
+      offset,
+      filters: {
+        [CommonFilter.CRUD]: true,
+        [ClassroomFilter.IsJoined]: isJoined,
+        [ClassroomFilter.IsOpen]: { value: isOpen },
       },
-      {
-        limit,
-        offset,
-        filters: [CommonFilter.CRUD],
-        orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
-      },
-    );
+      orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
+    });
   }
 
   async queryOne({ id }: QueryClassroomArgs) {
