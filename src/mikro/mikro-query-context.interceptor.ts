@@ -102,7 +102,8 @@ import { Observable } from 'rxjs';
  */
 @Injectable()
 export class MikroQueryContextInterceptor implements NestInterceptor {
-  static storage = new AsyncLocalStorage<EntityManager>();
+  static context = () => MikroQueryContextInterceptor.storage.getStore();
+  private static storage = new AsyncLocalStorage<EntityManager>();
 
   constructor(private em: EntityManager) {}
 
