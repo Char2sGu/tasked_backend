@@ -26,12 +26,12 @@ export class MembershipsService {
     return this.repo.findAndPaginate(query, {
       limit,
       offset,
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
   }
 
   async queryOne({ id }: QueryMembershipArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.Crud] });
   }
 
   async updateOne({ id, data }: UpdateMembershipArgs) {
@@ -47,7 +47,7 @@ export class MembershipsService {
 
   private async canWrite(where: FilterQuery<Membership>, action: string) {
     const targetMembership = await this.repo.findOneOrFail(where, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
     const ownMembership = await this.repo.findOneOrFail({
       owner: Context.current.user,

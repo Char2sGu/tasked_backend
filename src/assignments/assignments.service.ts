@@ -53,13 +53,13 @@ export class AssignmentsService {
         limit,
         offset,
         orderBy: { id: QueryOrder.DESC },
-        filters: [CommonFilter.CRUD],
+        filters: [CommonFilter.Crud],
       },
     );
   }
 
   async queryOne({ id }: QueryAssignmentArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.Crud] });
   }
 
   async createOne({ data }: CreateAssignmentArgs) {
@@ -68,7 +68,7 @@ export class AssignmentsService {
     await this.membershipRepo.findOneOrFail(
       { id: data.recipient, role: Role.Student },
       {
-        filters: [CommonFilter.CRUD],
+        filters: [CommonFilter.Crud],
         failHandler: () =>
           new BadRequestException(
             'recipient must be an ID of a student membership in this classroom',
@@ -79,7 +79,7 @@ export class AssignmentsService {
     await this.taskRepo.findOneOrFail(
       { id: data.task, creator: user },
       {
-        filters: [CommonFilter.CRUD],
+        filters: [CommonFilter.Crud],
         failHandler: () =>
           new BadRequestException(
             'task must be an ID of a task created by you',
@@ -98,7 +98,7 @@ export class AssignmentsService {
     const user = Context.current.user;
 
     const assignment = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
       populate: ['task'],
     });
 
@@ -120,7 +120,7 @@ export class AssignmentsService {
     const user = Context.current.user;
 
     const assignment = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
       populate: ['task'],
     });
 

@@ -56,14 +56,14 @@ export class JoinApplicationsService {
       {
         limit,
         offset,
-        filters: [CommonFilter.CRUD],
+        filters: [CommonFilter.Crud],
         orderBy: { id: QueryOrder.DESC },
       },
     );
   }
 
   async queryOne({ id }: QueryJoinApplicationArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.Crud] });
   }
 
   async createOne({ data }: CreateJoinApplicationArgs) {
@@ -83,7 +83,7 @@ export class JoinApplicationsService {
             { memberships: { owner: user } },
           ],
         },
-        { filters: [CommonFilter.CRUD] },
+        { filters: [CommonFilter.Crud] },
       )
       .then((result) => {
         if (result)
@@ -106,7 +106,7 @@ export class JoinApplicationsService {
 
   async rejectOne({ id }: RejectJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
 
     if (application.status != ApplicationStatus.Pending)
@@ -119,7 +119,7 @@ export class JoinApplicationsService {
 
   async acceptOne({ id }: AcceptJoinApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
 
     if (application.status != ApplicationStatus.Pending)

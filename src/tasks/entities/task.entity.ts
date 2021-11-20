@@ -18,7 +18,7 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Task>({
-  name: CommonFilter.CRUD,
+  name: CommonFilter.Crud,
   cond: () => ({
     $or: [
       { creator: Context.current.user },

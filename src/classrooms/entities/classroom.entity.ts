@@ -22,7 +22,7 @@ import { User } from 'src/users/entities/user.entity';
 import { ClassroomFilter } from '../classroom-filter.enum';
 
 @Filter<Classroom>({
-  name: CommonFilter.CRUD,
+  name: CommonFilter.Crud,
   cond: () => ({
     $or: [
       { memberships: { owner: Context.current.user, deletedAt: null } },

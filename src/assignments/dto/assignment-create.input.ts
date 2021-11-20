@@ -8,11 +8,11 @@ import { IsPrimaryKey } from 'src/validation/is-primary-key.decorator';
 @InputType()
 export class AssignmentCreateInput {
   @Field(() => ID)
-  @IsPrimaryKey(() => User, [CommonFilter.CRUD])
+  @IsPrimaryKey(() => User, [CommonFilter.Crud])
   recipient: number;
 
   @Field(() => ID)
-  @IsPrimaryKey(() => Task, [CommonFilter.CRUD])
+  @IsPrimaryKey(() => Task, [CommonFilter.Crud])
   task: number;
 
   @Field(() => Boolean, { nullable: true })

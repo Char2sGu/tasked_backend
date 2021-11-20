@@ -16,6 +16,6 @@ export class TaskCreateInput {
   description?: string;
 
   @Field(() => ID)
-  @IsPrimaryKey(() => Classroom, [CommonFilter.CRUD])
+  @IsPrimaryKey(() => Classroom, [CommonFilter.Crud])
   classroom: number;
 }

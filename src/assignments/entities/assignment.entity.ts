@@ -9,7 +9,7 @@ import { Task } from 'src/tasks/entities/task.entity';
 
 @ObjectType()
 @Filter<Assignment>({
-  name: CommonFilter.CRUD,
+  name: CommonFilter.Crud,
   cond: () => {
     const user = Context.current.user;
     return {

@@ -31,7 +31,7 @@ export class ClassroomsService {
       limit,
       offset,
       filters: {
-        [CommonFilter.CRUD]: true,
+        [CommonFilter.Crud]: true,
         [ClassroomFilter.IsJoined]: isJoined,
         [ClassroomFilter.IsOpen]: { value: isOpen },
       },
@@ -40,7 +40,7 @@ export class ClassroomsService {
   }
 
   async queryOne({ id }: QueryClassroomArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.Crud] });
   }
 
   async createOne({ data }: CreateClassroomArgs) {
@@ -59,7 +59,7 @@ export class ClassroomsService {
     const user = Context.current.user;
 
     const classroom = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
 
     if (user != classroom.creator)
@@ -74,7 +74,7 @@ export class ClassroomsService {
     const user = Context.current.user;
 
     const classroom = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
 
     if (user != classroom.creator)

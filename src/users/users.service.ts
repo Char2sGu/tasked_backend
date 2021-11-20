@@ -21,12 +21,12 @@ export class UsersService {
   async queryMany({ limit, offset }: QueryUsersArgs) {
     return this.repo.findAndPaginate(
       {},
-      { limit, offset, filters: [CommonFilter.CRUD] },
+      { limit, offset, filters: [CommonFilter.Crud] },
     );
   }
 
   async queryOne({ id }: QueryUserArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.Crud] });
   }
 
   async createOne({ data }: CreateUserArgs) {

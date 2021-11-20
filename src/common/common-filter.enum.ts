@@ -1,3 +1,3 @@
 export enum CommonFilter {
-  CRUD = 'crud',
+  Crud = 'filter:crud',
 }

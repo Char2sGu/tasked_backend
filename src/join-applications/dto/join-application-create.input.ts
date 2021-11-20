@@ -8,7 +8,7 @@ import { IsPrimaryKey } from 'src/validation/is-primary-key.decorator';
 @InputType()
 export class JoinApplicationCreateInput {
   @Field(() => ID)
-  @IsPrimaryKey(() => Classroom, [CommonFilter.CRUD])
+  @IsPrimaryKey(() => Classroom, [CommonFilter.Crud])
   classroom: number;
 
   @Field(() => String, { nullable: true })

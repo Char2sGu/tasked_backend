@@ -20,7 +20,7 @@ import { Role } from './role.enum';
 
 @ObjectType()
 @Filter<Membership>({
-  name: CommonFilter.CRUD,
+  name: CommonFilter.Crud,
   cond: () => ({
     classroom: {
       memberships: { owner: Context.current.user, deletedAt: null },

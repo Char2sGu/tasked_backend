@@ -35,13 +35,13 @@ export class TasksService {
         limit,
         offset,
         orderBy: { id: QueryOrder.DESC },
-        filters: [CommonFilter.CRUD],
+        filters: [CommonFilter.Crud],
       },
     );
   }
 
   async queryOne({ id }: QueryTaskArgs) {
-    return this.repo.findOneOrFail(id, { filters: [CommonFilter.CRUD] });
+    return this.repo.findOneOrFail(id, { filters: [CommonFilter.Crud] });
   }
 
   async createOne({ data }: CreateTaskArgs) {
@@ -53,7 +53,7 @@ export class TasksService {
         classroom: data.classroom,
       },
       {
-        filters: [CommonFilter.CRUD],
+        filters: [CommonFilter.Crud],
         failHandler: () =>
           new BadRequestException(
             'classroom must be an ID of a classroom having your membership',
@@ -71,7 +71,7 @@ export class TasksService {
     const user = Context.current.user;
 
     const task = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
 
     if (task.creator != user)
@@ -84,7 +84,7 @@ export class TasksService {
     const user = Context.current.user;
 
     const task = await this.repo.findOneOrFail(id, {
-      filters: [CommonFilter.CRUD],
+      filters: [CommonFilter.Crud],
     });
 
     if (task.creator != user)

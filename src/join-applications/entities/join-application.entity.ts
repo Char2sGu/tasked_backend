@@ -11,7 +11,7 @@ import { ApplicationStatus } from './application-status.enum';
 
 @ObjectType()
 @Filter<JoinApplication>({
-  name: CommonFilter.CRUD,
+  name: CommonFilter.Crud,
   cond: () => ({
     $or: [
       { owner: Context.current.user },
