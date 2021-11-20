@@ -22,7 +22,9 @@ import { Role } from './role.enum';
 @Filter<Membership>({
   name: FilterName.CRUD,
   cond: () => ({
-    classroom: { memberships: { owner: Context.current.user } },
+    classroom: {
+      memberships: { owner: Context.current.user, deletedAt: null },
+    },
   }),
   args: false,
 })

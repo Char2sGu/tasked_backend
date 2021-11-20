@@ -23,7 +23,10 @@ import { User } from 'src/users/entities/user.entity';
 @Filter<Classroom>({
   name: FilterName.CRUD,
   cond: () => ({
-    $or: [{ memberships: { owner: Context.current.user } }, { isOpen: true }],
+    $or: [
+      { memberships: { owner: Context.current.user, deletedAt: null } },
+      { isOpen: true },
+    ],
   }),
   args: false,
 })
