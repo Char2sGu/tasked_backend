@@ -46,7 +46,7 @@ export class AssignmentsService {
           filters,
           isOwn == undefined
             ? {}
-            : { recipient: isOwn ? user : { $not: user } },
+            : { recipient: { owner: isOwn ? user : { $not: user } } },
         ],
       },
       {
