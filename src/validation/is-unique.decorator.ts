@@ -1,20 +1,21 @@
-import { FindOneOptions } from '@mikro-orm/core';
+import { FindOptions } from '@mikro-orm/core';
 import { Type } from '@nestjs/common';
 import { registerDecorator, ValidationOptions } from 'class-validator';
 
-import { IsPrimaryKeyConstraint } from './is-primary-key.constraint';
+import { IsUniqueConstraint } from './is-unique.constraint';
 
-export const IsPrimaryKey =
+export const IsUnique =
   <Entity>(
     entityType: () => Type<Entity>,
-    filters?: FindOneOptions<never>['filters'],
+    field: keyof Entity,
+    filters?: FindOptions<never>['filters'],
     options?: ValidationOptions,
   ): PropertyDecorator =>
   ({ constructor: target }, propertyName: string) =>
     registerDecorator({
-      constraints: [entityType, filters],
-      options,
+      constraints: [entityType, field, filters],
       target,
+      options,
       propertyName,
-      validator: IsPrimaryKeyConstraint,
+      validator: IsUniqueConstraint,
     });

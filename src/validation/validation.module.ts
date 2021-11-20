@@ -2,11 +2,12 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 
 import { IsPrimaryKeyConstraint } from './is-primary-key.constraint';
+import { IsUniqueConstraint } from './is-unique.constraint';
 import { ValidationPipe } from './validation.pipe';
 
 @Module({
-  providers: [IsPrimaryKeyConstraint],
-  exports: [IsPrimaryKeyConstraint],
+  providers: [IsPrimaryKeyConstraint, IsUniqueConstraint],
+  exports: [IsPrimaryKeyConstraint, IsUniqueConstraint],
 })
 export class ValidationModule {
   static forRoot(): DynamicModule {
