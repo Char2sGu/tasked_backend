@@ -34,6 +34,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "dataloader": "^2.0.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
     "graphql": "^15.5.3",

@@ -4,7 +4,9 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { DB_PATH, DEBUG } from 'src/env.constants';
 import { Repository } from 'src/mikro/repository.class';
 
+import { MikroBatchService } from './mikro-batch/mikro-batch.service';
 import { MikroFlushInterceptor } from './mikro-flush/mikro-flush.interceptor';
+import { MikroMiddlewareModule } from './mikro-middleware.module';
 import { MikroQueryContextInterceptor } from './mikro-query-context/mikro-query-context.interceptor';
 import { QuotaFilter } from './quota/quota.filter';
 import { QuotaService } from './quota/quota.service';
@@ -25,6 +27,7 @@ export class MikroModule {
           entityRepository: Repository,
           debug: DEBUG,
         }),
+        MikroMiddlewareModule,
       ],
       providers: [
         {
@@ -46,8 +49,8 @@ export class MikroModule {
   static forFeature(): DynamicModule {
     return {
       module: MikroModule,
-      providers: [QuotaService],
-      exports: [QuotaService],
+      providers: [QuotaService, MikroBatchService],
+      exports: [QuotaService, MikroBatchService],
     };
   }
 }

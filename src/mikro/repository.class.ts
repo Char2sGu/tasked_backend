@@ -1,11 +1,11 @@
 import {
   EntityData,
+  EntityRepository,
   FilterQuery,
   FindOptions,
   Loaded,
   New,
 } from '@mikro-orm/core';
-import { EntityRepository } from '@mikro-orm/knex';
 
 export class Repository<Entity> extends EntityRepository<Entity> {
   async findAndPaginate<Population extends string = never>(
