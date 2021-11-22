@@ -16,7 +16,7 @@ import { AuthService } from './auth.service';
     MikroOrmModule.forFeature([User]),
     JwtModule.register({
       secret: SECRET_KEY,
-      signOptions: { expiresIn: '4h' },
+      signOptions: { expiresIn: '1 weeks' },
     }),
   ],
   providers: [
