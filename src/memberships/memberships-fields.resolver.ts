@@ -1,21 +1,25 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
+import { MikroBatchService } from 'src/mikro/mikro-batch/mikro-batch.service';
 
 import { Membership } from './entities/membership.entity';
 
 @Resolver(() => Membership)
 export class MembershipsFieldsResolver {
-  constructor(private assignmentsService: AssignmentsService) {}
+  constructor(
+    private batch: MikroBatchService,
+    private assignmentsService: AssignmentsService,
+  ) {}
 
   @ResolveField()
   async owner(@Parent() entity: Membership) {
-    return entity.owner.init();
+    return this.batch.load(entity.owner);
   }
 
   @ResolveField()
   async classroom(@Parent() entity: Membership) {
-    return entity.classroom.init();
+    return this.batch.load(entity.classroom);
   }
 
   @ResolveField()
