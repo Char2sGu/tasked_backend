@@ -10,7 +10,7 @@ import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
-import { QuotaService } from 'src/mikro/quota/quota.service';
+import { MikroQuotaService } from 'src/mikro/mikro-quota/mikro-quota.service';
 import { Repository } from 'src/mikro/repository.class';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
@@ -33,7 +33,7 @@ export class JoinApplicationsService {
     @InjectRepository(Classroom)
     private classroomRepo: Repository<Classroom>,
 
-    private quotaService: QuotaService,
+    private quotaService: MikroQuotaService,
   ) {}
 
   async queryMany(

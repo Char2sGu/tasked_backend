@@ -1,4 +1,4 @@
-export class QuotaError<Entity> extends Error {
+export class MikroQuotaError<Entity> extends Error {
   constructor(
     public entity: Entity,
     public field: keyof Entity,

@@ -1,11 +1,11 @@
 import { AnyEntity, Collection } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 
-import { QuotaError } from './quota.error';
+import { MikroQuotaError } from './mikro-quota.error';
 import { QUOTA } from './quota.symbol';
 
 @Injectable()
-export class QuotaService {
+export class MikroQuotaService {
   /**
    * Check all *initialized* `Collection` fields defined its quota.
    * @param entity
@@ -24,7 +24,8 @@ export class QuotaService {
       if (!collection.isInitialized()) return;
 
       const count = collection.count();
-      if (count >= quota) throw new QuotaError(entity, field, quota, count);
+      if (count >= quota)
+        throw new MikroQuotaError(entity, field, quota, count);
     });
   }
 }

@@ -8,8 +8,8 @@ import { MikroBatchService } from './mikro-batch/mikro-batch.service';
 import { MikroFlushInterceptor } from './mikro-flush/mikro-flush.interceptor';
 import { MikroMiddlewareModule } from './mikro-middleware.module';
 import { MikroQueryContextInterceptor } from './mikro-query-context/mikro-query-context.interceptor';
-import { QuotaFilter } from './quota/quota.filter';
-import { QuotaService } from './quota/quota.service';
+import { MikroQuotaFilter } from './mikro-quota/mikro-quota.filter';
+import { MikroQuotaService } from './mikro-quota/mikro-quota.service';
 
 @Module({})
 export class MikroModule {
@@ -40,7 +40,7 @@ export class MikroModule {
         },
         {
           provide: APP_FILTER,
-          useClass: QuotaFilter,
+          useClass: MikroQuotaFilter,
         },
       ],
     };
@@ -49,8 +49,8 @@ export class MikroModule {
   static forFeature(): DynamicModule {
     return {
       module: MikroModule,
-      providers: [QuotaService, MikroBatchService],
-      exports: [QuotaService, MikroBatchService],
+      providers: [MikroQuotaService, MikroBatchService],
+      exports: [MikroQuotaService, MikroBatchService],
     };
   }
 }
