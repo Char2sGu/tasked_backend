@@ -1,4 +1,4 @@
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, RequestContext } from '@mikro-orm/core';
 import {
   CallHandler,
   ExecutionContext,
@@ -102,7 +102,14 @@ import { Observable } from 'rxjs';
  */
 @Injectable()
 export class MikroQueryContextInterceptor implements NestInterceptor {
-  static context = () => MikroQueryContextInterceptor.storage.getStore();
+  /**
+   * Make the `EntityManager` use our query scoped context if available (query
+   * scoped contexts are only available after this interceptor is executed).
+   * Otherwise, use the default request scoped one.
+   */
+  static context = () =>
+    MikroQueryContextInterceptor.storage.getStore() ??
+    RequestContext.getEntityManager();
   private static storage = new AsyncLocalStorage<EntityManager>();
 
   constructor(private em: EntityManager) {}
