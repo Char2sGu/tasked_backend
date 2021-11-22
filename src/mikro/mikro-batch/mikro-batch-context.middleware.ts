@@ -2,8 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { AsyncLocalStorage } from 'async_hooks';
 import { Request, Response } from 'express';
 
-import { BaseEntity } from '../base-entity.entity';
-import { MikroBatchDataLoader } from './mikro-batch-data-loader.type';
+import { MikroBatchLoader } from './mikro-batch-loader.class';
 
 @Injectable()
 export class MikroBatchContextMiddleware implements NestMiddleware {
@@ -18,5 +17,5 @@ export class MikroBatchContextMiddleware implements NestMiddleware {
 }
 
 interface LoaderMap {
-  [typeName: string]: MikroBatchDataLoader<BaseEntity<any>>;
+  [typeName: string]: MikroBatchLoader<any, any>;
 }
