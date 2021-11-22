@@ -95,7 +95,7 @@ export class JoinApplicationsService {
     const classroom = await this.classroomRepo.findOne(data.classroom, {
       populate: ['memberships'],
     });
-    await this.quotaService.check(classroom);
+    await this.quotaService.check(classroom, 'memberships');
 
     return this.repo.create({
       owner: user,

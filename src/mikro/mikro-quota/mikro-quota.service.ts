@@ -7,25 +7,27 @@ import { QUOTA } from './quota.symbol';
 @Injectable()
 export class MikroQuotaService {
   /**
-   * Check all *initialized* `Collection` fields defined its quota.
+   * Check whether the specified `Collection` field's quota is exceeded.
+   *
+   * The collection must be initialized first.
+   *
    * @param entity
    */
-  async check(entity: AnyEntity) {
-    Object.entries(entity).forEach(([field, value]) => {
-      const quota: number | undefined = Reflect.getMetadata(
-        QUOTA,
-        entity,
-        field,
-      );
+  async check<Entity>(entity: Entity, field: CollectionField<Entity>) {
+    const quota: number | undefined = Reflect.getMetadata(QUOTA, entity, field);
+    if (quota == undefined) throw new Error('Quota not defined');
 
-      if (quota == undefined) return;
+    const collection = entity[field] as unknown as Collection<AnyEntity>;
+    if (!collection.isInitialized())
+      throw new Error('Collection not initialized');
 
-      const collection = value as Collection<AnyEntity>;
-      if (!collection.isInitialized()) return;
-
-      const count = collection.count();
-      if (count >= quota)
-        throw new MikroQuotaError(entity, field, quota, count);
-    });
+    const count = collection.count();
+    if (count >= quota) throw new MikroQuotaError(entity, field, quota, count);
   }
 }
+
+type CollectionField<Entity> = {
+  [Field in keyof Entity]: Entity[Field] extends Collection<any>
+    ? Field
+    : never;
+}[Extract<keyof Entity, string>];

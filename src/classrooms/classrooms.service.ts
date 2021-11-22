@@ -46,7 +46,7 @@ export class ClassroomsService {
   async createOne({ data }: CreateClassroomArgs) {
     const user = Context.current.user;
     await this.em.populate(user, ['classrooms']);
-    await this.quotaService.check(user);
+    await this.quotaService.check(user, 'classrooms');
     return this.repo.create({
       creator: user,
       memberships: [{ owner: user, role: Role.Teacher }],
