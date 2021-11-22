@@ -110,15 +110,19 @@ export class MikroQueryContextInterceptor implements NestInterceptor {
   static context = () =>
     MikroQueryContextInterceptor.storage.getStore() ??
     RequestContext.getEntityManager();
+
   private static storage = new AsyncLocalStorage<EntityManager>();
 
-  constructor(private em: EntityManager) {}
-
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const requestScoped = RequestContext.getEntityManager();
+    // Set `clear` to `false` so that the query scoped context will inherit the
+    // IdentityMap of request scoped one.
+    // Set `context` to `false` so that the query scoped context will use its
+    // own IdentityMap instead of looking for one from another context.
+    const queryScoped = requestScoped.fork({ clear: false, useContext: false });
     return new Observable((subscriber) => {
-      MikroQueryContextInterceptor.storage.run(
-        this.em.fork({ clear: false, useContext: true }),
-        () => next.handle().subscribe(subscriber),
+      MikroQueryContextInterceptor.storage.run(queryScoped, () =>
+        next.handle().subscribe(subscriber),
       );
     });
   }
