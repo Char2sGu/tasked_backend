@@ -99,7 +99,7 @@ export class AssignmentsService {
 
     const assignment = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
-      populate: ['task'],
+      populate: ['task', 'recipient'],
     });
 
     if (user != assignment.recipient.owner) {
