@@ -40,7 +40,7 @@ export class User extends BaseEntity<User> {
   @Property()
   gender: Gender = Gender.Unknown;
 
-  @Quota(3)
+  @Quota(20)
   @Field(() => PaginatedClassrooms)
   @OneToMany({
     entity: () => Classroom,
