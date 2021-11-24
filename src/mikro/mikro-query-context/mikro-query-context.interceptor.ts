@@ -1,4 +1,5 @@
 import { EntityManager, RequestContext } from '@mikro-orm/core';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import {
   CallHandler,
   ExecutionContext,
@@ -8,9 +9,17 @@ import {
 import { AsyncLocalStorage } from 'async_hooks';
 import { Observable } from 'rxjs';
 
+import { MikroFlushInterceptor } from '../mikro-flush/mikro-flush.interceptor';
+
 /**
- * Create a query scoped context for each query when there is multiple queries
- * in a single request.
+ * Create a query scoped MikroORM context for each query.
+ *
+ * MikroORM's `context` option should be set to
+ * {@link MikroQueryContextInterceptor.context} to make this interceptor work
+ * properly.
+ *
+ * **DEPRECATED: This issue is solved in a better way. See
+ * {@link MikroFlushInterceptor}.**
  *
  * ### MikroORM's Default Behavior
  *
@@ -127,3 +136,6 @@ export class MikroQueryContextInterceptor implements NestInterceptor {
     });
   }
 }
+
+MikroOrmModule;
+MikroFlushInterceptor;

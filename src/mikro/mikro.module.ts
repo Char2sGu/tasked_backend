@@ -22,7 +22,6 @@ export class MikroModule {
           dbName: DB_PATH,
           autoLoadEntities: true,
           forceUndefined: true,
-          context: MikroQueryContextInterceptor.context,
           findOneOrFailHandler: () => new NotFoundException(),
           entityRepository: Repository,
           debug: DEBUG,
