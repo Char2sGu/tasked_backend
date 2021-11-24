@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { concatMap, from, map, Observable, of } from 'rxjs';
+import { concatMap, from, map, Observable } from 'rxjs';
 
 /**
  * Invoke `em.flush()` after every mutations.
@@ -21,12 +21,12 @@ export class MikroFlushInterceptor implements NestInterceptor {
       GqlExecutionContext.create(context).getInfo<GraphQLResolveInfo>()
         .operation.operation;
 
-    return next.handle().pipe(
-      concatMap((value) => {
-        return operation == 'mutation'
-          ? from(this.em.flush()).pipe(map(() => value))
-          : of(value);
-      }),
-    );
+    if (operation == 'mutation')
+      return next
+        .handle()
+        .pipe(
+          concatMap((value) => from(this.em.flush()).pipe(map(() => value))),
+        );
+    else return next.handle();
   }
 }
