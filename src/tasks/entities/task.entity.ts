@@ -22,7 +22,12 @@ import { User } from 'src/users/entities/user.entity';
   cond: () => ({
     $or: [
       { creator: Context.current.user },
-      { assignments: { recipient: Context.current.user, deletedAt: null } },
+      {
+        assignments: {
+          recipient: { owner: Context.current.user },
+          deletedAt: null,
+        },
+      },
     ],
   }),
 })
