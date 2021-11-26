@@ -16,6 +16,7 @@ export class UserCreateInput {
   username: string;
 
   @Field(() => String, { nullable: true })
+  @Matches(/^[^\s]*$/)
   @Length(1, 15)
   nickname?: string;
 
