@@ -30,14 +30,19 @@ export class AuthService {
   async verifyJwt(token: string) {
     try {
       const { id } = await this.jwt.verifyAsync<JwtData>(token);
-      return this.userRepo.findOne(id);
+      const user = await this.userRepo.findOne(id);
+      if (!user) throw new UnauthorizedException();
+      return user;
     } catch (error) {
       if (error instanceof TokenExpiredError) throw new UnauthorizedException();
+      throw error;
     }
   }
 
   getJwtFromHeaders(headers: IncomingHttpHeaders): string | undefined {
-    return headers.authorization?.slice(7); // `7` is the length of the prefix "Bearer "
+    const token = headers.authorization?.slice(7); // `7` is the length of the prefix "Bearer "
+    if (!token) throw new UnauthorizedException();
+    return token;
   }
 
   private async signJwt(user: User) {

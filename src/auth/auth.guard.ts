@@ -1,9 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { ExpressContext } from 'apollo-server-express';
@@ -30,9 +25,7 @@ export class AuthGuard implements CanActivate {
     if (!skipAuth) {
       const request = this.getRequest(context);
       const token = this.auth.getJwtFromHeaders(request.headers);
-      if (!token) throw new UnauthorizedException();
       const user = await this.auth.verifyJwt(token);
-      if (!user) throw new UnauthorizedException();
       request.user = user;
     }
     return true;
