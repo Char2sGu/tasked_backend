@@ -2,15 +2,15 @@ import { EntityManager, EntityName } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 
 import { BaseEntity } from '../base-entity.entity';
-import { MikroBatchContext } from './mikro-batch-context.class';
-import { MikroBatchLoader } from './mikro-batch-loader.class';
+import { MikroRefLoaderContext } from './mikro-ref-loader-context.class';
+import { MikroRefLoaderDataLoader } from './mikro-ref-loader-data-loader.class';
 
 @Injectable()
-export class MikroBatchService {
+export class MikroRefLoaderService {
   constructor(private em: EntityManager) {}
 
-  async loadRef<Entity extends BaseEntity<Entity>>(entity: Entity) {
-    return this.getLoader(entity).load(entity.id);
+  async load<Entity extends BaseEntity<Entity>>(ref: Entity) {
+    return this.getLoader(ref).load(ref.id);
   }
 
   /**
@@ -21,10 +21,10 @@ export class MikroBatchService {
    */
   private getLoader<Entity extends BaseEntity<Entity>>(entity: Entity) {
     const name = entity.constructor.name;
-    const loaders = MikroBatchContext.current.loaders;
+    const loaders = MikroRefLoaderContext.current.loaders;
     const loader = (loaders[name] =
       loaders[name] ??
-      new MikroBatchLoader(this.em, name as EntityName<Entity>, 'id'));
+      new MikroRefLoaderDataLoader(this.em, name as EntityName<Entity>, 'id'));
     return loader;
   }
 }

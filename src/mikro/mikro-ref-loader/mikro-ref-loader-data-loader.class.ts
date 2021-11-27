@@ -7,7 +7,7 @@ import {
 import { OperatorMap } from '@mikro-orm/core/dist/typings';
 import DataLoader from 'dataloader';
 
-export class MikroBatchLoader<
+export class MikroRefLoaderDataLoader<
   Entity extends AnyEntity<Entity>,
   Primary extends keyof Entity,
 > extends DataLoader<Entity[Primary], Entity> {

@@ -9,7 +9,7 @@ import { JoinApplicationsService } from 'src/join-applications/join-applications
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { MikroBatchService } from 'src/mikro/mikro-batch/mikro-batch.service';
+import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args';
 import { TasksService } from 'src/tasks/tasks.service';
 
@@ -18,7 +18,7 @@ import { Classroom } from './entities/classroom.entity';
 @Resolver(() => Classroom)
 export class ClassroomsFieldsResolver {
   constructor(
-    private batch: MikroBatchService,
+    private batch: MikroRefLoaderService,
     private joinApplicationsService: JoinApplicationsService,
     private membershipsService: MembershipsService,
     private tasksService: TasksService,
@@ -27,7 +27,7 @@ export class ClassroomsFieldsResolver {
 
   @ResolveField()
   async creator(@Parent() entity: Classroom) {
-    return this.batch.loadRef(entity.creator);
+    return this.batch.load(entity.creator);
   }
 
   @ResolveField(() => PaginatedJoinApplications)

@@ -4,7 +4,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { DB_PATH, DEBUG } from 'src/env.constants';
 import { Repository } from 'src/mikro/repository.class';
 
-import { MikroBatchService } from './mikro-batch/mikro-batch.service';
+import { MikroRefLoaderService } from './mikro-ref-loader/mikro-ref-loader.service';
 import { MikroFlushInterceptor } from './mikro-flush/mikro-flush.interceptor';
 import { MikroMiddlewareModule } from './mikro-middleware.module';
 import { MikroQueryContextInterceptor } from './mikro-query-context/mikro-query-context.interceptor';
@@ -48,8 +48,8 @@ export class MikroModule {
   static forFeature(): DynamicModule {
     return {
       module: MikroModule,
-      providers: [MikroQuotaService, MikroBatchService],
-      exports: [MikroQuotaService, MikroBatchService],
+      providers: [MikroQuotaService, MikroRefLoaderService],
+      exports: [MikroQuotaService, MikroRefLoaderService],
     };
   }
 }
