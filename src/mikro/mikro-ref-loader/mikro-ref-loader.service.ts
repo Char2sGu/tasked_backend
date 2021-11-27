@@ -1,7 +1,6 @@
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, wrap } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 
-import { BaseEntity } from '../base-entity.entity';
 import { MikroRefLoaderContext } from './mikro-ref-loader-context.class';
 import { MikroRefLoaderDataLoader } from './mikro-ref-loader-data-loader.class';
 
@@ -9,27 +8,18 @@ import { MikroRefLoaderDataLoader } from './mikro-ref-loader-data-loader.class';
 export class MikroRefLoaderService {
   constructor(private em: EntityManager) {}
 
-  async load<Entity extends BaseEntity<Entity>>(ref: Entity) {
+  async load<Entity>(ref: Entity) {
     const type = ref.constructor.name;
     const entity = this.em.getUnitOfWork().tryGetById(type, ref);
-    return entity?.isInitialized()
+    return wrap(entity)?.isInitialized()
       ? entity
-      : this.getLoader<Entity>(type).load(ref.id);
+      : this.getLoader<Entity>(type).load(ref);
   }
 
-  /**
-   * Get or create a data loader of the specified entity type in tge current
-   * context.
-   * @param type
-   * @returns
-   */
-  private getLoader<Entity extends BaseEntity<Entity>>(
-    type: string,
-  ): MikroRefLoaderDataLoader<Entity, 'id'> {
+  private getLoader<Entity>(type: string): MikroRefLoaderDataLoader<Entity> {
     const loaders = MikroRefLoaderContext.current.loaders;
     return (
-      loaders[type] ??
-      (loaders[type] = new MikroRefLoaderDataLoader(this.em, type, 'id'))
+      loaders[type] ?? (loaders[type] = new MikroRefLoaderDataLoader(this.em))
     );
   }
 }

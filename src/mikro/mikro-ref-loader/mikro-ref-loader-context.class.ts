@@ -8,7 +8,7 @@ export class MikroRefLoaderContext {
   }
   private static storage = new AsyncLocalStorage<MikroRefLoaderContext>();
 
-  loaders: Record<string, MikroRefLoaderDataLoader<any, any>> = {};
+  loaders: Record<string, MikroRefLoaderDataLoader<any>> = {};
 
   apply<T>(fn: () => T) {
     return MikroRefLoaderContext.storage.run(this, fn);
