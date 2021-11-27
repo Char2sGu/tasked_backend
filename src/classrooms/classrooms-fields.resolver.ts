@@ -18,7 +18,7 @@ import { Classroom } from './entities/classroom.entity';
 @Resolver(() => Classroom)
 export class ClassroomsFieldsResolver {
   constructor(
-    private batch: MikroRefLoaderService,
+    private loader: MikroRefLoaderService,
     private joinApplicationsService: JoinApplicationsService,
     private membershipsService: MembershipsService,
     private tasksService: TasksService,
@@ -27,7 +27,7 @@ export class ClassroomsFieldsResolver {
 
   @ResolveField()
   async creator(@Parent() entity: Classroom) {
-    return this.batch.load(entity.creator);
+    return this.loader.load(entity.creator);
   }
 
   @ResolveField(() => PaginatedJoinApplications)

@@ -8,18 +8,18 @@ import { Task } from './entities/task.entity';
 @Resolver(() => Task)
 export class TasksFieldsResolver {
   constructor(
-    private batch: MikroRefLoaderService,
+    private loader: MikroRefLoaderService,
     private assignmentsService: AssignmentsService,
   ) {}
 
   @ResolveField()
   async creator(@Parent() entity: Task) {
-    return this.batch.load(entity.creator);
+    return this.loader.load(entity.creator);
   }
 
   @ResolveField()
   async classroom(@Parent() entity: Task) {
-    return this.batch.load(entity.classroom);
+    return this.loader.load(entity.classroom);
   }
 
   @ResolveField()

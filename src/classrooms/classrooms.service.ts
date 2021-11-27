@@ -20,7 +20,7 @@ export class ClassroomsService {
   constructor(
     private em: EntityManager,
     @InjectRepository(Classroom) private repo: Repository<Classroom>,
-    private quotaService: MikroQuotaService,
+    private quota: MikroQuotaService,
   ) {}
 
   async queryMany(
@@ -46,7 +46,7 @@ export class ClassroomsService {
   async createOne({ data }: CreateClassroomArgs) {
     const user = Context.current.user;
     await this.em.populate(user, ['classrooms']);
-    await this.quotaService.check(user, 'classrooms');
+    await this.quota.check(user, 'classrooms');
     return this.repo.create({
       creator: user,
       memberships: [{ owner: user, role: Role.Teacher }],

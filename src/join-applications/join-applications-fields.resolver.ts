@@ -5,15 +5,15 @@ import { JoinApplication } from './entities/join-application.entity';
 
 @Resolver(() => JoinApplication)
 export class JoinApplicationsFieldsResolver {
-  constructor(private batch: MikroRefLoaderService) {}
+  constructor(private loader: MikroRefLoaderService) {}
 
   @ResolveField()
   async owner(@Parent() entity: JoinApplication) {
-    return this.batch.load(entity.owner);
+    return this.loader.load(entity.owner);
   }
 
   @ResolveField()
   async classroom(@Parent() entity: JoinApplication) {
-    return this.batch.load(entity.classroom);
+    return this.loader.load(entity.classroom);
   }
 }

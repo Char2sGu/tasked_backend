@@ -33,7 +33,7 @@ export class JoinApplicationsService {
     @InjectRepository(Classroom)
     private classroomRepo: Repository<Classroom>,
 
-    private quotaService: MikroQuotaService,
+    private quota: MikroQuotaService,
   ) {}
 
   async queryMany(
@@ -95,7 +95,7 @@ export class JoinApplicationsService {
     const classroom = await this.classroomRepo.findOne(data.classroom, {
       populate: ['memberships'],
     });
-    await this.quotaService.check(classroom, 'memberships');
+    await this.quota.check(classroom, 'memberships');
 
     return this.repo.create({
       owner: user,

@@ -5,15 +5,15 @@ import { Assignment } from './entities/assignment.entity';
 
 @Resolver(() => Assignment)
 export class AssignmentsFieldsResolver {
-  constructor(private batch: MikroRefLoaderService) {}
+  constructor(private loader: MikroRefLoaderService) {}
 
   @ResolveField()
   async recipient(@Parent() entity: Assignment) {
-    return this.batch.load(entity.recipient);
+    return this.loader.load(entity.recipient);
   }
 
   @ResolveField()
   async task(@Parent() entity: Assignment) {
-    return this.batch.load(entity.task);
+    return this.loader.load(entity.task);
   }
 }

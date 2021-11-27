@@ -8,18 +8,18 @@ import { Membership } from './entities/membership.entity';
 @Resolver(() => Membership)
 export class MembershipsFieldsResolver {
   constructor(
-    private batch: MikroRefLoaderService,
+    private loader: MikroRefLoaderService,
     private assignmentsService: AssignmentsService,
   ) {}
 
   @ResolveField()
   async owner(@Parent() entity: Membership) {
-    return this.batch.load(entity.owner);
+    return this.loader.load(entity.owner);
   }
 
   @ResolveField()
   async classroom(@Parent() entity: Membership) {
-    return this.batch.load(entity.classroom);
+    return this.loader.load(entity.classroom);
   }
 
   @ResolveField()
