@@ -2,7 +2,7 @@ import { EntityManager, EntityName } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 
 import { BaseEntity } from '../base-entity.entity';
-import { MikroBatchContextMiddleware } from './mikro-batch-context.middleware';
+import { MikroBatchContext } from './mikro-batch-context.class';
 import { MikroBatchLoader } from './mikro-batch-loader.class';
 
 @Injectable()
@@ -21,9 +21,9 @@ export class MikroBatchService {
    */
   private getLoader<Entity extends BaseEntity<Entity>>(entity: Entity) {
     const name = entity.constructor.name;
-    const map = MikroBatchContextMiddleware.current;
-    const loader = (map[name] =
-      map[name] ??
+    const loaders = MikroBatchContext.current.loaders;
+    const loader = (loaders[name] =
+      loaders[name] ??
       new MikroBatchLoader(this.em, name as EntityName<Entity>, 'id'));
     return loader;
   }
