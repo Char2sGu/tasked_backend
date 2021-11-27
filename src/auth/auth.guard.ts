@@ -5,30 +5,41 @@ import { ExpressContext } from 'apollo-server-express';
 import { Request } from 'express';
 
 import { AuthService } from './auth.service';
+import { AuthGuardContext } from './auth-guard-context.class';
+import { AuthGuardSkip } from './auth-guard-skip.decorator';
 import { AUTH_GUARD_SKIP } from './auth-guard-skip.symbol';
 
 /**
- * Prevent the endpoints from being accessed by unauthenticated users.
+ * Prevent the endpoints from being accessed by unauthenticated users and
+ * define {@link Request.user}.
  *
- * Use {@link SkipAuth} to skip the check.
+ * Use {@link AuthGuardSkip} to ignore this process.
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private reflector: Reflector, private auth: AuthService) {}
+  constructor(private reflector: Reflector, private service: AuthService) {}
 
   async canActivate(context: ExecutionContext) {
-    const skipAuth = this.reflector.get<true | undefined>(
+    const skip = this.reflector.get<true | undefined>(
       AUTH_GUARD_SKIP,
       context.getHandler(),
     );
 
-    if (!skipAuth) {
-      const request = this.getRequest(context);
-      const token = this.auth.getJwtFromHeaders(request.headers);
-      const user = await this.auth.verifyJwt(token);
-      request.user = user;
+    if (!skip) {
+      const result =
+        AuthGuardContext.current.result ??
+        (AuthGuardContext.current.result = this.authenticate(context));
+      await result;
     }
+
     return true;
+  }
+
+  async authenticate(context: ExecutionContext) {
+    const request = this.getRequest(context);
+    const token = this.service.getJwtFromHeaders(request.headers);
+    const user = await this.service.verifyJwt(token);
+    request.user = user;
   }
 
   private getRequest(context: ExecutionContext) {
@@ -37,3 +48,5 @@ export class AuthGuard implements CanActivate {
       : context.switchToHttp().getRequest<Request>();
   }
 }
+
+AuthGuardSkip;
