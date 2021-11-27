@@ -27,7 +27,7 @@ export class ClassroomsFieldsResolver {
 
   @ResolveField()
   async creator(@Parent() entity: Classroom) {
-    return this.batch.load(entity.creator);
+    return this.batch.loadRef(entity.creator);
   }
 
   @ResolveField(() => PaginatedJoinApplications)

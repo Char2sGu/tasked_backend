@@ -9,11 +9,11 @@ export class AssignmentsFieldsResolver {
 
   @ResolveField()
   async recipient(@Parent() entity: Assignment) {
-    return this.batch.load(entity.recipient);
+    return this.batch.loadRef(entity.recipient);
   }
 
   @ResolveField()
   async task(@Parent() entity: Assignment) {
-    return this.batch.load(entity.task);
+    return this.batch.loadRef(entity.task);
   }
 }

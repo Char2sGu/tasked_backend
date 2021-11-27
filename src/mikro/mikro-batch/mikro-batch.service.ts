@@ -9,7 +9,7 @@ import { MikroBatchLoader } from './mikro-batch-loader.class';
 export class MikroBatchService {
   constructor(private em: EntityManager) {}
 
-  async load<Entity extends BaseEntity<Entity>>(entity: Entity) {
+  async loadRef<Entity extends BaseEntity<Entity>>(entity: Entity) {
     return this.getLoader(entity).load(entity.id);
   }
 

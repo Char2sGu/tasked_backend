@@ -14,12 +14,12 @@ export class TasksFieldsResolver {
 
   @ResolveField()
   async creator(@Parent() entity: Task) {
-    return this.batch.load(entity.creator);
+    return this.batch.loadRef(entity.creator);
   }
 
   @ResolveField()
   async classroom(@Parent() entity: Task) {
-    return this.batch.load(entity.classroom);
+    return this.batch.loadRef(entity.classroom);
   }
 
   @ResolveField()

@@ -9,11 +9,11 @@ export class JoinApplicationsFieldsResolver {
 
   @ResolveField()
   async owner(@Parent() entity: JoinApplication) {
-    return this.batch.load(entity.owner);
+    return this.batch.loadRef(entity.owner);
   }
 
   @ResolveField()
   async classroom(@Parent() entity: JoinApplication) {
-    return this.batch.load(entity.classroom);
+    return this.batch.loadRef(entity.classroom);
   }
 }

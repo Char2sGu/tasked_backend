@@ -14,12 +14,12 @@ export class MembershipsFieldsResolver {
 
   @ResolveField()
   async owner(@Parent() entity: Membership) {
-    return this.batch.load(entity.owner);
+    return this.batch.loadRef(entity.owner);
   }
 
   @ResolveField()
   async classroom(@Parent() entity: Membership) {
-    return this.batch.load(entity.classroom);
+    return this.batch.loadRef(entity.classroom);
   }
 
   @ResolveField()
