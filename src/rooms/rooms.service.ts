@@ -49,7 +49,7 @@ export class RoomsService {
     await this.quota.check(user, 'rooms');
     return this.repo.create({
       creator: user,
-      memberships: [{ owner: user, role: Role.Teacher }],
+      memberships: [{ owner: user, role: Role.Manager }],
       isOpen: true,
       ...data,
     });

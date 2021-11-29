@@ -66,12 +66,12 @@ export class AssignmentsService {
     const user = Context.current.user;
 
     await this.membershipRepo.findOneOrFail(
-      { id: data.recipient, role: Role.Student },
+      { id: data.recipient, role: Role.Member },
       {
         filters: [CommonFilter.Crud],
         failHandler: () =>
           new BadRequestException(
-            'recipient must be an ID of a student membership in this room',
+            'recipient must be an ID of a member membership in this room',
           ),
       },
     );

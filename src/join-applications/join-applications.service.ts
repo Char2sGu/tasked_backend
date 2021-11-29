@@ -132,7 +132,7 @@ export class JoinApplicationsService {
     const membership = this.membershipRepo.create({
       owner: application.owner,
       room: application.room,
-      role: Role.Student,
+      role: Role.Member,
     });
 
     return { application, membership };

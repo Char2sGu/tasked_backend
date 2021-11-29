@@ -60,15 +60,15 @@ export class MembershipsService {
         throw new ForbiddenException(
           `Cannot ${action} the membership of the creator`,
         );
-    } else if (ownMembership.role == Role.Teacher) {
-      if (targetMembership.role != Role.Student)
+    } else if (ownMembership.role == Role.Manager) {
+      if (targetMembership.role != Role.Member)
         throw new ForbiddenException(
-          `Cannot ${action} memberships of teachers`,
+          `Cannot ${action} memberships of managers`,
         );
-    } else if (ownMembership.role == Role.Student) {
+    } else if (ownMembership.role == Role.Member) {
       if (ownMembership != targetMembership)
         throw new ForbiddenException(
-          `Cannot ${action} memberships as a student`,
+          `Cannot ${action} memberships as a member`,
         );
     }
 

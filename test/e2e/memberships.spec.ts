@@ -114,9 +114,9 @@ describe('Memberships', () => {
     });
 
     it.each`
-      data                                                         | error
-      ${() => [create()]}                                          | ${'Cannot delete the membership of the creator'}
-      ${() => [create(3, [[2, Role.Teacher], [1, Role.Student]])]} | ${'Cannot delete memberships of superior members'}
+      data                                                        | error
+      ${() => [create()]}                                         | ${'Cannot delete the membership of the creator'}
+      ${() => [create(3, [[2, Role.Manager], [1, Role.Member]])]} | ${'Cannot delete memberships of superior members'}
     `(
       'should return an error when unauthorized: $error',
       async ({ data, error }) => {
@@ -136,7 +136,7 @@ describe('Memberships', () => {
 
   function create(
     creator: unknown = 1,
-    members: [unknown, Role][] = [[1, Role.Teacher]],
+    members: [unknown, Role][] = [[1, Role.Manager]],
   ) {
     return em.create(Room, {
       name: 'name',

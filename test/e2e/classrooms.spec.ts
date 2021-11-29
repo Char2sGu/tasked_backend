@@ -248,7 +248,7 @@ describe.only('Rooms', () => {
       memberships: [
         {
           owner: 1,
-          role: Role.Teacher,
+          role: Role.Manager,
         } as EntityData<Membership>,
       ],
     });
