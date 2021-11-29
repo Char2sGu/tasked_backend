@@ -10,7 +10,7 @@ import { User } from 'src/users/entities/user.entity';
 import { ApplicationStatus } from './application-status.enum';
 
 @ObjectType()
-@Filter<JoinApplication>({
+@Filter<Application>({
   name: CommonFilter.Crud,
   cond: () => ({
     $or: [
@@ -20,7 +20,7 @@ import { ApplicationStatus } from './application-status.enum';
   }),
 })
 @Entity()
-export class JoinApplication extends BaseEntity<JoinApplication> {
+export class Application extends BaseEntity<Application> {
   @Field(() => User)
   @ManyToOne({
     entity: () => User,

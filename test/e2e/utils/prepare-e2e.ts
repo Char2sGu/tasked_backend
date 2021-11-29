@@ -7,8 +7,8 @@ import { Server } from 'http';
 import { AddressInfo } from 'node:net';
 import { Affair } from 'src/affairs/entities/affair.entity';
 import { AppModule } from 'src/app.module';
+import { Application } from 'src/applications/entities/application.entity';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
-import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Room } from 'src/rooms/entities/room.entity';
 import { Task } from 'src/tasks/entities/task.entity';
@@ -30,7 +30,7 @@ export async function prepareE2E({
           User,
           Membership,
           Room,
-          JoinApplication,
+          Application,
           Affair,
           Task,
           Assignment,

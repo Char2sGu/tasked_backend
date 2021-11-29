@@ -13,19 +13,19 @@ import { MikroQuotaService } from 'src/mikro/mikro-quota/mikro-quota.service';
 import { Repository } from 'src/mikro/repository.class';
 import { Room } from 'src/rooms/entities/room.entity';
 
-import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
-import { CreateJoinApplicationArgs } from './dto/create-join-application.args';
-import { QueryJoinApplicationArgs } from './dto/query-join-application.args';
-import { QueryJoinApplicationsArgs } from './dto/query-join-applications.args';
-import { RejectJoinApplicationArgs } from './dto/reject-join-application.args';
+import { AcceptApplicationArgs } from './dto/accept-application.args';
+import { CreateApplicationArgs } from './dto/create-application.args';
+import { QueryApplicationArgs } from './dto/query-application.args';
+import { QueryApplicationsArgs } from './dto/query-applications.args';
+import { RejectApplicationArgs } from './dto/reject-application.args';
+import { Application } from './entities/application.entity';
 import { ApplicationStatus } from './entities/application-status.enum';
-import { JoinApplication } from './entities/join-application.entity';
 
 @Injectable()
-export class JoinApplicationsService {
+export class ApplicationsService {
   constructor(
-    @InjectRepository(JoinApplication)
-    private repo: Repository<JoinApplication>,
+    @InjectRepository(Application)
+    private repo: Repository<Application>,
 
     @InjectRepository(Membership)
     private membershipRepo: Repository<Membership>,
@@ -37,8 +37,8 @@ export class JoinApplicationsService {
   ) {}
 
   async queryMany(
-    { limit, offset, isPending }: QueryJoinApplicationsArgs,
-    query: FilterQuery<JoinApplication> = {},
+    { limit, offset, isPending }: QueryApplicationsArgs,
+    query: FilterQuery<Application> = {},
   ) {
     return this.repo.findAndPaginate(
       {
@@ -62,11 +62,11 @@ export class JoinApplicationsService {
     );
   }
 
-  async queryOne({ id }: QueryJoinApplicationArgs) {
+  async queryOne({ id }: QueryApplicationArgs) {
     return this.repo.findOneOrFail(id, { filters: [CommonFilter.Crud] });
   }
 
-  async createOne({ data }: CreateJoinApplicationArgs) {
+  async createOne({ data }: CreateApplicationArgs) {
     const user = Context.current.user;
 
     await this.roomRepo
@@ -75,7 +75,7 @@ export class JoinApplicationsService {
           id: data.room,
           $or: [
             {
-              joinApplications: {
+              applications: {
                 owner: user,
                 status: ApplicationStatus.Pending,
               },
@@ -104,7 +104,7 @@ export class JoinApplicationsService {
     });
   }
 
-  async rejectOne({ id }: RejectJoinApplicationArgs) {
+  async rejectOne({ id }: RejectApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
     });
@@ -117,7 +117,7 @@ export class JoinApplicationsService {
     });
   }
 
-  async acceptOne({ id }: AcceptJoinApplicationArgs) {
+  async acceptOne({ id }: AcceptApplicationArgs) {
     const application = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
     });

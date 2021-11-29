@@ -1,12 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Membership } from 'src/memberships/entities/membership.entity';
 
-import { JoinApplication } from '../entities/join-application.entity';
+import { Application } from '../entities/application.entity';
 
 @ObjectType()
-export class AcceptJoinApplicationResult {
-  @Field(() => JoinApplication)
-  application: JoinApplication;
+export class AcceptApplicationResult {
+  @Field(() => Application)
+  application: Application;
 
   @Field(() => Membership)
   membership: Membership;

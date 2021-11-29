@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { forwardRef, Module } from '@nestjs/common';
+import { ApplicationsModule } from 'src/applications/applications.module';
 import { AssignmentsModule } from 'src/assignments/assignments.module';
-import { JoinApplicationsModule } from 'src/join-applications/join-applications.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { RoomsModule } from 'src/rooms/rooms.module';
 import { SharedModule } from 'src/shared/shared.module';
@@ -17,7 +17,7 @@ import { UsersFieldsResolver } from './users-fields.resolver';
     SharedModule,
     MikroOrmModule.forFeature([User]),
     forwardRef(() => RoomsModule),
-    forwardRef(() => JoinApplicationsModule),
+    forwardRef(() => ApplicationsModule),
     forwardRef(() => MembershipsModule),
     forwardRef(() => TasksModule),
     forwardRef(() => AssignmentsModule),

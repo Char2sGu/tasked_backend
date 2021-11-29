@@ -6,7 +6,7 @@ import { Room } from 'src/rooms/entities/room.entity';
 import { IsPrimaryKey } from 'src/validation/is-primary-key.decorator';
 
 @InputType()
-export class JoinApplicationCreateInput {
+export class ApplicationCreateInput {
   @Field(() => ID)
   @IsPrimaryKey(() => Room, [CommonFilter.Crud])
   room: number;

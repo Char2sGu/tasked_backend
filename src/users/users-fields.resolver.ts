@@ -1,9 +1,9 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { ApplicationsService } from 'src/applications/applications.service';
+import { QueryApplicationsArgs } from 'src/applications/dto/query-applications.args';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
-import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { QueryRoomsArgs } from 'src/rooms/dto/query-rooms.args';
@@ -17,7 +17,7 @@ import { User } from './entities/user.entity';
 export class UsersFieldsResolver {
   constructor(
     private roomsService: RoomsService,
-    private applicationsService: JoinApplicationsService,
+    private applicationsService: ApplicationsService,
     private membershipsService: MembershipsService,
     private tasksService: TasksService,
     private assignmentsService: AssignmentsService,
@@ -29,8 +29,8 @@ export class UsersFieldsResolver {
   }
 
   @ResolveField()
-  async joinApplications(
-    @Args() args: QueryJoinApplicationsArgs,
+  async applications(
+    @Args() args: QueryApplicationsArgs,
     @Parent() entity: User,
   ) {
     return this.applicationsService.queryMany(args, { owner: entity });

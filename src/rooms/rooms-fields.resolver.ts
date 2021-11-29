@@ -1,11 +1,11 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { ApplicationsService } from 'src/applications/applications.service';
+import { PaginatedApplications } from 'src/applications/dto/paginated-applications.dto';
+import { QueryApplicationsArgs } from 'src/applications/dto/query-applications.args';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
 import { Context } from 'src/context/context.class';
-import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
-import { QueryJoinApplicationsArgs } from 'src/join-applications/dto/query-join-applications.args';
-import { JoinApplicationsService } from 'src/join-applications/join-applications.service';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
@@ -19,7 +19,7 @@ import { Room } from './entities/room.entity';
 export class RoomsFieldsResolver {
   constructor(
     private loader: MikroRefLoaderService,
-    private joinApplicationsService: JoinApplicationsService,
+    private applicationsService: ApplicationsService,
     private membershipsService: MembershipsService,
     private tasksService: TasksService,
     private assignmentsService: AssignmentsService,
@@ -30,12 +30,12 @@ export class RoomsFieldsResolver {
     return this.loader.load(entity.creator);
   }
 
-  @ResolveField(() => PaginatedJoinApplications)
-  async joinApplications(
-    @Args() args: QueryJoinApplicationsArgs,
+  @ResolveField(() => PaginatedApplications)
+  async applications(
+    @Args() args: QueryApplicationsArgs,
     @Parent() entity: Room,
   ) {
-    return this.joinApplicationsService.queryMany(args, {
+    return this.applicationsService.queryMany(args, {
       room: entity,
     });
   }

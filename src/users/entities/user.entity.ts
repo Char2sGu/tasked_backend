@@ -9,9 +9,9 @@ import {
 import { ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcryptjs';
 import dayjs from 'dayjs';
+import { PaginatedApplications } from 'src/applications/dto/paginated-applications.dto';
+import { Application } from 'src/applications/entities/application.entity';
 import { Field } from 'src/common/field.decorator';
-import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
-import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
@@ -49,13 +49,13 @@ export class User extends BaseEntity<User> {
   })
   rooms = new Collection<Room>(this);
 
-  @Field(() => PaginatedJoinApplications)
+  @Field(() => PaginatedApplications)
   @OneToMany({
-    entity: () => JoinApplication,
+    entity: () => Application,
     mappedBy: (application) => application.owner,
     orphanRemoval: true,
   })
-  joinApplications = new Collection<JoinApplication>(this);
+  applications = new Collection<Application>(this);
 
   @Field(() => PaginatedMemberships)
   @OneToMany({

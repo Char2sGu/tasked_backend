@@ -1,19 +1,19 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
 
-import { JoinApplication } from './entities/join-application.entity';
+import { Application } from './entities/application.entity';
 
-@Resolver(() => JoinApplication)
-export class JoinApplicationsFieldsResolver {
+@Resolver(() => Application)
+export class ApplicationsFieldsResolver {
   constructor(private loader: MikroRefLoaderService) {}
 
   @ResolveField()
-  async owner(@Parent() entity: JoinApplication) {
+  async owner(@Parent() entity: Application) {
     return this.loader.load(entity.owner);
   }
 
   @ResolveField()
-  async room(@Parent() entity: JoinApplication) {
+  async room(@Parent() entity: Application) {
     return this.loader.load(entity.room);
   }
 }

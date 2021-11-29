@@ -7,10 +7,10 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
+import { Application } from 'src/applications/entities/application.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
-import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
@@ -63,11 +63,11 @@ export class Room extends BaseEntity<Room> {
   creator: User;
 
   @OneToMany({
-    entity: () => JoinApplication,
+    entity: () => Application,
     mappedBy: (application) => application.room,
     orphanRemoval: true,
   })
-  joinApplications = new Collection<JoinApplication>(this);
+  applications = new Collection<Application>(this);
 
   @Quota(50)
   @Field(() => PaginatedMemberships)

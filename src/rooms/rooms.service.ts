@@ -79,7 +79,7 @@ export class RoomsService {
       throw new ForbiddenException('Cannot delete rooms not created by you');
 
     await this.repo.populate(room, [
-      'joinApplications',
+      'applications',
       'memberships',
       'tasks',
       'tasks.assignments',
