@@ -13,10 +13,10 @@ import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-load
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args';
 import { TasksService } from 'src/tasks/tasks.service';
 
-import { Classroom } from './entities/classroom.entity';
+import { Room } from './entities/room.entity';
 
-@Resolver(() => Classroom)
-export class ClassroomsFieldsResolver {
+@Resolver(() => Room)
+export class RoomsFieldsResolver {
   constructor(
     private loader: MikroRefLoaderService,
     private joinApplicationsService: JoinApplicationsService,
@@ -26,35 +26,35 @@ export class ClassroomsFieldsResolver {
   ) {}
 
   @ResolveField()
-  async creator(@Parent() entity: Classroom) {
+  async creator(@Parent() entity: Room) {
     return this.loader.load(entity.creator);
   }
 
   @ResolveField(() => PaginatedJoinApplications)
   async joinApplications(
     @Args() args: QueryJoinApplicationsArgs,
-    @Parent() entity: Classroom,
+    @Parent() entity: Room,
   ) {
     return this.joinApplicationsService.queryMany(args, {
-      classroom: entity,
+      room: entity,
     });
   }
 
   @ResolveField()
   async memberships(
     @Args() args: QueryMembershipsArgs,
-    @Parent() entity: Classroom,
+    @Parent() entity: Room,
   ) {
-    return this.membershipsService.queryMany(args, { classroom: entity });
+    return this.membershipsService.queryMany(args, { room: entity });
   }
 
   @ResolveField()
-  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: Classroom) {
-    return this.tasksService.queryMany(args, { classroom: entity });
+  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: Room) {
+    return this.tasksService.queryMany(args, { room: entity });
   }
 
   @ResolveField(() => Membership, { nullable: true })
-  async membership(@Parent() entity: Classroom) {
+  async membership(@Parent() entity: Room) {
     return entity.memberships
       .matching({ where: { owner: Context.current.user }, limit: 1 })
       .then(([v]) => v);
@@ -63,10 +63,10 @@ export class ClassroomsFieldsResolver {
   @ResolveField(() => PaginatedAssignments)
   async assignments(
     @Args() args: QueryAssignmentsArgs,
-    @Parent() entity: Classroom,
+    @Parent() entity: Room,
   ) {
     return this.assignmentsService.queryMany(args, {
-      task: { classroom: entity },
+      task: { room: entity },
     });
   }
 }

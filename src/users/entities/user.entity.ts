@@ -9,8 +9,6 @@ import {
 import { ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcryptjs';
 import dayjs from 'dayjs';
-import { PaginatedClassrooms } from 'src/classrooms/dto/paginated-classrooms.dto';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Field } from 'src/common/field.decorator';
 import { PaginatedJoinApplications } from 'src/join-applications/dto/paginated-join-applications.dto';
 import { JoinApplication } from 'src/join-applications/entities/join-application.entity';
@@ -18,6 +16,8 @@ import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { Quota } from 'src/mikro/mikro-quota/quota.decorator';
+import { PaginatedRooms } from 'src/rooms/dto/paginated-rooms.dto';
+import { Room } from 'src/rooms/entities/room.entity';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { Gender } from 'src/users/entities/gender.enum';
@@ -41,13 +41,13 @@ export class User extends BaseEntity<User> {
   gender: Gender = Gender.Unknown;
 
   @Quota(20)
-  @Field(() => PaginatedClassrooms)
+  @Field(() => PaginatedRooms)
   @OneToMany({
-    entity: () => Classroom,
-    mappedBy: (classroom) => classroom.creator,
+    entity: () => Room,
+    mappedBy: (room) => room.creator,
     orphanRemoval: true,
   })
-  classrooms = new Collection<Classroom>(this);
+  rooms = new Collection<Room>(this);
 
   @Field(() => PaginatedJoinApplications)
   @OneToMany({

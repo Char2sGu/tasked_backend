@@ -50,13 +50,13 @@ export class TasksService {
     await this.memRepo.findOneOrFail(
       {
         owner: user,
-        classroom: data.classroom,
+        room: data.room,
       },
       {
         filters: [CommonFilter.Crud],
         failHandler: () =>
           new BadRequestException(
-            'classroom must be an ID of a classroom having your membership',
+            'room must be an ID of a room having your membership',
           ),
       },
     );

@@ -9,11 +9,11 @@ import {
 import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
+import { Room } from 'src/rooms/entities/room.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { Role } from './role.enum';
@@ -22,7 +22,7 @@ import { Role } from './role.enum';
 @Filter<Membership>({
   name: CommonFilter.Crud,
   cond: () => ({
-    classroom: {
+    room: {
       memberships: { owner: Context.current.user, deletedAt: null },
     },
   }),
@@ -35,11 +35,11 @@ export class Membership extends BaseEntity<Membership> {
   })
   owner: User;
 
-  @Field(() => Classroom)
+  @Field(() => Room)
   @ManyToOne({
-    entity: () => Classroom,
+    entity: () => Room,
   })
-  classroom: Classroom;
+  room: Room;
 
   @Field(() => PaginatedAssignments)
   @OneToMany({

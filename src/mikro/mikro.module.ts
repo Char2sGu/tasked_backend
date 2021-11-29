@@ -4,12 +4,12 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { DB_PATH, DEBUG } from 'src/env.constants';
 import { Repository } from 'src/mikro/repository.class';
 
-import { MikroRefLoaderService } from './mikro-ref-loader/mikro-ref-loader.service';
 import { MikroFlushInterceptor } from './mikro-flush/mikro-flush.interceptor';
 import { MikroMiddlewareModule } from './mikro-middleware.module';
 import { MikroQueryContextInterceptor } from './mikro-query-context/mikro-query-context.interceptor';
 import { MikroQuotaFilter } from './mikro-quota/mikro-quota.filter';
 import { MikroQuotaService } from './mikro-quota/mikro-quota.service';
+import { MikroRefLoaderService } from './mikro-ref-loader/mikro-ref-loader.service';
 
 @Module({})
 export class MikroModule {

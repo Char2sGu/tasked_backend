@@ -6,21 +6,21 @@ import { MembershipsModule } from 'src/memberships/memberships.module';
 import { SharedModule } from 'src/shared/shared.module';
 import { TasksModule } from 'src/tasks/tasks.module';
 
-import { ClassroomsResolver } from './classrooms.resolver';
-import { ClassroomsService } from './classrooms.service';
-import { ClassroomsFieldsResolver } from './classrooms-fields.resolver';
-import { Classroom } from './entities/classroom.entity';
+import { Room } from './entities/room.entity';
+import { RoomsResolver } from './rooms.resolver';
+import { RoomsService } from './rooms.service';
+import { RoomsFieldsResolver } from './rooms-fields.resolver';
 
 @Module({
   imports: [
     SharedModule,
-    MikroOrmModule.forFeature([Classroom]),
+    MikroOrmModule.forFeature([Room]),
     forwardRef(() => JoinApplicationsModule),
     forwardRef(() => MembershipsModule),
     forwardRef(() => TasksModule),
     forwardRef(() => AssignmentsModule),
   ],
-  providers: [ClassroomsResolver, ClassroomsFieldsResolver, ClassroomsService],
-  exports: [ClassroomsService],
+  providers: [RoomsResolver, RoomsFieldsResolver, RoomsService],
+  exports: [RoomsService],
 })
-export class ClassroomsModule {}
+export class RoomsModule {}

@@ -18,8 +18,8 @@ export class MembershipsFieldsResolver {
   }
 
   @ResolveField()
-  async classroom(@Parent() entity: Membership) {
-    return this.loader.load(entity.classroom);
+  async room(@Parent() entity: Membership) {
+    return this.loader.load(entity.room);
   }
 
   @ResolveField()

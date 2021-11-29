@@ -18,8 +18,8 @@ export class TasksFieldsResolver {
   }
 
   @ResolveField()
-  async classroom(@Parent() entity: Task) {
-    return this.loader.load(entity.classroom);
+  async room(@Parent() entity: Task) {
+    return this.loader.load(entity.room);
   }
 
   @ResolveField()

@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { Room } from 'src/rooms/entities/room.entity';
 import { SharedModule } from 'src/shared/shared.module';
 
 import { JoinApplication } from './entities/join-application.entity';
@@ -12,7 +12,7 @@ import { JoinApplicationsFieldsResolver } from './join-applications-fields.resol
 @Module({
   imports: [
     SharedModule,
-    MikroOrmModule.forFeature([JoinApplication, Membership, Classroom]),
+    MikroOrmModule.forFeature([JoinApplication, Membership, Room]),
   ],
   providers: [
     JoinApplicationsResolver,

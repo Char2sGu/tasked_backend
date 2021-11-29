@@ -3,10 +3,10 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
+import { Room } from 'src/rooms/entities/room.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { GraphQLClient } from './utils/graphql-client.class';
@@ -138,7 +138,7 @@ describe('Memberships', () => {
     creator: unknown = 1,
     members: [unknown, Role][] = [[1, Role.Teacher]],
   ) {
-    return em.create(Classroom, {
+    return em.create(Room, {
       name: 'name',
       creator,
       memberships: members.map(

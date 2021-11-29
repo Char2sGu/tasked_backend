@@ -13,7 +13,7 @@ export class JoinApplicationsFieldsResolver {
   }
 
   @ResolveField()
-  async classroom(@Parent() entity: JoinApplication) {
-    return this.loader.load(entity.classroom);
+  async room(@Parent() entity: JoinApplication) {
+    return this.loader.load(entity.room);
   }
 }

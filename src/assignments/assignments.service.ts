@@ -71,7 +71,7 @@ export class AssignmentsService {
         filters: [CommonFilter.Crud],
         failHandler: () =>
           new BadRequestException(
-            'recipient must be an ID of a student membership in this classroom',
+            'recipient must be an ID of a student membership in this room',
           ),
       },
     );

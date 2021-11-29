@@ -3,16 +3,16 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
-import { PaginatedClassrooms } from 'src/classrooms/dto/paginated-classrooms.dto';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
+import { PaginatedRooms } from 'src/rooms/dto/paginated-rooms.dto';
+import { Room } from 'src/rooms/entities/room.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { GraphQLClient } from './utils/graphql-client.class';
 import { prepareE2E } from './utils/prepare-e2e';
 
-describe.only('Classrooms', () => {
+describe.only('Rooms', () => {
   let app: INestApplication;
   let module: TestingModule;
   let client: GraphQLClient;
@@ -44,8 +44,8 @@ describe.only('Classrooms', () => {
     client.setToken(token);
   });
 
-  describe('classroom', () => {
-    let result: EntityData<Classroom>;
+  describe('room', () => {
+    let result: EntityData<Room>;
 
     beforeEach(async () => {
       await em.persist([create(1)]).flush();
@@ -80,19 +80,17 @@ describe.only('Classrooms', () => {
     });
 
     async function request(args: string, fields: string) {
-      const content = await client.request(
-        `query { classroom${args} ${fields} }`,
-      );
-      result = content.classroom;
+      const content = await client.request(`query { room${args} ${fields} }`);
+      result = content.room;
     }
   });
 
-  describe('classrooms', () => {
+  describe('rooms', () => {
     beforeEach(async () => {
       await em.persist([create(1), create(1), create(1)]).flush();
     });
 
-    let result: PaginatedClassrooms;
+    let result: PaginatedRooms;
 
     it('should return the data when no arguments are specified', async () => {
       await request();
@@ -117,14 +115,14 @@ describe.only('Classrooms', () => {
 
     async function request(args = '') {
       const content = await client.request(
-        `query { classrooms${args} { total, results { id } } }`,
+        `query { rooms${args} { total, results { id } } }`,
       );
-      result = content.classrooms;
+      result = content.rooms;
     }
   });
 
-  describe('createClassroom', () => {
-    let result: Classroom;
+  describe('createRoom', () => {
+    let result: Room;
 
     it('should return the data', async () => {
       await request('(data: { name: "name" })');
@@ -151,15 +149,15 @@ describe.only('Classrooms', () => {
 
     async function request(args: string) {
       const content = await client.request(
-        `mutation { createClassroom${args} { id, name } }`,
+        `mutation { createRoom${args} { id, name } }`,
       );
-      result = content.createClassroom;
+      result = content.createRoom;
       return result;
     }
   });
 
-  describe('updateClassroom', () => {
-    let result: Classroom;
+  describe('updateRoom', () => {
+    let result: Room;
 
     beforeEach(async () => {
       await em.persist(create(1)).flush();
@@ -191,20 +189,20 @@ describe.only('Classrooms', () => {
       await em.persist(create(2)).flush();
       const promise = request(`(id: 2, data: {})`, `{ id }`);
       await expect(promise).rejects.toThrow(
-        'Cannot update classrooms not created by you',
+        'Cannot update rooms not created by you',
       );
     });
 
     async function request(args: string, fields: string) {
       const content = await client.request(
-        `mutation { updateClassroom${args} ${fields} }`,
+        `mutation { updateRoom${args} ${fields} }`,
       );
-      result = content.updateClassroom;
+      result = content.updateRoom;
     }
   });
 
-  describe('deleteClassroom', () => {
-    let result: Classroom;
+  describe('deleteRoom', () => {
+    let result: Room;
 
     beforeEach(async () => {
       await em.persist(create(1)).flush();
@@ -213,7 +211,7 @@ describe.only('Classrooms', () => {
     it('should return the data', async () => {
       await request(`(id: 1)`, `{ id }`);
       expect(result).toEqual({ id: '1' });
-      const count = await em.count(Classroom);
+      const count = await em.count(Room);
       expect(count).toBe(0);
     });
 
@@ -227,15 +225,15 @@ describe.only('Classrooms', () => {
       await em.persist(create(2)).flush();
       const promise = request(`(id: 2)`, `{ id }`);
       await expect(promise).rejects.toThrow(
-        'Cannot delete classrooms not created by you',
+        'Cannot delete rooms not created by you',
       );
     });
 
     async function request(args: string, fields: string) {
       const content = await client.request(
-        `mutation { deleteClassroom${args} ${fields} }`,
+        `mutation { deleteRoom${args} ${fields} }`,
       );
-      result = content.deleteClassroom;
+      result = content.deleteRoom;
     }
   });
 
@@ -244,7 +242,7 @@ describe.only('Classrooms', () => {
   });
 
   function create(creator: number) {
-    return em.create(Classroom, {
+    return em.create(Room, {
       name: 'name',
       creator,
       memberships: [

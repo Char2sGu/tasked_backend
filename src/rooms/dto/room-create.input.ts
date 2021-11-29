@@ -3,7 +3,7 @@ import { Length, MaxLength } from 'class-validator';
 import { Field } from 'src/common/field.decorator';
 
 @InputType()
-export class ClassroomCreateInput {
+export class RoomCreateInput {
   @Field(() => String)
   @Length(1, 15)
   name: string;

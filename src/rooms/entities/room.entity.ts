@@ -19,9 +19,9 @@ import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
-import { ClassroomFilter } from '../classroom-filter.enum';
+import { RoomFilter } from '../room-filter.enum';
 
-@Filter<Classroom>({
+@Filter<Room>({
   name: CommonFilter.Crud,
   cond: () => ({
     $or: [
@@ -30,20 +30,20 @@ import { ClassroomFilter } from '../classroom-filter.enum';
     ],
   }),
 })
-@Filter<Classroom>({
-  name: ClassroomFilter.IsJoined,
+@Filter<Room>({
+  name: RoomFilter.IsJoined,
   cond: () => ({
     memberships: { owner: Context.current.user, deletedAt: null },
   }),
 })
-@Filter<Classroom>({
-  name: ClassroomFilter.IsOpen,
+@Filter<Room>({
+  name: RoomFilter.IsOpen,
   cond: (args: { value?: boolean }) =>
     args.value == undefined ? {} : { isOpen: args.value },
 })
 @Entity()
 @ObjectType()
-export class Classroom extends BaseEntity<Classroom> {
+export class Room extends BaseEntity<Room> {
   @Field(() => String)
   @Property()
   name: string;
@@ -64,7 +64,7 @@ export class Classroom extends BaseEntity<Classroom> {
 
   @OneToMany({
     entity: () => JoinApplication,
-    mappedBy: (application) => application.classroom,
+    mappedBy: (application) => application.room,
     orphanRemoval: true,
   })
   joinApplications = new Collection<JoinApplication>(this);
@@ -73,7 +73,7 @@ export class Classroom extends BaseEntity<Classroom> {
   @Field(() => PaginatedMemberships)
   @OneToMany({
     entity: () => Membership,
-    mappedBy: (membership) => membership.classroom,
+    mappedBy: (membership) => membership.room,
     orphanRemoval: true,
   })
   memberships = new Collection<Membership>(this);
@@ -81,7 +81,7 @@ export class Classroom extends BaseEntity<Classroom> {
   @Field(() => PaginatedTasks)
   @OneToMany({
     entity: () => Task,
-    mappedBy: (task) => task.classroom,
+    mappedBy: (task) => task.room,
     orphanRemoval: true,
   })
   tasks = new Collection<Task>(this);

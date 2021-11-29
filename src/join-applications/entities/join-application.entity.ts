@@ -1,10 +1,10 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
+import { Room } from 'src/rooms/entities/room.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { ApplicationStatus } from './application-status.enum';
@@ -15,7 +15,7 @@ import { ApplicationStatus } from './application-status.enum';
   cond: () => ({
     $or: [
       { owner: Context.current.user },
-      { classroom: { creator: Context.current.user } },
+      { room: { creator: Context.current.user } },
     ],
   }),
 })
@@ -27,11 +27,11 @@ export class JoinApplication extends BaseEntity<JoinApplication> {
   })
   owner: User;
 
-  @Field(() => Classroom)
+  @Field(() => Room)
   @ManyToOne({
-    entity: () => Classroom,
+    entity: () => Room,
   })
-  classroom: Classroom;
+  room: Room;
 
   @Field(() => String, { nullable: true })
   @Property({ nullable: true })

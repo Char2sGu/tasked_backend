@@ -3,7 +3,7 @@ import { PaginationArgs } from 'src/common/dto/pagination.args';
 import { Field } from 'src/common/field.decorator';
 
 @ArgsType()
-export class QueryClassroomsArgs extends PaginationArgs {
+export class QueryRoomsArgs extends PaginationArgs {
   @Field(() => Boolean, { nullable: true })
   isOpen?: boolean;
 

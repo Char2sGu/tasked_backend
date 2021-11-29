@@ -5,13 +5,13 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Classroom } from 'src/classrooms/entities/classroom.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { MikroQuotaService } from 'src/mikro/mikro-quota/mikro-quota.service';
 import { Repository } from 'src/mikro/repository.class';
+import { Room } from 'src/rooms/entities/room.entity';
 
 import { AcceptJoinApplicationArgs } from './dto/accept-join-application.args';
 import { CreateJoinApplicationArgs } from './dto/create-join-application.args';
@@ -30,8 +30,8 @@ export class JoinApplicationsService {
     @InjectRepository(Membership)
     private membershipRepo: Repository<Membership>,
 
-    @InjectRepository(Classroom)
-    private classroomRepo: Repository<Classroom>,
+    @InjectRepository(Room)
+    private roomRepo: Repository<Room>,
 
     private quota: MikroQuotaService,
   ) {}
@@ -69,10 +69,10 @@ export class JoinApplicationsService {
   async createOne({ data }: CreateJoinApplicationArgs) {
     const user = Context.current.user;
 
-    await this.classroomRepo
+    await this.roomRepo
       .findOne(
         {
-          id: data.classroom,
+          id: data.room,
           $or: [
             {
               joinApplications: {
@@ -88,14 +88,14 @@ export class JoinApplicationsService {
       .then((result) => {
         if (result)
           throw new BadRequestException(
-            'classroom must be an ID of a classroom in which you have no membership or application',
+            'room must be an ID of a room in which you have no membership or application',
           );
       });
 
-    const classroom = await this.classroomRepo.findOne(data.classroom, {
+    const room = await this.roomRepo.findOne(data.room, {
       populate: ['memberships'],
     });
-    await this.quota.check(classroom, 'memberships');
+    await this.quota.check(room, 'memberships');
 
     return this.repo.create({
       owner: user,
@@ -131,7 +131,7 @@ export class JoinApplicationsService {
 
     const membership = this.membershipRepo.create({
       owner: application.owner,
-      classroom: application.classroom,
+      room: application.room,
       role: Role.Student,
     });
 
