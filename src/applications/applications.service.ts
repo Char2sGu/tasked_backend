@@ -109,8 +109,7 @@ export class ApplicationsService {
       filters: [CommonFilter.Crud],
     });
 
-    if (application.status != ApplicationStatus.Pending)
-      throw new ForbiddenException('Cannot reject resulted applications');
+    this.forbidResulted(application, 'reject');
 
     return application.assign({
       status: ApplicationStatus.Rejected,
@@ -122,8 +121,7 @@ export class ApplicationsService {
       filters: [CommonFilter.Crud],
     });
 
-    if (application.status != ApplicationStatus.Pending)
-      throw new ForbiddenException('Cannot accept resulted applications');
+    this.forbidResulted(application, 'accept');
 
     application.assign({
       status: ApplicationStatus.Accepted,
@@ -143,9 +141,13 @@ export class ApplicationsService {
       filters: [CommonFilter.Crud],
     });
 
-    if (application.status != ApplicationStatus.Pending)
-      throw new ForbiddenException('Cannot delete resulted applications');
+    this.forbidResulted(application, 'delete');
 
     return this.repo.delete(application);
+  }
+
+  private forbidResulted(application: Application, action: string) {
+    if (application.status == ApplicationStatus.Pending)
+      throw new ForbiddenException(`Cannot ${action} resulted applications`);
   }
 }
