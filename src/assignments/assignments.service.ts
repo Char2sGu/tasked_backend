@@ -38,7 +38,6 @@ export class AssignmentsService {
     query: FilterQuery<Assignment> = {},
   ) {
     const user = Context.current.user;
-
     return this.repo.findAndPaginate(
       {
         $and: [
@@ -65,27 +64,23 @@ export class AssignmentsService {
   async createOne({ data }: CreateAssignmentArgs) {
     const user = Context.current.user;
 
-    await this.membershipRepo.findOneOrFail(
-      { id: data.recipient, role: Role.Member },
-      {
-        filters: [CommonFilter.Crud],
-        failHandler: () =>
-          new BadRequestException(
+    await this.membershipRepo
+      .findOneOrFail(data.recipient, { filters: false })
+      .then((membership) => {
+        if (membership.role != Role.Member)
+          throw new BadRequestException(
             'recipient must be an ID of a member membership in this room',
-          ),
-      },
-    );
+          );
+      });
 
-    await this.taskRepo.findOneOrFail(
-      { id: data.task, creator: user },
-      {
-        filters: [CommonFilter.Crud],
-        failHandler: () =>
-          new BadRequestException(
+    await this.taskRepo
+      .findOneOrFail(data.task, { filters: false })
+      .then((task) => {
+        if (task.creator != user)
+          throw new BadRequestException(
             'task must be an ID of a task created by you',
-          ),
-      },
-    );
+          );
+      });
 
     return this.repo.create({
       isCompleted: false,
@@ -95,13 +90,12 @@ export class AssignmentsService {
   }
 
   async updateOne({ id, data }: UpdateAssignmentArgs) {
-    const user = Context.current.user;
-
     const assignment = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
       populate: ['task', 'recipient'],
     });
 
+    const user = Context.current.user;
     if (user != assignment.recipient.owner) {
       if (isDefined(data.isCompleted))
         throw new ForbiddenException(
@@ -117,13 +111,12 @@ export class AssignmentsService {
   }
 
   async deleteOne({ id }: DeleteAssignmentArgs) {
-    const user = Context.current.user;
-
     const assignment = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
       populate: ['task'],
     });
 
+    const user = Context.current.user;
     if (user != assignment.task.creator)
       throw new ForbiddenException(
         'Cannot delete assignments not created by you',
