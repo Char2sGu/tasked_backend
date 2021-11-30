@@ -47,19 +47,15 @@ export class TasksService {
   async createOne({ data }: CreateTaskArgs) {
     const user = Context.current.user;
 
-    await this.memRepo.findOneOrFail(
-      {
-        owner: user,
-        room: data.room,
-      },
-      {
-        filters: [CommonFilter.Crud],
-        failHandler: () =>
-          new BadRequestException(
+    await this.memRepo
+      .findOneOrFail(data.room, { filters: false })
+      .then((membership) => {
+        if (membership.owner != user)
+          throw new BadRequestException(
             'room must be an ID of a room having your membership',
-          ),
-      },
-    );
+          );
+      });
+
     return this.repo.create({
       creator: user,
       isActive: true,
