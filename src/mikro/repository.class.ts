@@ -2,12 +2,9 @@ import {
   EntityData,
   EntityRepository,
   FilterQuery,
-  FindOneOptions,
   FindOptions,
   Loaded,
   New,
-  Primary,
-  Utils,
 } from '@mikro-orm/core';
 
 export class Repository<Entity> extends EntityRepository<Entity> {
@@ -18,25 +15,12 @@ export class Repository<Entity> extends EntityRepository<Entity> {
    * @param options
    * @returns
    */
-  async findAndPaginate<Population extends string = never>(
+  async findAndPaginate<Populate extends string = never>(
     where: FilterQuery<Entity>,
-    options?: FindOptions<Entity, Population>,
-  ): Promise<{ total: number; results: Loaded<Entity, Population>[] }> {
+    options?: FindOptions<Entity, Populate>,
+  ): Promise<{ total: number; results: Loaded<Entity, Populate>[] }> {
     const [results, total] = await super.findAndCount(where, options);
     return { total, results };
-  }
-
-  /**
-   * Use the Identity Map if possible, and execute a query when the entity is
-   * not loaded in the Identity Map.
-   * @param id
-   * @returns
-   */
-  async findOneById(id: Primary<Entity>, options?: FindOneOptions<Entity>) {
-    const loaded = this.em
-      .getUnitOfWork()
-      .getById<Entity>(Utils.className(this.entityName), id);
-    return loaded ?? this.findOne(id as any, options);
   }
 
   /**
@@ -45,10 +29,10 @@ export class Repository<Entity> extends EntityRepository<Entity> {
    * @param persist
    * @returns
    */
-  create<Population extends string = any>(
+  create<Populate extends string = any>(
     data: EntityData<Entity>,
     persist = true,
-  ): New<Entity, Population> {
+  ): New<Entity, Populate> {
     const result = super.create(data);
     if (persist) this.persist(result);
     return result;
