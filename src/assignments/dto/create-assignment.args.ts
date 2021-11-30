@@ -1,9 +1,9 @@
 import { ArgsType } from '@nestjs/graphql';
-import { HasDataArgs } from 'src/common/dto/has-data.args';
+import { WithData } from 'src/common/dto/with-data.args';
 
 import { AssignmentCreateInput } from './assignment-create.input';
 
 @ArgsType()
-export class CreateAssignmentArgs extends HasDataArgs.for(
+export class CreateAssignmentArgs extends WithData.for(
   () => AssignmentCreateInput,
 ) {}

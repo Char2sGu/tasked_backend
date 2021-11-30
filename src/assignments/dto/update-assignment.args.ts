@@ -1,11 +1,11 @@
 import { ArgsType, IntersectionType } from '@nestjs/graphql';
-import { HasDataArgs } from 'src/common/dto/has-data.args';
-import { TargetedArgs } from 'src/common/dto/targeted.args';
+import { WithData } from 'src/common/dto/with-data.args';
+import { WithId } from 'src/common/dto/with-id.args';
 
 import { AssignmentUpdateInput } from './assignment-update.input';
 
 @ArgsType()
 export class UpdateAssignmentArgs extends IntersectionType(
-  TargetedArgs,
-  HasDataArgs.for(() => AssignmentUpdateInput),
+  WithId,
+  WithData.for(() => AssignmentUpdateInput),
 ) {}

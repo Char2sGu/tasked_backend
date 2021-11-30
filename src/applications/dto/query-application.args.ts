@@ -1,5 +1,5 @@
 import { ArgsType } from '@nestjs/graphql';
-import { TargetedArgs } from 'src/common/dto/targeted.args';
+import { WithId } from 'src/common/dto/with-id.args';
 
 @ArgsType()
-export class QueryApplicationArgs extends TargetedArgs {}
+export class QueryApplicationArgs extends WithId {}

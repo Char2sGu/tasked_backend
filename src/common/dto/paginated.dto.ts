@@ -7,15 +7,15 @@ import { Field } from '../field.decorator';
  * A factory class to build DTO classes representing pagination results.
  */
 @ObjectType()
-export abstract class PaginatedDto<Entity> {
-  static for<Entity>(type: () => Type<Entity>): Type<PaginatedDto<Entity>> {
+export abstract class Paginated<Entity> {
+  static for<Entity>(type: () => Type<Entity>): Type<Paginated<Entity>> {
     @ObjectType()
-    class Paginated extends this<Entity> {
+    class _Paginated extends this<Entity> {
       @Field(() => [type()])
       results: Entity[];
     }
 
-    return Paginated;
+    return _Paginated;
   }
 
   @Field(() => Int)

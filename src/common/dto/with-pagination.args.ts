@@ -7,7 +7,7 @@ import { Field } from '../field.decorator';
  * A base class specifying common pagination parameters.
  */
 @ArgsType()
-export class PaginationArgs {
+export class WithPagination {
   @Field(() => Int)
   @Max(100)
   @Min(1)
