@@ -85,9 +85,15 @@ export class ApplicationsService {
             applications: {
               owner: user,
               status: ApplicationStatus.Pending,
+              deletedAt: null,
             },
           },
-          { memberships: { owner: user } },
+          {
+            memberships: {
+              owner: user,
+              deletedAt: null,
+            },
+          },
         ],
       })
       .then((result) => {
