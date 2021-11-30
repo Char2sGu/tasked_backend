@@ -71,32 +71,31 @@ export class ApplicationsService {
     const user = Context.current.user;
 
     await this.roomRepo
-      .findOne(
-        {
-          id: data.room,
-          $or: [
-            {
-              applications: {
-                owner: user,
-                status: ApplicationStatus.Pending,
-              },
+      .findOne(data.room, {
+        populate: ['memberships'],
+        filters: false,
+      })
+      .then((room) => this.quota.check(room, 'memberships'));
+
+    await this.roomRepo
+      .findOne({
+        id: data.room,
+        $or: [
+          {
+            applications: {
+              owner: user,
+              status: ApplicationStatus.Pending,
             },
-            { memberships: { owner: user } },
-          ],
-        },
-        { filters: [CommonFilter.Crud] },
-      )
+          },
+          { memberships: { owner: user } },
+        ],
+      })
       .then((result) => {
         if (result)
           throw new BadRequestException(
             'room must be an ID of a room in which you have no membership or application',
           );
       });
-
-    const room = await this.roomRepo.findOne(data.room, {
-      populate: ['memberships'],
-    });
-    await this.quota.check(room, 'memberships');
 
     return this.repo.create({
       owner: user,
