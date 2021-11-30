@@ -15,6 +15,7 @@ import { Room } from 'src/rooms/entities/room.entity';
 
 import { AcceptApplicationArgs } from './dto/accept-application.args';
 import { CreateApplicationArgs } from './dto/create-application.args';
+import { DeleteApplicationArgs } from './dto/delete-application.args';
 import { QueryApplicationArgs } from './dto/query-application.args';
 import { QueryApplicationsArgs } from './dto/query-applications.args';
 import { RejectApplicationArgs } from './dto/reject-application.args';
@@ -136,5 +137,16 @@ export class ApplicationsService {
     });
 
     return { application, membership };
+  }
+
+  async deleteOne({ id }: DeleteApplicationArgs) {
+    const application = await this.repo.findOneOrFail(id, {
+      filters: [CommonFilter.Crud],
+    });
+
+    if (application.status != ApplicationStatus.Pending)
+      throw new ForbiddenException('Cannot delete resulted applications');
+
+    return this.repo.delete(application);
   }
 }

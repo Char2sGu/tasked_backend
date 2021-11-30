@@ -4,6 +4,7 @@ import { ApplicationsService } from './applications.service';
 import { AcceptApplicationArgs } from './dto/accept-application.args';
 import { AcceptApplicationResult } from './dto/accept-application-result.dto';
 import { CreateApplicationArgs } from './dto/create-application.args';
+import { DeleteApplicationArgs } from './dto/delete-application.args';
 import { PaginatedApplications } from './dto/paginated-applications.dto';
 import { QueryApplicationArgs } from './dto/query-application.args';
 import { QueryApplicationsArgs } from './dto/query-applications.args';
@@ -37,5 +38,10 @@ export class ApplicationsResolver {
   @Mutation(() => AcceptApplicationResult)
   async acceptApplication(@Args() args: AcceptApplicationArgs) {
     return this.service.acceptOne(args);
+  }
+
+  @Mutation(() => Application)
+  async deleteApplication(@Args() args: DeleteApplicationArgs) {
+    return this.service.deleteOne(args);
   }
 }
