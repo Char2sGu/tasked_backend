@@ -147,7 +147,7 @@ export class ApplicationsService {
   }
 
   private forbidResulted(application: Application, action: string) {
-    if (application.status == ApplicationStatus.Pending)
+    if (application.status != ApplicationStatus.Pending)
       throw new ForbiddenException(`Cannot ${action} resulted applications`);
   }
 }
