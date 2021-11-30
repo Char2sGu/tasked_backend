@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ContextModule } from 'src/context/context.module';
 import { DEBUG } from 'src/env.constants';
 import { MikroModule } from 'src/mikro/mikro.module';
+import { ThrottlerModule } from 'src/throttler/throttler.module';
 import { ValidationModule } from 'src/validation/validation.module';
 
 /**
@@ -17,6 +18,7 @@ import { ValidationModule } from 'src/validation/validation.module';
       playground: DEBUG,
     }),
     ValidationModule.forRoot(),
+    ThrottlerModule,
   ],
   providers: [],
 })
