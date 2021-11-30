@@ -11,9 +11,7 @@ export class AuthResolver {
   constructor(private service: AuthService) {}
 
   @AuthGuardSkip()
-  @Mutation(() => AuthResult, {
-    name: 'auth',
-  })
+  @Mutation(() => AuthResult)
   async auth(@Args() { username, password }: QueryTokenArgs) {
     const result = await this.service.obtainJwt(username, password);
     if (!result)
