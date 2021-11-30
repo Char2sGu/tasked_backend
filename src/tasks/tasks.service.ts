@@ -64,12 +64,11 @@ export class TasksService {
   }
 
   async updateOne({ id, data }: UpdateTaskArgs) {
-    const user = Context.current.user;
-
     const task = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
     });
 
+    const user = Context.current.user;
     if (task.creator != user)
       throw new ForbiddenException('Cannot update tasks not created by you');
 
@@ -77,12 +76,11 @@ export class TasksService {
   }
 
   async deleteOne({ id }: DeleteTaskArgs) {
-    const user = Context.current.user;
-
     const task = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
     });
 
+    const user = Context.current.user;
     if (task.creator != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');
 

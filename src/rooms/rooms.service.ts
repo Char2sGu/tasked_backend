@@ -56,12 +56,11 @@ export class RoomsService {
   }
 
   async updateOne({ id, data }: UpdateRoomArgs) {
-    const user = Context.current.user;
-
     const room = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
     });
 
+    const user = Context.current.user;
     if (user != room.creator)
       throw new ForbiddenException('Cannot update rooms not created by you');
 
@@ -69,12 +68,11 @@ export class RoomsService {
   }
 
   async deleteOne({ id }: DeleteRoomArgs) {
-    const user = Context.current.user;
-
     const room = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
     });
 
+    const user = Context.current.user;
     if (user != room.creator)
       throw new ForbiddenException('Cannot delete rooms not created by you');
 

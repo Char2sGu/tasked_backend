@@ -30,9 +30,9 @@ export class UsersService {
   }
 
   async updateOne({ id, data }: UpdateUserArgs) {
-    const user = Context.current.user;
     const entity = await this.repo.findOneOrFail(id);
 
+    const user = Context.current.user;
     if (entity != user)
       throw new ForbiddenException('Cannot update other users');
 
