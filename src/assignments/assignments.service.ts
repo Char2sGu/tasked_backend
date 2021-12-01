@@ -51,7 +51,7 @@ export class AssignmentsService {
       {
         limit,
         offset,
-        orderBy: { id: QueryOrder.DESC },
+        orderBy: { updatedAt: QueryOrder.DESC },
         filters: [CommonFilter.Crud],
       },
     );
