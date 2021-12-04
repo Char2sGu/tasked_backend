@@ -2,6 +2,7 @@ import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { FilterMap } from 'src/common/dto/filter/filter-map.input.dto';
 import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
 
@@ -20,15 +21,18 @@ export class MembershipsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order }: QueryMembershipsArgs,
+    { limit, offset, order, filter }: QueryMembershipsArgs,
     query: FilterQuery<Membership> = {},
   ) {
-    return this.repo.findAndPaginate(query, {
-      limit,
-      offset,
-      filters: [CommonFilter.Crud],
-      orderBy: { ...order },
-    });
+    return this.repo.findAndPaginate(
+      { $and: [query, FilterMap.resolve(filter)] },
+      {
+        limit,
+        offset,
+        filters: [CommonFilter.Crud],
+        orderBy: { ...order },
+      },
+    );
   }
 
   async queryOne({ id }: QueryMembershipArgs) {

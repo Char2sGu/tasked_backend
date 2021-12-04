@@ -49,7 +49,7 @@ export class Membership extends BaseEntity<Membership> {
   })
   assignments = new Collection<Assignment>(this);
 
-  @Field(() => Role, { orderable: true })
+  @Field(() => Role, { orderable: true, filterable: true })
   @Property()
   role: Role;
 }
