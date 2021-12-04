@@ -33,11 +33,11 @@ export class Application extends BaseEntity<Application> {
   })
   room: Room;
 
-  @Field(() => String, { nullable: true, orderable: true })
+  @Field(() => String, { nullable: true, orderable: true, filterable: true })
   @Property({ nullable: true })
   message?: string;
 
-  @Field(() => ApplicationStatus, { orderable: true })
+  @Field(() => ApplicationStatus, { orderable: true, filterable: true })
   @Property()
   status: ApplicationStatus;
 }

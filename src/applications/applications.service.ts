@@ -6,6 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { FilterMap } from 'src/common/dto/filter/filter-map.input.dto';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
@@ -38,13 +39,14 @@ export class ApplicationsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, isPending }: QueryApplicationsArgs,
+    { limit, offset, order, filter, isPending }: QueryApplicationsArgs,
     query: FilterQuery<Application> = {},
   ) {
     return this.repo.findAndPaginate(
       {
         $and: [
           query,
+          filter ? FilterMap.resolve(filter) : {},
           isPending != undefined
             ? {
                 status: isPending
