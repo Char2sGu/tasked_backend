@@ -12,7 +12,7 @@ export class WithData<Data> {
     @ArgsType()
     class _WithData extends this<Data> {
       @Field(() => type(), { nested: true })
-      data: Data;
+      data: never;
     }
 
     return _WithData;

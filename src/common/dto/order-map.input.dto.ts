@@ -11,7 +11,7 @@ export class OrderMap {
     type: () => Type<Entity>,
     fields: readonly Field[],
   ) {
-    class _OrderMap extends OrderMap {}
+    class _OrderMap extends this {}
 
     fields.forEach((field) => {
       Field(() => QueryOrderNumeric, { nullable: true })(

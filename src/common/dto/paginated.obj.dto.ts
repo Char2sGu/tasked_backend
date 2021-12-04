@@ -12,7 +12,7 @@ export class Paginated<Entity> {
     @ObjectType()
     class _Paginated extends this<Entity> {
       @Field(() => [type()])
-      results: Entity[];
+      results: never;
     }
 
     return _Paginated;
