@@ -6,6 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { FilterMap } from 'src/common/dto/filter/filter-map.input.dto';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Repository } from 'src/mikro/repository.class';
@@ -25,12 +26,18 @@ export class TasksService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, isOwn }: QueryTasksArgs,
+    { limit, offset, order, filter, isOwn }: QueryTasksArgs,
     query: FilterQuery<Task> = {},
   ) {
     const user = Context.current.user;
     return this.repo.findAndPaginate(
-      { $and: [query, isOwn != undefined ? { creator: user } : {}] },
+      {
+        $and: [
+          query,
+          filter ? FilterMap.resolve(filter) : {},
+          isOwn != undefined ? { creator: user } : {},
+        ],
+      },
       {
         limit,
         offset,

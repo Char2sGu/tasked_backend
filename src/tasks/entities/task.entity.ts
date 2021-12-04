@@ -45,15 +45,15 @@ export class Task extends BaseEntity<Task> {
   })
   room: Room;
 
-  @Field(() => String, { orderable: true })
+  @Field(() => String, { orderable: true, filterable: true })
   @Property()
   title: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, orderable: true, filterable: true })
   @Property({ nullable: true })
   description?: string;
 
-  @Field(() => Boolean, { orderable: true })
+  @Field(() => Boolean, { orderable: true, filterable: true })
   @Property()
   isActive: boolean;
 
