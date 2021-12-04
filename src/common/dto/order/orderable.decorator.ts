@@ -2,7 +2,8 @@ export const Orderable =
   (): PropertyDecorator =>
   ({ constructor: target }, field: string) => {
     const fields: Set<string> =
-      Reflect.getMetadata(ORDERABLE, target) ?? new Set();
+      Reflect.getOwnMetadata(ORDERABLE, target) ??
+      new Set(Reflect.getMetadata(ORDERABLE, target)); // inherit parent metadata
     Reflect.defineMetadata(ORDERABLE, fields.add(field), target);
   };
 
