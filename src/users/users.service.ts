@@ -17,7 +17,12 @@ export class UsersService {
   async queryMany({ limit, offset, order }: QueryUsersArgs) {
     return this.repo.findAndPaginate(
       {},
-      { limit, offset, filters: [CommonFilter.Crud], orderBy: { ...order } },
+      {
+        limit,
+        offset,
+        filters: [CommonFilter.Crud],
+        orderBy: { ...order },
+      },
     );
   }
 

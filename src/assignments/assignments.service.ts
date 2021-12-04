@@ -1,4 +1,4 @@
-import { FilterQuery, QueryOrder } from '@mikro-orm/core';
+import { FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
@@ -51,7 +51,7 @@ export class AssignmentsService {
       {
         limit,
         offset,
-        orderBy: { updatedAt: QueryOrder.DESC, ...order },
+        orderBy: { ...order },
         filters: [CommonFilter.Crud],
       },
     );
