@@ -9,16 +9,16 @@ import {
 import { ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcryptjs';
 import dayjs from 'dayjs';
-import { PaginatedApplications } from 'src/applications/dto/paginated-applications.dto';
+import { PaginatedApplications } from 'src/applications/dto/paginated-applications.obj.dto';
 import { Application } from 'src/applications/entities/application.entity';
 import { Field } from 'src/common/field.decorator';
-import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
+import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.obj.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { Quota } from 'src/mikro/mikro-quota/quota.decorator';
-import { PaginatedRooms } from 'src/rooms/dto/paginated-rooms.dto';
+import { PaginatedRooms } from 'src/rooms/dto/paginated-rooms.obj.dto';
 import { Room } from 'src/rooms/entities/room.entity';
-import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
+import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { Gender } from 'src/users/entities/gender.enum';
 

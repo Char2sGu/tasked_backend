@@ -1,11 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { CreateTaskArgs } from './dto/create-task.args';
-import { DeleteTaskArgs } from './dto/delete-task.args';
-import { PaginatedTasks } from './dto/paginated-tasks.dto';
-import { QueryTaskArgs } from './dto/query-task.args';
-import { QueryTasksArgs } from './dto/query-tasks.args';
-import { UpdateTaskArgs } from './dto/update-task.args';
+import { CreateTaskArgs } from './dto/create-task.args.dto';
+import { DeleteTaskArgs } from './dto/delete-task.args.dto';
+import { PaginatedTasks } from './dto/paginated-tasks.obj.dto';
+import { QueryTaskArgs } from './dto/query-task.args.dto';
+import { QueryTasksArgs } from './dto/query-tasks.args.dto';
+import { UpdateTaskArgs } from './dto/update-task.args.dto';
 import { Task } from './entities/task.entity';
 import { TasksService } from './tasks.service';
 

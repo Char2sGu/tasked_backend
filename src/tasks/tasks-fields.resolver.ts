@@ -1,6 +1,6 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
-import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
+import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args.dto';
 import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
 
 import { Task } from './entities/task.entity';

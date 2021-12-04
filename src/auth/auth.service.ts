@@ -7,7 +7,7 @@ import { TokenExpiredError } from 'jsonwebtoken';
 import { IncomingHttpHeaders } from 'node:http';
 import { User } from 'src/users/entities/user.entity';
 
-import { AuthResult } from './dto/auth-result.dto';
+import { AuthResult } from './dto/auth-result.obj.dto';
 
 @Injectable()
 export class AuthService {

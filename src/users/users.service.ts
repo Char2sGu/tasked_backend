@@ -4,10 +4,10 @@ import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
 
-import { CreateUserArgs } from './dto/create-user.args';
-import { QueryUserArgs } from './dto/query-user.args';
-import { QueryUsersArgs } from './dto/query-users.args';
-import { UpdateUserArgs } from './dto/update-user.args';
+import { CreateUserArgs } from './dto/create-user.args.dto';
+import { QueryUserArgs } from './dto/query-user.args.dto';
+import { QueryUsersArgs } from './dto/query-users.args.dto';
+import { UpdateUserArgs } from './dto/update-user.args.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()

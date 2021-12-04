@@ -1,16 +1,16 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { ApplicationsService } from 'src/applications/applications.service';
-import { PaginatedApplications } from 'src/applications/dto/paginated-applications.dto';
-import { QueryApplicationsArgs } from 'src/applications/dto/query-applications.args';
+import { PaginatedApplications } from 'src/applications/dto/paginated-applications.obj.dto';
+import { QueryApplicationsArgs } from 'src/applications/dto/query-applications.args.dto';
 import { AssignmentsService } from 'src/assignments/assignments.service';
-import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
-import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
+import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.obj.dto';
+import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args.dto';
 import { Context } from 'src/context/context.class';
-import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
+import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
-import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args';
+import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args.dto';
 import { TasksService } from 'src/tasks/tasks.service';
 
 import { Room } from './entities/room.entity';

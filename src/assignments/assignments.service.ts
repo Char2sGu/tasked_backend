@@ -13,11 +13,11 @@ import { Role } from 'src/memberships/entities/role.enum';
 import { Repository } from 'src/mikro/repository.class';
 import { Task } from 'src/tasks/entities/task.entity';
 
-import { CreateAssignmentArgs } from './dto/create-assignment.args';
-import { DeleteAssignmentArgs } from './dto/delete-assignment.args';
-import { QueryAssignmentArgs } from './dto/query-assignment.args';
-import { QueryAssignmentsArgs } from './dto/query-assignments.args';
-import { UpdateAssignmentArgs } from './dto/update-assignment.args';
+import { CreateAssignmentArgs } from './dto/create-assignment.args.dto';
+import { DeleteAssignmentArgs } from './dto/delete-assignment.args.dto';
+import { QueryAssignmentArgs } from './dto/query-assignment.args.dto';
+import { QueryAssignmentsArgs } from './dto/query-assignments.args.dto';
+import { UpdateAssignmentArgs } from './dto/update-assignment.args.dto';
 import { Assignment } from './entities/assignment.entity';
 
 @Injectable()

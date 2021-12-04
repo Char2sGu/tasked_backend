@@ -7,11 +7,11 @@ import { Role } from 'src/memberships/entities/role.enum';
 import { MikroQuotaService } from 'src/mikro/mikro-quota/mikro-quota.service';
 import { Repository } from 'src/mikro/repository.class';
 
-import { CreateRoomArgs } from './dto/create-room.args';
-import { DeleteRoomArgs } from './dto/delete-room.args';
-import { QueryRoomArgs } from './dto/query-room.args';
-import { QueryRoomsArgs } from './dto/query-rooms.args';
-import { UpdateRoomArgs } from './dto/update-room.args';
+import { CreateRoomArgs } from './dto/create-room.args.dto';
+import { DeleteRoomArgs } from './dto/delete-room.args.dto';
+import { QueryRoomArgs } from './dto/query-room.args.dto';
+import { QueryRoomsArgs } from './dto/query-rooms.args.dto';
+import { UpdateRoomArgs } from './dto/update-room.args.dto';
 import { Room } from './entities/room.entity';
 import { RoomFilter } from './room-filter.enum';
 

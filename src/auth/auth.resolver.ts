@@ -3,8 +3,8 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthGuardSkip } from 'src/auth/auth-guard-skip.decorator';
 
 import { AuthService } from './auth.service';
-import { AuthResult } from './dto/auth-result.dto';
-import { QueryTokenArgs } from './dto/query-token.args';
+import { AuthResult } from './dto/auth-result.obj.dto';
+import { QueryTokenArgs } from './dto/query-token.args.dto';
 
 @Resolver()
 export class AuthResolver {

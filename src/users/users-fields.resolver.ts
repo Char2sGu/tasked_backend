@@ -1,14 +1,14 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { ApplicationsService } from 'src/applications/applications.service';
-import { QueryApplicationsArgs } from 'src/applications/dto/query-applications.args';
+import { QueryApplicationsArgs } from 'src/applications/dto/query-applications.args.dto';
 import { AssignmentsService } from 'src/assignments/assignments.service';
-import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
-import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args';
-import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args';
+import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.obj.dto';
+import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args.dto';
+import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args.dto';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { QueryRoomsArgs } from 'src/rooms/dto/query-rooms.args';
+import { QueryRoomsArgs } from 'src/rooms/dto/query-rooms.args.dto';
 import { RoomsService } from 'src/rooms/rooms.service';
-import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args';
+import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args.dto';
 import { TasksService } from 'src/tasks/tasks.service';
 
 import { User } from './entities/user.entity';

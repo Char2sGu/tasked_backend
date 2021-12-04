@@ -1,10 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { DeleteMembershipArgs } from './dto/delete-membership.args';
-import { PaginatedMemberships } from './dto/paginated-memberships.dto';
-import { QueryMembershipArgs } from './dto/query-membership.args';
-import { QueryMembershipsArgs } from './dto/query-memberships.args';
-import { UpdateMembershipArgs } from './dto/update-membership.args';
+import { DeleteMembershipArgs } from './dto/delete-membership.args.dto';
+import { PaginatedMemberships } from './dto/paginated-memberships.obj.dto';
+import { QueryMembershipArgs } from './dto/query-membership.args.dto';
+import { QueryMembershipsArgs } from './dto/query-memberships.args.dto';
+import { UpdateMembershipArgs } from './dto/update-membership.args.dto';
 import { Membership } from './entities/membership.entity';
 import { MembershipsService } from './memberships.service';
 

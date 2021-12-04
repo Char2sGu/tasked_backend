@@ -5,10 +5,10 @@ import { CommonFilter } from 'src/common/common-filter.enum';
 import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
 
-import { DeleteMembershipArgs } from './dto/delete-membership.args';
-import { QueryMembershipArgs } from './dto/query-membership.args';
-import { QueryMembershipsArgs } from './dto/query-memberships.args';
-import { UpdateMembershipArgs } from './dto/update-membership.args';
+import { DeleteMembershipArgs } from './dto/delete-membership.args.dto';
+import { QueryMembershipArgs } from './dto/query-membership.args.dto';
+import { QueryMembershipsArgs } from './dto/query-memberships.args.dto';
+import { UpdateMembershipArgs } from './dto/update-membership.args.dto';
 import { Membership } from './entities/membership.entity';
 import { Role } from './entities/role.enum';
 

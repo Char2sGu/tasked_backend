@@ -1,12 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { AssignmentsService } from './assignments.service';
-import { CreateAssignmentArgs } from './dto/create-assignment.args';
-import { DeleteAssignmentArgs } from './dto/delete-assignment.args';
-import { PaginatedAssignments } from './dto/paginated-assignments.dto';
-import { QueryAssignmentArgs } from './dto/query-assignment.args';
-import { QueryAssignmentsArgs } from './dto/query-assignments.args';
-import { UpdateAssignmentArgs } from './dto/update-assignment.args';
+import { CreateAssignmentArgs } from './dto/create-assignment.args.dto';
+import { DeleteAssignmentArgs } from './dto/delete-assignment.args.dto';
+import { PaginatedAssignments } from './dto/paginated-assignments.obj.dto';
+import { QueryAssignmentArgs } from './dto/query-assignment.args.dto';
+import { QueryAssignmentsArgs } from './dto/query-assignments.args.dto';
+import { UpdateAssignmentArgs } from './dto/update-assignment.args.dto';
 import { Assignment } from './entities/assignment.entity';
 
 @Resolver(() => Assignment)

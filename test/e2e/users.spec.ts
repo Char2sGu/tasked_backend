@@ -4,7 +4,7 @@ import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { ClientError } from 'graphql-request';
 import { AuthService } from 'src/auth/auth.service';
-import { PaginatedUsers } from 'src/users/dto/paginated-users.dto';
+import { PaginatedUsers } from 'src/users/dto/paginated-users.obj.dto';
 import { User } from 'src/users/entities/user.entity';
 
 import { GraphQLClient } from './utils/graphql-client.class';

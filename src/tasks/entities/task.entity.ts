@@ -7,7 +7,7 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
-import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.dto';
+import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.obj.dto';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';

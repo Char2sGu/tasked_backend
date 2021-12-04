@@ -3,7 +3,7 @@ import { EntityManager } from '@mikro-orm/sqlite';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
-import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
+import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.obj.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
 import { Room } from 'src/rooms/entities/room.entity';

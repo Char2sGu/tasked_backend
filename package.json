@@ -38,6 +38,7 @@
     "dataloader": "^2.0.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
+    "glob": "^7.2.0",
     "graphql": "^15.5.3",
     "graphql-tools": "^8.2.0",
     "nest-graphql-toolkit": "file:libs/nest-graphql-toolkit",

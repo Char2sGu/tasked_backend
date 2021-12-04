@@ -2,11 +2,11 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuardSkip } from 'src/auth/auth-guard-skip.decorator';
 import { Context } from 'src/context/context.class';
 
-import { CreateUserArgs } from './dto/create-user.args';
-import { PaginatedUsers } from './dto/paginated-users.dto';
-import { QueryUserArgs } from './dto/query-user.args';
-import { QueryUsersArgs } from './dto/query-users.args';
-import { UpdateUserArgs } from './dto/update-user.args';
+import { CreateUserArgs } from './dto/create-user.args.dto';
+import { PaginatedUsers } from './dto/paginated-users.obj.dto';
+import { QueryUserArgs } from './dto/query-user.args.dto';
+import { QueryUsersArgs } from './dto/query-users.args.dto';
+import { UpdateUserArgs } from './dto/update-user.args.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 

@@ -5,7 +5,7 @@ import { TestingModule } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
-import { PaginatedRooms } from 'src/rooms/dto/paginated-rooms.dto';
+import { PaginatedRooms } from 'src/rooms/dto/paginated-rooms.obj.dto';
 import { Room } from 'src/rooms/entities/room.entity';
 import { User } from 'src/users/entities/user.entity';
 

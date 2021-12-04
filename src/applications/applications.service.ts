@@ -13,12 +13,12 @@ import { MikroQuotaService } from 'src/mikro/mikro-quota/mikro-quota.service';
 import { Repository } from 'src/mikro/repository.class';
 import { Room } from 'src/rooms/entities/room.entity';
 
-import { AcceptApplicationArgs } from './dto/accept-application.args';
-import { CreateApplicationArgs } from './dto/create-application.args';
-import { DeleteApplicationArgs } from './dto/delete-application.args';
-import { QueryApplicationArgs } from './dto/query-application.args';
-import { QueryApplicationsArgs } from './dto/query-applications.args';
-import { RejectApplicationArgs } from './dto/reject-application.args';
+import { AcceptApplicationArgs } from './dto/accept-application.args.dto';
+import { CreateApplicationArgs } from './dto/create-application.args.dto';
+import { DeleteApplicationArgs } from './dto/delete-application.args.dto';
+import { QueryApplicationArgs } from './dto/query-application.args.dto';
+import { QueryApplicationsArgs } from './dto/query-applications.args.dto';
+import { RejectApplicationArgs } from './dto/reject-application.args.dto';
 import { Application } from './entities/application.entity';
 import { ApplicationStatus } from './entities/application-status.enum';
 

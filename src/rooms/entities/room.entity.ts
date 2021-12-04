@@ -11,11 +11,11 @@ import { Application } from 'src/applications/entities/application.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
-import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.dto';
+import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.obj.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { Quota } from 'src/mikro/mikro-quota/quota.decorator';
-import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.dto';
+import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
