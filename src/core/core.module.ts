@@ -15,7 +15,7 @@ import { ValidationModule } from 'src/validation/validation.module';
     MikroModule.forRoot(),
     GraphqlModule.forRoot(COMPLEXITY),
     ValidationModule.forRoot(),
-    ThrottlerModule,
+    ThrottlerModule.forRoot(),
   ],
 })
 export class CoreModule {}
