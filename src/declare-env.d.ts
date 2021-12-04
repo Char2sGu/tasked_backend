@@ -4,6 +4,7 @@ declare namespace NodeJS {
     PORT: string;
     DB_PATH: string;
     SECRET_KEY: string;
+    COMPLEXITY: string;
     DEBUG: string;
   }
 }

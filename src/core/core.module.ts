@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ContextModule } from 'src/context/context.module';
+import { COMPLEXITY } from 'src/env.constants';
 import { GraphqlModule } from 'src/graphql/graphql.module';
 import { MikroModule } from 'src/mikro/mikro.module';
 import { ThrottlerModule } from 'src/throttler/throttler.module';
@@ -12,10 +13,9 @@ import { ValidationModule } from 'src/validation/validation.module';
   imports: [
     ContextModule.forRoot(),
     MikroModule.forRoot(),
-    GraphqlModule.forRoot(),
+    GraphqlModule.forRoot(COMPLEXITY),
     ValidationModule.forRoot(),
     ThrottlerModule,
   ],
-  providers: [],
 })
 export class CoreModule {}
