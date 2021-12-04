@@ -25,18 +25,18 @@ import { Gender } from 'src/users/entities/gender.enum';
 @ObjectType()
 @Entity()
 export class User extends BaseEntity<User> {
-  @Field(() => String, { orderable: true })
+  @Field(() => String, { orderable: true, filterable: true })
   @Property({ unique: true })
   username: string;
 
-  @Field(() => String, { nullable: true, orderable: true })
+  @Field(() => String, { nullable: true, orderable: true, filterable: true })
   @Property({ nullable: true })
   nickname?: string;
 
   @Property()
   password: string;
 
-  @Field(() => Gender, { orderable: true })
+  @Field(() => Gender, { orderable: true, filterable: true })
   @Property()
   gender: Gender = Gender.Unknown;
 

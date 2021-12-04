@@ -1,6 +1,7 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { FilterMap } from 'src/common/dto/filter/filter-map.input.dto';
 import { Context } from 'src/context/context.class';
 import { Repository } from 'src/mikro/repository.class';
 
@@ -14,16 +15,13 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  async queryMany({ limit, offset, order }: QueryUsersArgs) {
-    return this.repo.findAndPaginate(
-      {},
-      {
-        limit,
-        offset,
-        filters: [CommonFilter.Crud],
-        orderBy: { ...order },
-      },
-    );
+  async queryMany({ limit, offset, order, filter }: QueryUsersArgs) {
+    return this.repo.findAndPaginate(filter ? FilterMap.resolve(filter) : {}, {
+      limit,
+      offset,
+      filters: [CommonFilter.Crud],
+      orderBy: { ...order },
+    });
   }
 
   async queryOne({ id }: QueryUserArgs) {
