@@ -10,6 +10,7 @@ import { ObjectType } from '@nestjs/graphql';
 import { Application } from 'src/applications/entities/application.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { Orderable } from 'src/common/dto/order/orderable.decorator';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.obj.dto';
@@ -44,14 +45,17 @@ import { RoomFilter } from '../room-filter.enum';
 @Entity()
 @ObjectType()
 export class Room extends BaseEntity<Room> {
+  @Orderable()
   @Field(() => String)
   @Property()
   name: string;
 
+  @Orderable()
   @Field(() => String, { nullable: true })
   @Property({ nullable: true })
   description?: string;
 
+  @Orderable()
   @Field(() => Boolean)
   @Property()
   isOpen: boolean;

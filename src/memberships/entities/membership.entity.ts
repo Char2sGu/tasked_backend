@@ -11,6 +11,7 @@ import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { Orderable } from 'src/common/dto/order/orderable.decorator';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { Room } from 'src/rooms/entities/room.entity';
@@ -49,6 +50,7 @@ export class Membership extends BaseEntity<Membership> {
   })
   assignments = new Collection<Assignment>(this);
 
+  @Orderable()
   @Field(() => Role)
   @Property()
   role: Role;

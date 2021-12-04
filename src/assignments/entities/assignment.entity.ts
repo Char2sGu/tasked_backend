@@ -2,6 +2,7 @@ import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { Orderable } from 'src/common/dto/order/orderable.decorator';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
@@ -31,10 +32,12 @@ export class Assignment extends BaseEntity<Assignment> {
   })
   task: Task;
 
+  @Orderable()
   @Field(() => Boolean)
   @Property()
   isCompleted: boolean;
 
+  @Orderable()
   @Field(() => Boolean)
   @Property()
   isImportant: boolean;
