@@ -31,6 +31,7 @@ export class User extends BaseEntity<User> {
   @Property({ unique: true })
   username: string;
 
+  @Orderable()
   @Field(() => String, { nullable: true })
   @Property({ nullable: true })
   nickname?: string;
@@ -38,6 +39,7 @@ export class User extends BaseEntity<User> {
   @Property()
   password: string;
 
+  @Orderable()
   @Field(() => Gender)
   @Property()
   gender: Gender = Gender.Unknown;
