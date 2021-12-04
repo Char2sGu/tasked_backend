@@ -3,7 +3,7 @@ import { WithOrder } from 'src/common/dto/with-order.args';
 import { WithPagination } from 'src/common/dto/with-pagination.args.dto';
 import { Field } from 'src/common/field.decorator';
 
-import { RoomOrderMap } from './room-order-map.input';
+import { RoomOrderMap } from './room-order-map.input.dto';
 
 @ArgsType()
 export class QueryRoomsArgs extends IntersectionType(
