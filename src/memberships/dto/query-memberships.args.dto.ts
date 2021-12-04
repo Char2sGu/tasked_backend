@@ -1,5 +1,11 @@
-import { ArgsType } from '@nestjs/graphql';
+import { ArgsType, IntersectionType } from '@nestjs/graphql';
+import { WithOrder } from 'src/common/dto/with-order.args';
 import { WithPagination } from 'src/common/dto/with-pagination.args.dto';
 
+import { MembershipOrderMap } from './membership-order-map.input';
+
 @ArgsType()
-export class QueryMembershipsArgs extends WithPagination {}
+export class QueryMembershipsArgs extends IntersectionType(
+  WithPagination,
+  WithOrder.for(() => MembershipOrderMap),
+) {}

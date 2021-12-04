@@ -20,13 +20,14 @@ export class MembershipsService {
   ) {}
 
   async queryMany(
-    { limit, offset }: QueryMembershipsArgs,
+    { limit, offset, order }: QueryMembershipsArgs,
     query: FilterQuery<Membership> = {},
   ) {
     return this.repo.findAndPaginate(query, {
       limit,
       offset,
       filters: [CommonFilter.Crud],
+      orderBy: { ...order },
     });
   }
 
