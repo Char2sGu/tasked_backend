@@ -1,5 +1,5 @@
 import { ArgsType, IntersectionType } from '@nestjs/graphql';
-import { WithOrder } from 'src/common/dto/with-order.args';
+import { WithOrder } from 'src/common/dto/order/with-order.args';
 import { WithPagination } from 'src/common/dto/with-pagination.args.dto';
 
 import { UserOrderMap } from './user-order-map.input.dto';
