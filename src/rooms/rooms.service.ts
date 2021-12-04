@@ -1,4 +1,4 @@
-import { EntityManager, FilterQuery } from '@mikro-orm/core';
+import { EntityManager, FilterQuery, QueryOrder } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
@@ -24,7 +24,7 @@ export class RoomsService {
   ) {}
 
   async queryMany(
-    { limit, offset, isOpen, isJoined }: QueryRoomsArgs,
+    { limit, offset, order, isOpen, isJoined }: QueryRoomsArgs,
     query: FilterQuery<Room> = {},
   ) {
     return this.repo.findAndPaginate(query, {
@@ -35,7 +35,7 @@ export class RoomsService {
         [RoomFilter.IsJoined]: isJoined,
         [RoomFilter.IsOpen]: { value: isOpen },
       },
-      orderBy: { id: 'ASC' }, // the order will be messy for some unknown reasons when the filters are enabled
+      orderBy: { id: QueryOrder.ASC, ...order }, // the order will be messy for some unknown reasons when the filters are enabled
     });
   }
 
