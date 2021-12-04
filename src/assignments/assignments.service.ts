@@ -34,7 +34,7 @@ export class AssignmentsService {
   ) {}
 
   async queryMany(
-    { limit, offset, isOwn, ...filters }: QueryAssignmentsArgs,
+    { limit, offset, order, isOwn, ...filters }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
     const user = Context.current.user;
@@ -51,7 +51,7 @@ export class AssignmentsService {
       {
         limit,
         offset,
-        orderBy: { updatedAt: QueryOrder.DESC },
+        orderBy: { updatedAt: QueryOrder.DESC, ...order },
         filters: [CommonFilter.Crud],
       },
     );
