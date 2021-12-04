@@ -1,9 +1,9 @@
 import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
+import { BaseEntity } from 'src/common/base-entity.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
-import { BaseEntity } from 'src/mikro/base-entity.entity';
 import { Room } from 'src/rooms/entities/room.entity';
 import { User } from 'src/users/entities/user.entity';
 
