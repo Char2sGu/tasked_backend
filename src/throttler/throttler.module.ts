@@ -6,15 +6,10 @@ import { ThrottlerGuard } from './throttler.guard';
 
 @Module({})
 export class ThrottlerModule {
-  static forRoot(): DynamicModule {
+  static forRoot(ttl: number, limit: number): DynamicModule {
     return {
       module: ThrottlerModule,
-      imports: [
-        ThrottlerModuleBase.forRoot({
-          ttl: 60,
-          limit: 60,
-        }),
-      ],
+      imports: [ThrottlerModuleBase.forRoot({ ttl, limit })],
       providers: [
         {
           provide: APP_GUARD,
