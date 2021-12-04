@@ -7,9 +7,11 @@ import {
 import { Expose, Type as TransformType } from 'class-transformer';
 import { Allow, IsOptional, ValidateNested } from 'class-validator';
 
+import { Filterable } from './dto/filter/filterable.decorator';
+import { Orderable } from './dto/order/orderable.decorator';
+
 /**
- * Combine the decorators from `class-validator` and `class-transformer` into
- * the `@Field()` to avoid repeating options.
+ * Combine decorators.
  * @param returnType
  * @param options
  * @returns
@@ -29,6 +31,10 @@ export const Field = (returnType?: ReturnTypeFunc, options?: FieldOptions) => {
       TransformType(() => extractItemIfArray(returnType() as Type)),
     );
 
+  // own
+  if (options?.orderable) decorators.push(Orderable());
+  if (options?.filterable) decorators.push(Filterable(returnType));
+
   return applyDecorators(...decorators);
 };
 
@@ -38,4 +44,6 @@ function extractItemIfArray<T>(value: T | T[]) {
 
 interface FieldOptions extends FieldOptionsBase {
   nested?: boolean;
+  orderable?: boolean;
+  filterable?: boolean;
 }

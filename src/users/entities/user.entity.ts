@@ -12,7 +12,6 @@ import dayjs from 'dayjs';
 import { PaginatedApplications } from 'src/applications/dto/paginated-applications.obj.dto';
 import { Application } from 'src/applications/entities/application.entity';
 import { BaseEntity } from 'src/common/base-entity.entity';
-import { Orderable } from 'src/common/dto/order/orderable.decorator';
 import { Field } from 'src/common/field.decorator';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.obj.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
@@ -26,21 +25,18 @@ import { Gender } from 'src/users/entities/gender.enum';
 @ObjectType()
 @Entity()
 export class User extends BaseEntity<User> {
-  @Orderable()
-  @Field(() => String)
+  @Field(() => String, { orderable: true })
   @Property({ unique: true })
   username: string;
 
-  @Orderable()
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, orderable: true })
   @Property({ nullable: true })
   nickname?: string;
 
   @Property()
   password: string;
 
-  @Orderable()
-  @Field(() => Gender)
+  @Field(() => Gender, { orderable: true })
   @Property()
   gender: Gender = Gender.Unknown;
 

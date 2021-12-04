@@ -2,7 +2,6 @@ import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
-import { Orderable } from 'src/common/dto/order/orderable.decorator';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { Room } from 'src/rooms/entities/room.entity';
@@ -34,13 +33,11 @@ export class Application extends BaseEntity<Application> {
   })
   room: Room;
 
-  @Orderable()
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, orderable: true })
   @Property({ nullable: true })
   message?: string;
 
-  @Orderable()
-  @Field(() => ApplicationStatus)
+  @Field(() => ApplicationStatus, { orderable: true })
   @Property()
   status: ApplicationStatus;
 }
