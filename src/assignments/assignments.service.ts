@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { isDefined } from 'class-validator';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { FilterMap } from 'src/common/dto/filter/filter-map.input.dto';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Role } from 'src/memberships/entities/role.enum';
@@ -34,7 +35,7 @@ export class AssignmentsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, isOwn, ...filters }: QueryAssignmentsArgs,
+    { limit, offset, order, filter, isOwn, ...filters }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
     const user = Context.current.user;
@@ -42,6 +43,7 @@ export class AssignmentsService {
       {
         $and: [
           query,
+          filter ? FilterMap.resolve(filter) : {},
           filters,
           isOwn == undefined
             ? {}

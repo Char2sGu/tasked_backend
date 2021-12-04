@@ -31,11 +31,11 @@ export class Assignment extends BaseEntity<Assignment> {
   })
   task: Task;
 
-  @Field(() => Boolean, { orderable: true })
+  @Field(() => Boolean, { orderable: true, filterable: true })
   @Property()
   isCompleted: boolean;
 
-  @Field(() => Boolean, { orderable: true })
+  @Field(() => Boolean, { orderable: true, filterable: true })
   @Property()
   isImportant: boolean;
 }
