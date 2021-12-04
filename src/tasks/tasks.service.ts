@@ -25,7 +25,7 @@ export class TasksService {
   ) {}
 
   async queryMany(
-    { limit, offset, isOwn }: QueryTasksArgs,
+    { limit, offset, order, isOwn }: QueryTasksArgs,
     query: FilterQuery<Task> = {},
   ) {
     const user = Context.current.user;
@@ -34,7 +34,7 @@ export class TasksService {
       {
         limit,
         offset,
-        orderBy: { id: QueryOrder.DESC },
+        orderBy: { id: QueryOrder.DESC, ...order },
         filters: [CommonFilter.Crud],
       },
     );
