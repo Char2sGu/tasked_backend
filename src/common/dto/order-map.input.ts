@@ -14,7 +14,7 @@ export class OrderMap {
     class _OrderMap extends OrderMap {}
 
     fields.forEach((field) => {
-      Field(() => QueryOrder)(_OrderMap.prototype, field);
+      Field(() => QueryOrder, { nullable: true })(_OrderMap.prototype, field);
     });
     InputType()(_OrderMap);
 
