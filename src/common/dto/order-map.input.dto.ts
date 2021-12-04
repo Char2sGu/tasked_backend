@@ -1,11 +1,11 @@
 import { QueryOrder, QueryOrderNumeric } from '@mikro-orm/core';
 import { Type } from '@nestjs/common';
-import { InputType, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { InputType, registerEnumType } from '@nestjs/graphql';
 import { Field } from 'src/common/field.decorator';
 
 registerEnumType(QueryOrderNumeric, { name: 'QueryOrder' });
 
-@ObjectType()
+@InputType()
 export class OrderMap {
   static for<Entity, Field extends Extract<keyof Entity, string>>(
     type: () => Type<Entity>,
