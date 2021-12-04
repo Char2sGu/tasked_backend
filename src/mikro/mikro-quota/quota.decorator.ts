@@ -7,7 +7,7 @@ import { QUOTA } from './quota.symbol';
  * Define the quota of a collection field for the service to check.
  * @param quota
  * @returns
- * @see {MikroQuotaService.check}
+ * @see MikroQuotaService.check
  */
 export const Quota =
   (quota: number) =>

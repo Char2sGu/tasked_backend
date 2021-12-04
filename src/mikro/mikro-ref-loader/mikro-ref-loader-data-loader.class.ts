@@ -7,7 +7,7 @@ import { MikroRefLoaderService } from './mikro-ref-loader.service';
 /**
  * Derived data loader to load specified type of uninitialized entities or
  * references.
- * @see {MikroRefLoaderService}
+ * @see MikroRefLoaderService
  */
 export class MikroRefLoaderDataLoader<
   Entity extends AnyEntity<Entity>,

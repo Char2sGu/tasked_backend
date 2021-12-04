@@ -13,7 +13,7 @@ import { SoftDeletableMetadata } from './soft-deletable-metadata.interface';
 /**
  * Intercept deletions of soft-deletable entities and perform updates instead.
  *
- * @see {SoftDeletable}
+ * @see SoftDeletable
  * @see https://github.com/mikro-orm/mikro-orm/issues/1492#issuecomment-785394397
  */
 @Subscriber()

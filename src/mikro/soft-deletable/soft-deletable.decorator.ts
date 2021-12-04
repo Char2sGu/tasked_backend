@@ -16,7 +16,7 @@ import { SoftDeletableMetadata } from './soft-deletable-metadata.interface';
  * @param field - Identifier field used to identify deleted entities.
  * @param value - Value to set to the identifier field in deletions.
  * @returns
- * @see {SoftDeletableHandlerSubscriber}
+ * @see SoftDeletableHandlerSubscriber
  */
 export const SoftDeletable =
   <Entity, Field extends keyof Entity>(
