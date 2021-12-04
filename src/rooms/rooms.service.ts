@@ -25,7 +25,7 @@ export class RoomsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, filter, isOpen, isJoined }: QueryRoomsArgs,
+    { limit, offset, order, filter, isJoined }: QueryRoomsArgs,
     query: FilterQuery<Room> = {},
   ) {
     return this.repo.findAndPaginate(
@@ -36,7 +36,6 @@ export class RoomsService {
         filters: {
           [CommonFilter.Crud]: true,
           [RoomFilter.IsJoined]: isJoined,
-          [RoomFilter.IsOpen]: { value: isOpen },
         },
         orderBy: { ...order },
       },

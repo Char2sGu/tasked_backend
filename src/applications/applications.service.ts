@@ -39,22 +39,12 @@ export class ApplicationsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, filter, isPending }: QueryApplicationsArgs,
+    { limit, offset, order, filter }: QueryApplicationsArgs,
     query: FilterQuery<Application> = {},
   ) {
     return this.repo.findAndPaginate(
       {
-        $and: [
-          query,
-          filter ? FilterMap.resolve(filter) : {},
-          isPending != undefined
-            ? {
-                status: isPending
-                  ? { $eq: ApplicationStatus.Pending }
-                  : { $not: ApplicationStatus.Pending },
-              }
-            : {},
-        ],
+        $and: [query, filter ? FilterMap.resolve(filter) : {}],
       },
       {
         limit,

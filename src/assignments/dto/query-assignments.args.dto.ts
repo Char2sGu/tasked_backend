@@ -16,8 +16,5 @@ export class QueryAssignmentsArgs extends IntersectionType(
   ),
 ) {
   @Field(() => Boolean, { nullable: true })
-  isCompleted?: boolean;
-
-  @Field(() => Boolean, { nullable: true })
   isOwn?: boolean;
 }

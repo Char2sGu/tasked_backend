@@ -35,7 +35,7 @@ export class AssignmentsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, filter, isOwn, ...filters }: QueryAssignmentsArgs,
+    { limit, offset, order, filter, isOwn }: QueryAssignmentsArgs,
     query: FilterQuery<Assignment> = {},
   ) {
     const user = Context.current.user;
@@ -44,7 +44,6 @@ export class AssignmentsService {
         $and: [
           query,
           filter ? FilterMap.resolve(filter) : {},
-          filters,
           isOwn == undefined
             ? {}
             : { recipient: { owner: isOwn ? user : { $not: user } } },

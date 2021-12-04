@@ -36,11 +36,6 @@ import { RoomFilter } from '../room-filter.enum';
     memberships: { owner: Context.current.user, deletedAt: null },
   }),
 })
-@Filter<Room>({
-  name: RoomFilter.IsOpen,
-  cond: (args: { value?: boolean }) =>
-    args.value == undefined ? {} : { isOpen: args.value },
-})
 @Entity()
 @ObjectType()
 export class Room extends BaseEntity<Room> {
