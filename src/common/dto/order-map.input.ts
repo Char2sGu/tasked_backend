@@ -1,8 +1,9 @@
+import { QueryOrder } from '@mikro-orm/core';
 import { Type } from '@nestjs/common';
-import { InputType, ObjectType } from '@nestjs/graphql';
+import { InputType, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Field } from 'src/common/field.decorator';
 
-import { QueryOrder } from './query-order.enum';
+registerEnumType(QueryOrder, { name: 'QueryOrder' });
 
 @ObjectType()
 export class OrderMapInput {

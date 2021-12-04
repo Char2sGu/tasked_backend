@@ -1,5 +1,5 @@
 import { InputType } from '@nestjs/graphql';
-import { OrderMapInput } from 'src/mikro/order/order-map.input';
+import { OrderMapInput } from 'src/common/dto/order-map.input';
 
 import { User } from '../entities/user.entity';
 
