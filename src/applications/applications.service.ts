@@ -38,7 +38,7 @@ export class ApplicationsService {
   ) {}
 
   async queryMany(
-    { limit, offset, isPending }: QueryApplicationsArgs,
+    { limit, offset, order, isPending }: QueryApplicationsArgs,
     query: FilterQuery<Application> = {},
   ) {
     return this.repo.findAndPaginate(
@@ -58,7 +58,7 @@ export class ApplicationsService {
         limit,
         offset,
         filters: [CommonFilter.Crud],
-        orderBy: { id: QueryOrder.DESC },
+        orderBy: { id: QueryOrder.DESC, ...order },
       },
     );
   }
