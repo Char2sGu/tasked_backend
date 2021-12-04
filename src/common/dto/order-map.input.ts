@@ -6,12 +6,12 @@ import { Field } from 'src/common/field.decorator';
 registerEnumType(QueryOrder, { name: 'QueryOrder' });
 
 @ObjectType()
-export class OrderMapInput {
+export class OrderMap {
   static for<Entity, Field extends Extract<keyof Entity, string>>(
     type: () => Type<Entity>,
     fields: readonly Field[],
   ) {
-    class _OrderMap extends OrderMapInput {}
+    class _OrderMap extends OrderMap {}
 
     fields.forEach((field) => {
       Field(() => QueryOrder)(_OrderMap.prototype, field);
