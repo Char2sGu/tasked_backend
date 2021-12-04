@@ -4,10 +4,20 @@ import { Type } from '@nestjs/common';
 import { InputType, ReturnTypeFunc } from '@nestjs/graphql';
 import { Field } from 'src/common/field.decorator';
 
-import { FILTERABLE, FilterableFieldMap } from './filterable.decorator';
+import {
+  FILTERABLE,
+  Filterable,
+  FilterableFieldMap,
+} from './filterable.decorator';
 
 @InputType()
 export class FilterMap {
+  /**
+   * Create a filter map input class based on fields of the entity marked as
+   * {@link Filterable}.
+   * @param entityType
+   * @returns
+   */
   static from(entityType: Type<AnyEntity>): Type<FilterMap> {
     class _FilterMap extends this {}
 
@@ -36,6 +46,11 @@ export class FilterMap {
     return _FilterMap;
   }
 
+  /**
+   * Convert an filter map into a legal MikroORM condition map.
+   * @param filterMap
+   * @returns
+   */
   static resolve(filterMap: FilterMap) {
     return Object.fromEntries(
       Object.entries(filterMap).map(([filter, value]) => [
@@ -75,3 +90,5 @@ type FieldFilter<Field extends string> =
   | `${Field}__lt`
   | `${Field}__lte`
   | `${Field}__like`;
+
+Filterable;

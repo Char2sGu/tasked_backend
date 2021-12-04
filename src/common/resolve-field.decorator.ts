@@ -8,6 +8,9 @@ import {
 
 /**
  * Provide better type support.
+ *
+ * @deprecated
+ *
  * @param entityType
  * @param field
  * @param returnType

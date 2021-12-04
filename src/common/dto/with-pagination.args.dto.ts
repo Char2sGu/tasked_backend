@@ -3,9 +3,6 @@ import { Max, Min } from 'class-validator';
 
 import { Field } from '../field.decorator';
 
-/**
- * A base class specifying common pagination parameters.
- */
 @ArgsType()
 export class WithPagination {
   @Field(() => Int)

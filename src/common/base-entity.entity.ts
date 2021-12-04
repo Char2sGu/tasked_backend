@@ -4,10 +4,6 @@ import { SoftDeletable } from 'src/mikro/soft-deletable/soft-deletable.decorator
 
 import { Field } from './field.decorator';
 
-/**
- * A wrap of mikro-orm's `BaseEntity`, as the base class of every entity class
- * in this project.
- */
 @ObjectType()
 @SoftDeletable(() => BaseEntity, 'deletedAt', () => new Date())
 export class BaseEntity<T extends BaseEntity<T>> extends Base<T, 'id'> {

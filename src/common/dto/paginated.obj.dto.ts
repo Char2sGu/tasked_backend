@@ -3,9 +3,6 @@ import { Int, ObjectType } from '@nestjs/graphql';
 
 import { Field } from '../field.decorator';
 
-/**
- * A factory class to build DTO classes representing pagination results.
- */
 @ObjectType()
 export class Paginated<Entity> {
   static for<Entity>(type: () => Type<Entity>): Type<Paginated<Entity>> {

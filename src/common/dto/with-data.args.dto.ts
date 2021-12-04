@@ -3,9 +3,6 @@ import { ArgsType } from '@nestjs/graphql';
 
 import { Field } from '../field.decorator';
 
-/**
- * A factory class to build DTO classes having a `data` field.
- */
 @ArgsType()
 export class WithData<Data> {
   static for<Data>(type: () => Type<Data>): Type<WithData<Data>> {
