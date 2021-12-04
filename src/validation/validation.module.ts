@@ -5,10 +5,7 @@ import { IsPrimaryKeyConstraint } from './is-primary-key.constraint';
 import { IsUniqueConstraint } from './is-unique.constraint';
 import { ValidationPipe } from './validation.pipe';
 
-@Module({
-  providers: [IsPrimaryKeyConstraint, IsUniqueConstraint],
-  exports: [IsPrimaryKeyConstraint, IsUniqueConstraint],
-})
+@Module({})
 export class ValidationModule {
   static forRoot(): DynamicModule {
     return {
@@ -25,8 +22,8 @@ export class ValidationModule {
   static forFeature(): DynamicModule {
     return {
       module: ValidationModule,
-      providers: [IsPrimaryKeyConstraint],
-      exports: [IsPrimaryKeyConstraint],
+      providers: [IsPrimaryKeyConstraint, IsUniqueConstraint],
+      exports: [IsPrimaryKeyConstraint, IsUniqueConstraint],
     };
   }
 }
