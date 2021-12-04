@@ -25,7 +25,7 @@ export class MembershipsService {
     query: FilterQuery<Membership> = {},
   ) {
     return this.repo.findAndPaginate(
-      { $and: [query, FilterMap.resolve(filter)] },
+      { $and: [query, filter ? FilterMap.resolve(filter) : {}] },
       {
         limit,
         offset,
