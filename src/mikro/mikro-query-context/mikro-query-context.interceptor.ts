@@ -18,8 +18,9 @@ import { MikroFlushInterceptor } from '../mikro-flush/mikro-flush.interceptor';
  * {@link MikroQueryContextInterceptor.context} to make this interceptor work
  * properly.
  *
- * **DEPRECATED: This issue is solved in a better way. See
- * {@link MikroFlushInterceptor}.**
+ * @deprecated
+ * This issue is solved in a better way using
+ * {@link MikroFlushInterceptor}.
  *
  * ### MikroORM's Default Behavior
  *

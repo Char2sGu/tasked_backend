@@ -2,16 +2,19 @@ import { AnyEntity, Collection } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 
 import { MikroQuotaError } from './mikro-quota.error';
+import { CollectionField } from './quota.decorator';
 import { QUOTA } from './quota.symbol';
 
 @Injectable()
 export class MikroQuotaService {
   /**
-   * Check whether the specified `Collection` field's quota is exceeded.
+   * Check whether the specified `Collection` field's defined quota is
+   * exceeded.
    *
-   * The collection must be initialized first.
+   * The collection must have been initialized before.
    *
    * @param entity
+   * @param field
    */
   async check<Entity>(entity: Entity, field: CollectionField<Entity>) {
     const quota: number | undefined = Reflect.getMetadata(QUOTA, entity, field);
@@ -25,9 +28,3 @@ export class MikroQuotaService {
     if (count >= quota) throw new MikroQuotaError(entity, field, quota, count);
   }
 }
-
-type CollectionField<Entity> = {
-  [Field in keyof Entity]: Entity[Field] extends Collection<any>
-    ? Field
-    : never;
-}[Extract<keyof Entity, string>];

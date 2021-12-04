@@ -8,6 +8,10 @@ import { MikroRefLoaderDataLoader } from './mikro-ref-loader-data-loader.class';
 export class MikroRefLoaderService {
   constructor(private em: EntityManager) {}
 
+  /**
+   * Combine loadings of any uninitialized entities during a single *tick* into
+   * much fewer queries to avoid the N+1 issue.
+   */
   async load<Entity>(ref: Entity) {
     const type = ref.constructor.name;
     const entity = this.em.getUnitOfWork().tryGetById(type, ref);

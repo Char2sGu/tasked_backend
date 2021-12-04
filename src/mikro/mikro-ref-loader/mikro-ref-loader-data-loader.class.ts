@@ -2,6 +2,13 @@ import { AnyEntity, EntityManager, FilterQuery, wrap } from '@mikro-orm/core';
 import { OperatorMap } from '@mikro-orm/core/dist/typings';
 import DataLoader from 'dataloader';
 
+import { MikroRefLoaderService } from './mikro-ref-loader.service';
+
+/**
+ * Derived data loader to load specified type of uninitialized entities or
+ * references.
+ * @see {MikroRefLoaderService}
+ */
 export class MikroRefLoaderDataLoader<
   Entity extends AnyEntity<Entity>,
 > extends DataLoader<Entity, Entity> {
@@ -20,3 +27,5 @@ export class MikroRefLoaderDataLoader<
     });
   }
 }
+
+MikroRefLoaderService;

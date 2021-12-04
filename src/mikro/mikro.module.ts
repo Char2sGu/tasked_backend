@@ -11,6 +11,9 @@ import { MikroQuotaFilter } from './mikro-quota/mikro-quota.filter';
 import { MikroQuotaService } from './mikro-quota/mikro-quota.service';
 import { MikroRefLoaderService } from './mikro-ref-loader/mikro-ref-loader.service';
 
+/**
+ * Generic MikroORM toolkit isolated from business.
+ */
 @Module({})
 export class MikroModule {
   static forRoot(): DynamicModule {

@@ -3,6 +3,9 @@ import { Catch, ExceptionFilter, ForbiddenException } from '@nestjs/common';
 
 import { MikroQuotaError } from './mikro-quota.error';
 
+/**
+ * Convert {@link MikroQuotaError}s into {@link ForbiddenException}s.
+ */
 @Catch(MikroQuotaError)
 export class MikroQuotaFilter
   implements ExceptionFilter<MikroQuotaError<AnyEntity>>

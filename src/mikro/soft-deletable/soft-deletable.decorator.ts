@@ -7,14 +7,16 @@ import { Type } from '@nestjs/common';
 import { SOFT_DELETABLE } from './soft-deletable.symbol';
 import { SOFT_DELETABLE_FILTER } from './soft-deletable-filter.constant';
 import { SoftDeletableFilterArgs } from './soft-deletable-filter-args.interface';
+import { SoftDeletableHandlerSubscriber } from './soft-deletable-handler.subscriber';
 import { SoftDeletableMetadata } from './soft-deletable-metadata.interface';
 
 /**
- *
- * @param type - Helper to infer the generic types.
- * @param field
- * @param value
+ * Mark an entity type as soft-deletable.
+ * @param type - Helper function for type inference.
+ * @param field - Identifier field used to identify deleted entities.
+ * @param value - Value to set to the identifier field in deletions.
  * @returns
+ * @see {SoftDeletableHandlerSubscriber}
  */
 export const SoftDeletable =
   <Entity, Field extends keyof Entity>(
@@ -37,3 +39,5 @@ export const SoftDeletable =
       default: true,
     })(type);
   };
+
+SoftDeletableHandlerSubscriber;

@@ -6,11 +6,15 @@ import {
   Subscriber,
 } from '@mikro-orm/core';
 
+import { SoftDeletable } from './soft-deletable.decorator';
 import { SOFT_DELETABLE } from './soft-deletable.symbol';
 import { SoftDeletableMetadata } from './soft-deletable-metadata.interface';
 
 /**
- * Inspired by: https://github.com/mikro-orm/mikro-orm/issues/1492#issuecomment-785394397
+ * Intercept deletions of soft-deletable entities and perform updates instead.
+ *
+ * @see {SoftDeletable}
+ * @see https://github.com/mikro-orm/mikro-orm/issues/1492#issuecomment-785394397
  */
 @Subscriber()
 export class SoftDeletableHandlerSubscriber implements EventSubscriber {
@@ -34,3 +38,5 @@ export class SoftDeletableHandlerSubscriber implements EventSubscriber {
     );
   }
 }
+
+SoftDeletable;
