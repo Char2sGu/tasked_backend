@@ -14,10 +14,10 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  async queryMany({ limit, offset }: QueryUsersArgs) {
+  async queryMany({ limit, offset, order }: QueryUsersArgs) {
     return this.repo.findAndPaginate(
       {},
-      { limit, offset, filters: [CommonFilter.Crud] },
+      { limit, offset, filters: [CommonFilter.Crud], orderBy: { ...order } },
     );
   }
 
