@@ -44,15 +44,15 @@ import { RoomFilter } from '../room-filter.enum';
 @Entity()
 @ObjectType()
 export class Room extends BaseEntity<Room> {
-  @Field(() => String, { orderable: true })
+  @Field(() => String, { orderable: true, filterable: true })
   @Property()
   name: string;
 
-  @Field(() => String, { nullable: true, orderable: true })
+  @Field(() => String, { nullable: true, orderable: true, filterable: true })
   @Property({ nullable: true })
   description?: string;
 
-  @Field(() => Boolean, { orderable: true })
+  @Field(() => Boolean, { orderable: true, filterable: true })
   @Property()
   isOpen: boolean;
 

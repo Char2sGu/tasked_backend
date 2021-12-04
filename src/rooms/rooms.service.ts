@@ -2,6 +2,7 @@ import { EntityManager, FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommonFilter } from 'src/common/common-filter.enum';
+import { FilterMap } from 'src/common/dto/filter/filter-map.input.dto';
 import { Context } from 'src/context/context.class';
 import { Role } from 'src/memberships/entities/role.enum';
 import { MikroQuotaService } from 'src/mikro/mikro-quota/mikro-quota.service';
@@ -24,19 +25,22 @@ export class RoomsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, isOpen, isJoined }: QueryRoomsArgs,
+    { limit, offset, order, filter, isOpen, isJoined }: QueryRoomsArgs,
     query: FilterQuery<Room> = {},
   ) {
-    return this.repo.findAndPaginate(query, {
-      limit,
-      offset,
-      filters: {
-        [CommonFilter.Crud]: true,
-        [RoomFilter.IsJoined]: isJoined,
-        [RoomFilter.IsOpen]: { value: isOpen },
+    return this.repo.findAndPaginate(
+      { $and: [query, filter ? FilterMap.resolve(filter) : {}] },
+      {
+        limit,
+        offset,
+        filters: {
+          [CommonFilter.Crud]: true,
+          [RoomFilter.IsJoined]: isJoined,
+          [RoomFilter.IsOpen]: { value: isOpen },
+        },
+        orderBy: { ...order },
       },
-      orderBy: { ...order },
-    });
+    );
   }
 
   async queryOne({ id }: QueryRoomArgs) {
