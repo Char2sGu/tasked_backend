@@ -14,7 +14,6 @@ import { QueryRoomArgs } from './dto/query-room.args.dto';
 import { QueryRoomsArgs } from './dto/query-rooms.args.dto';
 import { UpdateRoomArgs } from './dto/update-room.args.dto';
 import { Room } from './entities/room.entity';
-import { RoomFilter } from './room-filter.enum';
 
 @Injectable()
 export class RoomsService {
@@ -28,14 +27,27 @@ export class RoomsService {
     { limit, offset, order, filter, isJoined }: QueryRoomsArgs,
     query: FilterQuery<Room> = {},
   ) {
+    const user = Context.current.user;
     return this.repo.findAndPaginate(
-      { $and: [query, filter ? FilterMap.resolve(filter) : {}] },
+      {
+        $and: [
+          query,
+          filter ? FilterMap.resolve(filter) : {},
+          isJoined != undefined
+            ? {
+                memberships: {
+                  owner: isJoined ? { $eq: user } : { $ne: user },
+                  deletedAt: null,
+                },
+              }
+            : {},
+        ],
+      },
       {
         limit,
         offset,
         filters: {
           [CommonFilter.Crud]: true,
-          [RoomFilter.IsJoined]: isJoined,
         },
         orderBy: { ...order },
       },

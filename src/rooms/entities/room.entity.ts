@@ -19,8 +19,6 @@ import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
-import { RoomFilter } from '../room-filter.enum';
-
 @Filter<Room>({
   name: CommonFilter.Crud,
   cond: () => ({
@@ -28,12 +26,6 @@ import { RoomFilter } from '../room-filter.enum';
       { memberships: { owner: Context.current.user, deletedAt: null } },
       { isOpen: true },
     ],
-  }),
-})
-@Filter<Room>({
-  name: RoomFilter.IsJoined,
-  cond: () => ({
-    memberships: { owner: Context.current.user, deletedAt: null },
   }),
 })
 @Entity()
