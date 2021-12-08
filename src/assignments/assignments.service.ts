@@ -46,7 +46,7 @@ export class AssignmentsService {
           filter ? FilterMap.resolve(filter) : {},
           isOwn == undefined
             ? {}
-            : { recipient: { owner: isOwn ? user : { $not: user } } },
+            : { recipient: { owner: isOwn ? { $eq: user } : { $ne: user } } },
         ],
       },
       {
