@@ -35,7 +35,9 @@ export class TasksService {
         $and: [
           query,
           filter ? FilterMap.resolve(filter) : {},
-          isOwn != undefined ? { creator: user } : {},
+          isOwn != undefined
+            ? { creator: isOwn ? { $eq: user } : { $ne: user } }
+            : {},
         ],
       },
       {
