@@ -16,5 +16,5 @@ export class QueryRoomsArgs extends IntersectionType(
   ),
 ) {
   @Field(() => Boolean, { nullable: true })
-  isJoined?: boolean;
+  joinedOnly?: boolean;
 }

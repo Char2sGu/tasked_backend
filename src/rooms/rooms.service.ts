@@ -24,7 +24,7 @@ export class RoomsService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, filter, isJoined }: QueryRoomsArgs,
+    { limit, offset, order, filter, joinedOnly }: QueryRoomsArgs,
     query: FilterQuery<Room> = {},
   ) {
     const user = Context.current.user;
@@ -33,10 +33,10 @@ export class RoomsService {
         $and: [
           query,
           filter ? FilterMap.resolve(filter) : {},
-          isJoined != undefined
+          joinedOnly
             ? {
                 memberships: {
-                  owner: isJoined ? { $eq: user } : { $ne: user },
+                  owner: user,
                   deletedAt: null,
                 },
               }
@@ -46,9 +46,7 @@ export class RoomsService {
       {
         limit,
         offset,
-        filters: {
-          [CommonFilter.Crud]: true,
-        },
+        filters: [CommonFilter.Crud],
         orderBy: { ...order },
       },
     );
