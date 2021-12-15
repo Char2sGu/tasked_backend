@@ -13,7 +13,10 @@ import { Task } from 'src/tasks/entities/task.entity';
   cond: () => {
     const user = Context.current.user;
     return {
-      $or: [{ recipient: { owner: user } }, { task: { creator: user } }],
+      $or: [
+        { recipient: { owner: user } },
+        { task: { creator: { owner: user } } },
+      ],
     };
   },
 })

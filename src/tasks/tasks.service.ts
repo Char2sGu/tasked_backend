@@ -36,7 +36,7 @@ export class TasksService {
           query,
           filter ? FilterMap.resolve(filter) : {},
           isOwn != undefined
-            ? { creator: isOwn ? { $eq: user } : { $ne: user } }
+            ? { creator: { owner: isOwn ? { $eq: user } : { $ne: user } } }
             : {},
         ],
       },
@@ -56,7 +56,7 @@ export class TasksService {
   async createOne({ data }: CreateTaskArgs) {
     const user = Context.current.user;
 
-    await this.memRepo.findOneOrFail(
+    const membership = await this.memRepo.findOneOrFail(
       { room: data.room, owner: user },
       {
         failHandler: () =>
@@ -67,7 +67,7 @@ export class TasksService {
     );
 
     return this.repo.create({
-      creator: user,
+      creator: membership,
       isActive: true,
       ...data,
     });
@@ -75,11 +75,12 @@ export class TasksService {
 
   async updateOne({ id, data }: UpdateTaskArgs) {
     const task = await this.repo.findOneOrFail(id, {
+      populate: ['creator'],
       filters: [CommonFilter.Crud],
     });
 
     const user = Context.current.user;
-    if (task.creator != user)
+    if (task.creator.owner != user)
       throw new ForbiddenException('Cannot update tasks not created by you');
 
     return task.assign(data);
@@ -87,11 +88,12 @@ export class TasksService {
 
   async deleteOne({ id }: DeleteTaskArgs) {
     const task = await this.repo.findOneOrFail(id, {
+      populate: ['creator'],
       filters: [CommonFilter.Crud],
     });
 
     const user = Context.current.user;
-    if (task.creator != user)
+    if (task.creator.owner != user)
       throw new ForbiddenException('Cannot delete tasks not created by you');
 
     await this.repo.populate(task, ['assignments']);

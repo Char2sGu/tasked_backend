@@ -15,8 +15,6 @@ import { Context } from 'src/context/context.class';
 import { PaginatedMemberships } from 'src/memberships/dto/paginated-memberships.obj.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Quota } from 'src/mikro/mikro-quota/quota.decorator';
-import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
-import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Filter<Room>({
@@ -64,12 +62,4 @@ export class Room extends BaseEntity<Room> {
     orphanRemoval: true,
   })
   memberships = new Collection<Membership>(this);
-
-  @Field(() => PaginatedTasks)
-  @OneToMany({
-    entity: () => Task,
-    mappedBy: (task) => task.room,
-    orphanRemoval: true,
-  })
-  tasks = new Collection<Task>(this);
 }

@@ -18,11 +18,6 @@ export class TasksFieldsResolver {
   }
 
   @ResolveField()
-  async room(@Parent() entity: Task) {
-    return this.loader.load(entity.room);
-  }
-
-  @ResolveField()
   async assignments(
     @Args() args: QueryAssignmentsArgs,
     @Parent() entity: Task,

@@ -10,6 +10,7 @@ import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
+import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args.dto';
 import { TasksService } from 'src/tasks/tasks.service';
 
@@ -48,16 +49,16 @@ export class RoomsFieldsResolver {
     return this.membershipsService.queryMany(args, { room: entity });
   }
 
-  @ResolveField()
-  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: Room) {
-    return this.tasksService.queryMany(args, { room: entity });
-  }
-
   @ResolveField(() => Membership, { nullable: true })
   async membership(@Parent() entity: Room) {
     return entity.memberships
       .matching({ where: { owner: Context.current.user }, limit: 1 })
       .then(([v]) => v);
+  }
+
+  @ResolveField(() => PaginatedTasks)
+  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: Room) {
+    return this.tasksService.queryMany(args, { creator: { room: entity } });
   }
 
   @ResolveField(() => PaginatedAssignments)
@@ -66,7 +67,7 @@ export class RoomsFieldsResolver {
     @Parent() entity: Room,
   ) {
     return this.assignmentsService.queryMany(args, {
-      task: { room: entity },
+      task: { creator: { room: entity } },
     });
   }
 }

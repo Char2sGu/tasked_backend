@@ -14,6 +14,8 @@ import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { Room } from 'src/rooms/entities/room.entity';
+import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
+import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 
 import { Role } from './role.enum';
@@ -48,6 +50,14 @@ export class Membership extends BaseEntity<Membership> {
     orphanRemoval: true,
   })
   assignments = new Collection<Assignment>(this);
+
+  @Field(() => PaginatedTasks)
+  @OneToMany({
+    entity: () => Task,
+    mappedBy: (task) => task.creator,
+    orphanRemoval: true,
+  })
+  tasks = new Collection<Task>(this);
 
   @Field(() => Role, { orderable: true, filterable: true })
   @Property()

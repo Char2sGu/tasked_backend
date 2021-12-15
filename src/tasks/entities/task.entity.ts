@@ -13,15 +13,15 @@ import { BaseEntity } from 'src/common/base-entity.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
+import { Membership } from 'src/memberships/entities/membership.entity';
 import { Room } from 'src/rooms/entities/room.entity';
-import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Filter<Task>({
   name: CommonFilter.Crud,
   cond: () => ({
     $or: [
-      { creator: Context.current.user },
+      { creator: { owner: Context.current.user } },
       {
         assignments: {
           recipient: { owner: Context.current.user },
@@ -33,11 +33,11 @@ import { User } from 'src/users/entities/user.entity';
 })
 @Entity()
 export class Task extends BaseEntity<Task> {
-  @Field(() => User)
+  @Field(() => Membership)
   @ManyToOne({
-    entity: () => User,
+    entity: () => Membership,
   })
-  creator: User;
+  creator: Membership;
 
   @Field(() => Room)
   @ManyToOne({

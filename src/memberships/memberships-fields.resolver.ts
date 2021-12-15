@@ -2,6 +2,9 @@ import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args.dto';
 import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
+import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args.dto';
+import { TasksService } from 'src/tasks/tasks.service';
+import { User } from 'src/users/entities/user.entity';
 
 import { Membership } from './entities/membership.entity';
 
@@ -10,6 +13,7 @@ export class MembershipsFieldsResolver {
   constructor(
     private loader: MikroRefLoaderService,
     private assignmentsService: AssignmentsService,
+    private tasksService: TasksService,
   ) {}
 
   @ResolveField()
@@ -28,5 +32,10 @@ export class MembershipsFieldsResolver {
     @Parent() entity: Membership,
   ) {
     return this.assignmentsService.queryMany(args, { recipient: entity });
+  }
+
+  @ResolveField()
+  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: User) {
+    return this.tasksService.queryMany(args, { creator: { owner: entity } });
   }
 }

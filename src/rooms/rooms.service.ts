@@ -92,8 +92,8 @@ export class RoomsService {
     await this.repo.populate(room, [
       'applications',
       'memberships',
-      'tasks',
-      'tasks.assignments',
+      'memberships.assignments',
+      'memberships.tasks',
     ]);
 
     return this.repo.delete(room);

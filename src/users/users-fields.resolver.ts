@@ -8,6 +8,7 @@ import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args
 import { MembershipsService } from 'src/memberships/memberships.service';
 import { QueryRoomsArgs } from 'src/rooms/dto/query-rooms.args.dto';
 import { RoomsService } from 'src/rooms/rooms.service';
+import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args.dto';
 import { TasksService } from 'src/tasks/tasks.service';
 
@@ -44,9 +45,9 @@ export class UsersFieldsResolver {
     return this.membershipsService.queryMany(args, { owner: entity });
   }
 
-  @ResolveField()
+  @ResolveField(() => PaginatedTasks)
   async tasks(@Args() args: QueryTasksArgs, @Parent() entity: User) {
-    return this.tasksService.queryMany(args, { creator: entity });
+    return this.tasksService.queryMany(args, { creator: { owner: entity } });
   }
 
   @ResolveField(() => PaginatedAssignments)

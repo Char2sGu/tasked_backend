@@ -75,9 +75,9 @@ export class AssignmentsService {
       });
 
     await this.taskRepo
-      .findOneOrFail(data.task, { filters: false })
+      .findOneOrFail(data.task, { filters: false, populate: ['creator'] })
       .then((task) => {
-        if (task.creator != user)
+        if (task.creator.owner != user)
           throw new BadRequestException(
             'task must be an ID of a task created by you',
           );
@@ -114,11 +114,11 @@ export class AssignmentsService {
   async deleteOne({ id }: DeleteAssignmentArgs) {
     const assignment = await this.repo.findOneOrFail(id, {
       filters: [CommonFilter.Crud],
-      populate: ['task'],
+      populate: ['task.creator'],
     });
 
     const user = Context.current.user;
-    if (user != assignment.task.creator)
+    if (user != assignment.task.creator.owner)
       throw new ForbiddenException(
         'Cannot delete assignments not created by you',
       );
