@@ -66,10 +66,11 @@ export class MembershipsService {
           `Cannot ${action} the membership of the creator`,
         );
     } else if (ownMembership.role == Role.Manager) {
-      if (targetMembership.role != Role.Member)
-        throw new ForbiddenException(
-          `Cannot ${action} memberships of managers`,
-        );
+      if (ownMembership != targetMembership)
+        if (targetMembership.role != Role.Member)
+          throw new ForbiddenException(
+            `Cannot ${action} memberships of managers`,
+          );
     } else if (ownMembership.role == Role.Member) {
       if (ownMembership != targetMembership)
         throw new ForbiddenException(
