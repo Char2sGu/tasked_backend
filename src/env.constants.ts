@@ -12,7 +12,9 @@ export const THROTTLER_TTL = Number(process.env.THROTTLER_TTL);
 
 export const THROTTLER_LIMIT = Number(process.env.THROTTLER_LIMIT);
 
-export const COMPLEXITY = Number(process.env.COMPLEXITY);
+export const MAX_COMPLEXITY = Number(process.env.MAX_COMPLEXITY);
+
+export const MAX_DEPTH = Number(process.env.MAX_DEPTH);
 
 export const DEBUG =
   process.env.DEBUG == 'true'

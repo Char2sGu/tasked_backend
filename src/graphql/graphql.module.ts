@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { DEBUG } from 'src/env.constants';
+import depthLimit from 'graphql-depth-limit';
+import { DEBUG, MAX_DEPTH } from 'src/env.constants';
 
 import { GraphqlComplexityPlugin } from './graphql-complexity.plugin';
 import { GRAPHQL_COMPLEXITY_MAX } from './graphql-complexity-max.token';
@@ -14,6 +15,7 @@ export class GraphqlModule {
         GraphQLModule.forRoot({
           autoSchemaFile: true,
           playground: DEBUG,
+          validationRules: [depthLimit(MAX_DEPTH)],
         }),
       ],
       providers: [

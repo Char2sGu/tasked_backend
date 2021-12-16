@@ -6,7 +6,8 @@ declare namespace NodeJS {
     SECRET_KEY: string;
     THROTTLER_TTL: string;
     THROTTLER_LIMIT: string;
-    COMPLEXITY: string;
+    MAX_COMPLEXITY: string;
+    MAX_DEPTH: string;
     DEBUG: string;
   }
 }
