@@ -1,4 +1,4 @@
-import { Entity, Filter, ManyToOne, Property } from '@mikro-orm/core';
+import { Entity, Filter, ManyToOne, Property, Unique } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base-entity.entity';
 import { CommonFilter } from 'src/common/common-filter.enum';
@@ -22,6 +22,7 @@ import { Task } from 'src/tasks/entities/task.entity';
     };
   },
 })
+@Unique<Assignment>({ properties: ['task', 'recipient', 'deletedAt'] })
 @Entity()
 export class Assignment extends BaseEntity<Assignment> {
   @Field(() => Membership)
