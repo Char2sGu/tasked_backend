@@ -43,7 +43,6 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Room,
     mappedBy: (room) => room.creator,
-    orphanRemoval: true,
   })
   rooms = new Collection<Room>(this);
 
@@ -51,7 +50,6 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Application,
     mappedBy: (application) => application.owner,
-    orphanRemoval: true,
   })
   applications = new Collection<Application>(this);
 
@@ -59,7 +57,6 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (memberships) => memberships.owner,
-    orphanRemoval: true,
   })
   memberships = new Collection<Membership>(this);
 

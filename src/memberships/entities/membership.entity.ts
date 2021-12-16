@@ -47,7 +47,6 @@ export class Membership extends BaseEntity<Membership> {
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.recipient,
-    orphanRemoval: true,
   })
   assignments = new Collection<Assignment>(this);
 
@@ -55,7 +54,6 @@ export class Membership extends BaseEntity<Membership> {
   @OneToMany({
     entity: () => Task,
     mappedBy: (task) => task.creator,
-    orphanRemoval: true,
   })
   tasks = new Collection<Task>(this);
 
