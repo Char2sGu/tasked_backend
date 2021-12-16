@@ -5,6 +5,7 @@ import {
   Entity,
   OneToMany,
   Property,
+  Unique,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { hash } from 'bcryptjs';
@@ -21,10 +22,11 @@ import { Room } from 'src/rooms/entities/room.entity';
 import { Gender } from 'src/users/entities/gender.enum';
 
 @ObjectType()
+@Unique<User>({ properties: ['username', 'deletedAt'] })
 @Entity()
 export class User extends BaseEntity<User> {
   @Field(() => String, { orderable: true, filterable: true })
-  @Property({ unique: true })
+  @Property()
   username: string;
 
   @Field(() => String, { nullable: true, orderable: true, filterable: true })
