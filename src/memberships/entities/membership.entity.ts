@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   Property,
+  Unique,
 } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.obj.dto';
@@ -29,6 +30,7 @@ import { Role } from './role.enum';
     },
   }),
 })
+@Unique<Membership>({ properties: ['owner', 'room', 'deletedAt'] })
 @Entity()
 export class Membership extends BaseEntity<Membership> {
   @Field(() => User)
