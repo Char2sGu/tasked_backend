@@ -5,6 +5,7 @@ import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { Role } from 'src/memberships/entities/role.enum';
 import { Task } from 'src/tasks/entities/task.entity';
 
 @ObjectType()
@@ -13,6 +14,7 @@ import { Task } from 'src/tasks/entities/task.entity';
   cond: () => {
     const user = Context.current.user;
     return {
+      recipient: { role: Role.Member },
       $or: [
         { recipient: { owner: user } },
         { task: { creator: { owner: user } } },

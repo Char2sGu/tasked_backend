@@ -14,12 +14,14 @@ import { CommonFilter } from 'src/common/common-filter.enum';
 import { Field } from 'src/common/field.decorator';
 import { Context } from 'src/context/context.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
+import { Role } from 'src/memberships/entities/role.enum';
 import { Room } from 'src/rooms/entities/room.entity';
 
 @ObjectType()
 @Filter<Task>({
   name: CommonFilter.Crud,
   cond: () => ({
+    creator: { role: Role.Manager },
     $or: [
       { creator: { owner: Context.current.user } },
       {
