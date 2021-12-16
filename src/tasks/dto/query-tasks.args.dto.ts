@@ -15,5 +15,5 @@ export class QueryTasksArgs extends IntersectionType(
   ),
 ) {
   @Field(() => Boolean, { nullable: true })
-  isOwn?: boolean;
+  ownOnly?: boolean;
 }

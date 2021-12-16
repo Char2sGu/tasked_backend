@@ -26,7 +26,7 @@ export class TasksService {
   ) {}
 
   async queryMany(
-    { limit, offset, order, filter, isOwn }: QueryTasksArgs,
+    { limit, offset, order, filter, ownOnly }: QueryTasksArgs,
     query: FilterQuery<Task> = {},
   ) {
     const user = Context.current.user;
@@ -35,9 +35,7 @@ export class TasksService {
         $and: [
           query,
           filter ? FilterMap.resolve(filter) : {},
-          isOwn != undefined
-            ? { creator: { owner: isOwn ? { $eq: user } : { $ne: user } } }
-            : {},
+          ownOnly ? { creator: { owner: user } } : {},
         ],
       },
       {
