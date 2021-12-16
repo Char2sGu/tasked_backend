@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { ObjectType } from '@nestjs/graphql';
+import { Field } from 'src/common/field.decorator';
 import { Membership } from 'src/memberships/entities/membership.entity';
 
 import { Application } from '../entities/application.entity';

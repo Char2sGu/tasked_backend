@@ -1,4 +1,5 @@
-import { Field, InputType, PartialType } from '@nestjs/graphql';
+import { InputType, PartialType } from '@nestjs/graphql';
+import { Field } from 'src/common/field.decorator';
 
 import { TaskCreateInput } from './task-create.input.dto';
 
