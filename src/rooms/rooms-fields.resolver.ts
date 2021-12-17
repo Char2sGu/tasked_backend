@@ -5,7 +5,6 @@ import { QueryApplicationsArgs } from 'src/applications/dto/query-applications.a
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { PaginatedAssignments } from 'src/assignments/dto/paginated-assignments.obj.dto';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args.dto';
-import { Context } from 'src/context/context.class';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
@@ -15,11 +14,13 @@ import { TasksService } from 'src/tasks/tasks.service';
 import { UserRefLoader } from 'src/users/user-ref.loader';
 
 import { Room } from './entities/room.entity';
+import { RoomMembershipLoader } from './room-membership.loader';
 
 @Resolver(() => Room)
 export class RoomsFieldsResolver {
   constructor(
     private userRefLoader: UserRefLoader,
+    private roomMembershipLoader: RoomMembershipLoader,
     private applicationsService: ApplicationsService,
     private membershipsService: MembershipsService,
     private tasksService: TasksService,
@@ -51,9 +52,7 @@ export class RoomsFieldsResolver {
 
   @ResolveField(() => Membership, { nullable: true })
   async membership(@Parent() entity: Room) {
-    return entity.memberships
-      .matching({ where: { owner: Context.current.user }, limit: 1 })
-      .then(([v]) => v);
+    return this.roomMembershipLoader.load(entity);
   }
 
   @ResolveField(() => PaginatedTasks)
