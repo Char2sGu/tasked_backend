@@ -6,10 +6,8 @@ import { Repository } from 'src/mikro/repository.class';
 
 import { MikroFlushInterceptor } from './mikro-flush/mikro-flush.interceptor';
 import { MikroMiddlewareModule } from './mikro-middleware.module';
-import { MikroQueryContextInterceptor } from './mikro-query-context/mikro-query-context.interceptor';
 import { MikroQuotaFilter } from './mikro-quota/mikro-quota.filter';
 import { MikroQuotaService } from './mikro-quota/mikro-quota.service';
-import { MikroRefLoaderService } from './mikro-ref-loader/mikro-ref-loader.service';
 
 /**
  * Generic MikroORM toolkit isolated from business.
@@ -34,10 +32,6 @@ export class MikroModule {
       providers: [
         {
           provide: APP_INTERCEPTOR,
-          useClass: MikroQueryContextInterceptor,
-        },
-        {
-          provide: APP_INTERCEPTOR,
           useClass: MikroFlushInterceptor,
         },
         {
@@ -51,8 +45,8 @@ export class MikroModule {
   static forFeature(): DynamicModule {
     return {
       module: MikroModule,
-      providers: [MikroQuotaService, MikroRefLoaderService],
-      exports: [MikroQuotaService, MikroRefLoaderService],
+      providers: [MikroQuotaService],
+      exports: [MikroQuotaService],
     };
   }
 }
