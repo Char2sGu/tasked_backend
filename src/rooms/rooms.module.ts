@@ -5,6 +5,7 @@ import { AssignmentsModule } from 'src/assignments/assignments.module';
 import { MembershipsModule } from 'src/memberships/memberships.module';
 import { SharedModule } from 'src/shared/shared.module';
 import { TasksModule } from 'src/tasks/tasks.module';
+import { UsersModule } from 'src/users/users.module';
 
 import { Room } from './entities/room.entity';
 import { RoomRefLoader } from './room-ref.loader';
@@ -16,6 +17,7 @@ import { RoomsFieldsResolver } from './rooms-fields.resolver';
   imports: [
     SharedModule,
     MikroOrmModule.forFeature([Room]),
+    forwardRef(() => UsersModule),
     forwardRef(() => ApplicationsModule),
     forwardRef(() => MembershipsModule),
     forwardRef(() => TasksModule),

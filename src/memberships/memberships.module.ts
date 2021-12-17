@@ -2,8 +2,10 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { forwardRef, Module } from '@nestjs/common';
 import { AssignmentsModule } from 'src/assignments/assignments.module';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
+import { RoomsModule } from 'src/rooms/rooms.module';
 import { SharedModule } from 'src/shared/shared.module';
 import { TasksModule } from 'src/tasks/tasks.module';
+import { UsersModule } from 'src/users/users.module';
 
 import { Membership } from './entities/membership.entity';
 import { MembershipRefLoader } from './membership-ref.loader';
@@ -15,6 +17,8 @@ import { MembershipsFieldsResolver } from './memberships-fields.resolver';
   imports: [
     SharedModule,
     MikroOrmModule.forFeature([Membership, Assignment]),
+    forwardRef(() => UsersModule),
+    forwardRef(() => RoomsModule),
     forwardRef(() => AssignmentsModule),
     forwardRef(() => TasksModule),
   ],

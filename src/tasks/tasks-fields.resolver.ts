@@ -1,20 +1,20 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AssignmentsService } from 'src/assignments/assignments.service';
 import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args.dto';
-import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
+import { MembershipRefLoader } from 'src/memberships/membership-ref.loader';
 
 import { Task } from './entities/task.entity';
 
 @Resolver(() => Task)
 export class TasksFieldsResolver {
   constructor(
-    private loader: MikroRefLoaderService,
+    private membershipRefLoader: MembershipRefLoader,
     private assignmentsService: AssignmentsService,
   ) {}
 
   @ResolveField()
   async creator(@Parent() entity: Task) {
-    return this.loader.load(entity.creator);
+    return this.membershipRefLoader.load(entity.creator);
   }
 
   @ResolveField()

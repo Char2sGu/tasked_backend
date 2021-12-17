@@ -9,17 +9,17 @@ import { Context } from 'src/context/context.class';
 import { QueryMembershipsArgs } from 'src/memberships/dto/query-memberships.args.dto';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { MembershipsService } from 'src/memberships/memberships.service';
-import { MikroRefLoaderService } from 'src/mikro/mikro-ref-loader/mikro-ref-loader.service';
 import { PaginatedTasks } from 'src/tasks/dto/paginated-tasks.obj.dto';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args.dto';
 import { TasksService } from 'src/tasks/tasks.service';
+import { UserRefLoader } from 'src/users/user-ref.loader';
 
 import { Room } from './entities/room.entity';
 
 @Resolver(() => Room)
 export class RoomsFieldsResolver {
   constructor(
-    private loader: MikroRefLoaderService,
+    private userRefLoader: UserRefLoader,
     private applicationsService: ApplicationsService,
     private membershipsService: MembershipsService,
     private tasksService: TasksService,
@@ -28,7 +28,7 @@ export class RoomsFieldsResolver {
 
   @ResolveField()
   async creator(@Parent() entity: Room) {
-    return this.loader.load(entity.creator);
+    return this.userRefLoader.load(entity.creator);
   }
 
   @ResolveField(() => PaginatedApplications)
