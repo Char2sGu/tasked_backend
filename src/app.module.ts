@@ -5,6 +5,7 @@ import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
 import { ContextModule } from './context/context.module';
 import { CoreModule } from './core/core.module';
+import { DataLoaderModule } from './data-loader/data-loader.module';
 import {
   MAX_COMPLEXITY,
   THROTTLER_LIMIT,
@@ -26,6 +27,7 @@ import { ValidationModule } from './validation/validation.module';
     GraphqlModule.forRoot(MAX_COMPLEXITY),
     ValidationModule.forRoot(),
     ThrottlerModule.forRoot(THROTTLER_TTL, THROTTLER_LIMIT),
+    DataLoaderModule.forRoot(),
     CoreModule,
     AuthModule,
     UsersModule,
