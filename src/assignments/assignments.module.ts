@@ -4,6 +4,7 @@ import { Membership } from 'src/memberships/entities/membership.entity';
 import { SharedModule } from 'src/shared/shared.module';
 import { Task } from 'src/tasks/entities/task.entity';
 
+import { AssignmentRefLoader } from './assignment-ref.loader';
 import { AssignmentsResolver } from './assignments.resolver';
 import { AssignmentsService } from './assignments.service';
 import { AssignmentsFieldsResolver } from './assignments-fields.resolver';
@@ -18,7 +19,8 @@ import { Assignment } from './entities/assignment.entity';
     AssignmentsResolver,
     AssignmentsFieldsResolver,
     AssignmentsService,
+    AssignmentRefLoader,
   ],
-  exports: [AssignmentsService],
+  exports: [AssignmentsService, AssignmentRefLoader],
 })
 export class AssignmentsModule {}

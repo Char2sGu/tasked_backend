@@ -6,6 +6,7 @@ import { MembershipsModule } from 'src/memberships/memberships.module';
 import { SharedModule } from 'src/shared/shared.module';
 
 import { Task } from './entities/task.entity';
+import { TaskRefLoader } from './task-ref.loader';
 import { TasksResolver } from './tasks.resolver';
 import { TasksService } from './tasks.service';
 import { TasksFieldsResolver } from './tasks-fields.resolver';
@@ -17,7 +18,7 @@ import { TasksFieldsResolver } from './tasks-fields.resolver';
     forwardRef(() => AssignmentsModule),
     forwardRef(() => MembershipsModule),
   ],
-  providers: [TasksResolver, TasksFieldsResolver, TasksService],
-  exports: [TasksService],
+  providers: [TasksResolver, TasksFieldsResolver, TasksService, TaskRefLoader],
+  exports: [TasksService, TaskRefLoader],
 })
 export class TasksModule {}

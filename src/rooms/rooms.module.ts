@@ -7,6 +7,7 @@ import { SharedModule } from 'src/shared/shared.module';
 import { TasksModule } from 'src/tasks/tasks.module';
 
 import { Room } from './entities/room.entity';
+import { RoomRefLoader } from './room-ref.loader';
 import { RoomsResolver } from './rooms.resolver';
 import { RoomsService } from './rooms.service';
 import { RoomsFieldsResolver } from './rooms-fields.resolver';
@@ -20,7 +21,7 @@ import { RoomsFieldsResolver } from './rooms-fields.resolver';
     forwardRef(() => TasksModule),
     forwardRef(() => AssignmentsModule),
   ],
-  providers: [RoomsResolver, RoomsFieldsResolver, RoomsService],
-  exports: [RoomsService],
+  providers: [RoomsResolver, RoomsFieldsResolver, RoomsService, RoomRefLoader],
+  exports: [RoomsService, RoomRefLoader],
 })
 export class RoomsModule {}

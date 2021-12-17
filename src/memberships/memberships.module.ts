@@ -6,6 +6,7 @@ import { SharedModule } from 'src/shared/shared.module';
 import { TasksModule } from 'src/tasks/tasks.module';
 
 import { Membership } from './entities/membership.entity';
+import { MembershipRefLoader } from './membership-ref.loader';
 import { MembershipsResolver } from './memberships.resolver';
 import { MembershipsService } from './memberships.service';
 import { MembershipsFieldsResolver } from './memberships-fields.resolver';
@@ -21,7 +22,8 @@ import { MembershipsFieldsResolver } from './memberships-fields.resolver';
     MembershipsResolver,
     MembershipsFieldsResolver,
     MembershipsService,
+    MembershipRefLoader,
   ],
-  exports: [MembershipsService],
+  exports: [MembershipsService, MembershipRefLoader],
 })
 export class MembershipsModule {}

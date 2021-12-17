@@ -8,6 +8,7 @@ import { SharedModule } from 'src/shared/shared.module';
 import { TasksModule } from 'src/tasks/tasks.module';
 
 import { User } from './entities/user.entity';
+import { UserRefLoader } from './user-ref.loader';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 import { UsersFieldsResolver } from './users-fields.resolver';
@@ -22,7 +23,7 @@ import { UsersFieldsResolver } from './users-fields.resolver';
     forwardRef(() => TasksModule),
     forwardRef(() => AssignmentsModule),
   ],
-  providers: [UsersResolver, UsersFieldsResolver, UsersService],
-  exports: [UsersService],
+  providers: [UsersResolver, UsersFieldsResolver, UsersService, UserRefLoader],
+  exports: [UsersService, UserRefLoader],
 })
 export class UsersModule {}
