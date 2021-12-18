@@ -7,9 +7,5 @@ import { Application } from './entities/application.entity';
 
 @Injectable()
 export class ApplicationRefLoader extends EntityRefLoader<Application> {
-  constructor(
-    @InjectRepository(Application) protected repo: Repository<Application>,
-  ) {
-    super();
-  }
+  @InjectRepository(Application) protected repo: Repository<Application>;
 }

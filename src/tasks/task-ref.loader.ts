@@ -7,7 +7,5 @@ import { Task } from './entities/task.entity';
 
 @Injectable()
 export class TaskRefLoader extends EntityRefLoader<Task> {
-  constructor(@InjectRepository(Task) protected repo: Repository<Task>) {
-    super();
-  }
+  @InjectRepository(Task) protected repo: Repository<Task>;
 }

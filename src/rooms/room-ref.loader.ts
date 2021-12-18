@@ -7,7 +7,5 @@ import { Room } from './entities/room.entity';
 
 @Injectable()
 export class RoomRefLoader extends EntityRefLoader<Room> {
-  constructor(@InjectRepository(Room) protected repo: Repository<Room>) {
-    super();
-  }
+  @InjectRepository(Room) protected repo: Repository<Room>;
 }
