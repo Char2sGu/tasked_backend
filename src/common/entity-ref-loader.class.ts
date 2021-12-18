@@ -2,7 +2,10 @@ import { EntityRepository, wrap } from '@mikro-orm/core';
 import { FilterQuery, OperatorMap } from '@mikro-orm/core/dist/typings';
 import { DataLoader } from 'src/data-loader/data-loader.class';
 
-export abstract class RefLoader<Entity> extends DataLoader<Entity, Entity> {
+export abstract class EntityRefLoader<Entity> extends DataLoader<
+  Entity,
+  Entity
+> {
   protected abstract repo: EntityRepository<Entity>;
 
   protected async resolve(refs: Entity[]) {
