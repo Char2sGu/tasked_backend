@@ -1,13 +1,13 @@
 import { EntityManager, wrap } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import { DataLoaderModule } from 'src/data-loader/data-loader.module';
+import { EntityRefLoader } from 'src/common/entity-ref-loader.class';
 
 import { MikroRefLoaderContext } from './mikro-ref-loader-context.class';
 import { MikroRefLoaderDataLoader } from './mikro-ref-loader-data-loader.class';
 
 /**
  * @deprecated
- * @see {DataLoaderModule}
+ * @see {EntityRefLoader}
  */
 @Injectable()
 export class MikroRefLoaderService {
@@ -33,4 +33,4 @@ export class MikroRefLoaderService {
   }
 }
 
-DataLoaderModule;
+EntityRefLoader;

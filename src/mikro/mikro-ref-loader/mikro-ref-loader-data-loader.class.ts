@@ -1,7 +1,7 @@
 import { AnyEntity, EntityManager, FilterQuery, wrap } from '@mikro-orm/core';
 import { OperatorMap } from '@mikro-orm/core/dist/typings';
 import DataLoader from 'dataloader';
-import { DataLoaderModule } from 'src/data-loader/data-loader.module';
+import { EntityRefLoader } from 'src/common/entity-ref-loader.class';
 
 import { MikroRefLoaderService } from './mikro-ref-loader.service';
 
@@ -13,7 +13,7 @@ import { MikroRefLoaderService } from './mikro-ref-loader.service';
  * @see MikroRefLoaderService
  *
  * @deprecated
- * @see {DataLoaderModule}
+ * @see {EntityRefLoader}
  */
 export class MikroRefLoaderDataLoader<
   Entity extends AnyEntity<Entity>,
@@ -35,4 +35,4 @@ export class MikroRefLoaderDataLoader<
 }
 
 MikroRefLoaderService;
-DataLoaderModule;
+EntityRefLoader;

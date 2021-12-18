@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { DataLoaderModule } from '@nestjs-devkit/dataloader';
 
 import { ApplicationsModule } from './applications/applications.module';
 import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
 import { ContextModule } from './context/context.module';
 import { CoreModule } from './core/core.module';
-import { DataLoaderModule } from './data-loader/data-loader.module';
 import {
   MAX_COMPLEXITY,
   THROTTLER_LIMIT,

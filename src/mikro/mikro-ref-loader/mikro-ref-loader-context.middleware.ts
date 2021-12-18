@@ -1,12 +1,12 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { DataLoaderModule } from 'src/data-loader/data-loader.module';
+import { EntityRefLoader } from 'src/common/entity-ref-loader.class';
 
 import { MikroRefLoaderContext } from './mikro-ref-loader-context.class';
 
 /**
  * @deprecated
- * @see {DataLoaderModule}
+ * @see {EntityRefLoader}
  */
 @Injectable()
 export class MikroRefLoaderContextMiddleware implements NestMiddleware {
@@ -15,4 +15,4 @@ export class MikroRefLoaderContextMiddleware implements NestMiddleware {
   }
 }
 
-DataLoaderModule;
+EntityRefLoader;

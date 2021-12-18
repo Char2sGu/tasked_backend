@@ -1,6 +1,6 @@
 import { EntityRepository, wrap } from '@mikro-orm/core';
 import { FilterQuery, OperatorMap } from '@mikro-orm/core/dist/typings';
-import { DataLoader } from 'src/data-loader/data-loader.class';
+import { DataLoader } from '@nestjs-devkit/dataloader';
 
 export abstract class EntityRefLoader<Entity> extends DataLoader<
   Entity,

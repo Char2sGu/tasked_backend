@@ -1,11 +1,11 @@
 import { AsyncLocalStorage } from 'async_hooks';
-import { DataLoaderModule } from 'src/data-loader/data-loader.module';
+import { EntityRefLoader } from 'src/common/entity-ref-loader.class';
 
 import { MikroRefLoaderDataLoader } from './mikro-ref-loader-data-loader.class';
 
 /**
  * @deprecated
- * @see {DataLoaderModule}
+ * @see {EntityRefLoader}
  */
 export class MikroRefLoaderContext {
   static get current() {
@@ -20,4 +20,4 @@ export class MikroRefLoaderContext {
   }
 }
 
-DataLoaderModule;
+EntityRefLoader;

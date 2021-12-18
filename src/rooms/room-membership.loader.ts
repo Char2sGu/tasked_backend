@@ -1,7 +1,7 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
+import { DataLoader } from '@nestjs-devkit/dataloader';
 import { Context } from 'src/context/context.class';
-import { DataLoader } from 'src/data-loader/data-loader.class';
 import { Membership } from 'src/memberships/entities/membership.entity';
 import { Repository } from 'src/mikro/repository.class';
 
