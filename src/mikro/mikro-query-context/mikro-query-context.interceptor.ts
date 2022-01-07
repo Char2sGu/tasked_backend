@@ -6,10 +6,9 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { MikroFlusherInterceptor } from '@nestjs-devkit/mikro-graphql-flusher';
 import { AsyncLocalStorage } from 'async_hooks';
 import { Observable } from 'rxjs';
-
-import { MikroFlushInterceptor } from '../mikro-flush/mikro-flush.interceptor';
 
 /**
  * Create a query scoped MikroORM context for each query.
@@ -20,7 +19,7 @@ import { MikroFlushInterceptor } from '../mikro-flush/mikro-flush.interceptor';
  *
  * @deprecated
  * This issue is solved in a better way using
- * {@link MikroFlushInterceptor}.
+ * {@link MikroFlusherInterceptor}.
  *
  * ### MikroORM's Default Behavior
  *
@@ -139,4 +138,4 @@ export class MikroQueryContextInterceptor implements NestInterceptor {
 }
 
 MikroOrmModule;
-MikroFlushInterceptor;
+MikroFlusherInterceptor;

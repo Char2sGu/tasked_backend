@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DataLoaderModule } from '@nestjs-devkit/dataloader';
+import { MikroFlusherModule } from '@nestjs-devkit/mikro-graphql-flusher';
 
 import { ApplicationsModule } from './applications/applications.module';
 import { AssignmentsModule } from './assignments/assignments.module';
@@ -19,11 +20,11 @@ import { TasksModule } from './tasks/tasks.module';
 import { ThrottlerModule } from './throttler/throttler.module';
 import { UsersModule } from './users/users.module';
 import { ValidationModule } from './validation/validation.module';
-
 @Module({
   imports: [
     ContextModule.forRoot(),
     MikroModule.forRoot(),
+    MikroFlusherModule,
     GraphqlModule.forRoot(MAX_COMPLEXITY),
     ValidationModule.forRoot(),
     ThrottlerModule.forRoot(THROTTLER_TTL, THROTTLER_LIMIT),
