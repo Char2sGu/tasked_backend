@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { catchError, concatMap, from, map, Observable, tap } from 'rxjs';
+import { concatMap } from 'rxjs';
 
 import { MikroQueryContextInterceptor } from '../mikro-query-context/mikro-query-context.interceptor';
 import { MikroFlushContext } from './mikro-flush-context.class';
@@ -31,37 +31,34 @@ import { MikroFlushContext } from './mikro-flush-context.class';
 export class MikroFlushInterceptor implements NestInterceptor {
   constructor(private em: EntityManager) {}
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(executionContext: ExecutionContext, next: CallHandler) {
     const operation =
-      GqlExecutionContext.create(context).getInfo<GraphQLResolveInfo>()
+      GqlExecutionContext.create(executionContext).getInfo<GraphQLResolveInfo>()
         .operation.operation;
 
-    if (operation == 'mutation') {
-      const context = MikroFlushContext.current;
-      context.mutationCountTotal++;
-      return next.handle().pipe(
-        concatMap((result) => {
-          context.mutationCountHandled++;
-          if (context.mutationCountHandled == context.mutationCountTotal) {
-            return from(this.em.flush()).pipe(
-              tap(() => {
-                context.flush$.next(null);
-                context.flush$.complete();
-              }),
-              catchError((err) => {
-                context.flush$.error(err);
-                throw err;
-              }),
-              map(() => result),
-            );
-          } else {
-            return context.flush$.pipe(map(() => result));
-          }
-        }),
-      );
-    } else {
-      return next.handle();
-    }
+    if (operation != 'mutation') return next.handle();
+
+    const context = MikroFlushContext.current;
+
+    context.mutationCountTotal++;
+
+    return next.handle().pipe(
+      concatMap(async (result) => {
+        context.mutationCountHandled++;
+
+        const flush =
+          context.mutationCountHandled == context.mutationCountTotal
+            ? this.em
+                .flush()
+                .then(() => context.flush.resolve())
+                .catch((err: unknown) => context.flush.reject(err))
+            : context.flush;
+
+        await flush;
+
+        return result;
+      }),
+    );
   }
 }
 

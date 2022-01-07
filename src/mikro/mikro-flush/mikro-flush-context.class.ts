@@ -1,5 +1,5 @@
+import { Deconstructed } from 'advanced-promises';
 import { AsyncLocalStorage } from 'async_hooks';
-import { Subject } from 'rxjs';
 
 export class MikroFlushContext {
   static get current() {
@@ -18,9 +18,9 @@ export class MikroFlushContext {
   mutationCountHandled = 0;
 
   /**
-   * The `em.flush()` result will be mapped here.
+   * Will be resolved after `em.flush()` is invoked and resolved.
    */
-  flush$ = new Subject<null>();
+  flush = new Deconstructed();
 
   apply<T>(fn: () => T) {
     return MikroFlushContext.storage.run(this, fn);
