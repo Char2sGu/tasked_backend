@@ -32,7 +32,15 @@ export class SoftDeletableHandlerSubscriber implements EventSubscriber {
           item.type = ChangeSetType.UPDATE;
           item.entity[field] = value();
           item.payload[field] = value();
-          uow.recomputeSingleChangeSet(item.entity);
+
+          // Don't recompute here. Otherwise ManyToOne relation fields will be
+          // set to `null` and cause a `NotNullConstraintViolationException`.
+          // This only appear when using `cascade: [Cascade.ALL],
+          // it will be fine to recompute here when using
+          // `orphanRemoval: true`.
+          // But because we can't catch the deletions caused by
+          // `orphanRemoval`, we still chose `cascade: [Cascade.ALL],
+          // uow.recomputeSingleChangeSet(item.entity);
         }
       },
     );
