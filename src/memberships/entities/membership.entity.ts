@@ -1,4 +1,5 @@
 import {
+  Cascade,
   Collection,
   Entity,
   Filter,
@@ -49,6 +50,7 @@ export class Membership extends BaseEntity<Membership> {
   @OneToMany({
     entity: () => Assignment,
     mappedBy: (assignment) => assignment.recipient,
+    cascade: [Cascade.ALL],
   })
   assignments = new Collection<Assignment>(this);
 
@@ -56,6 +58,7 @@ export class Membership extends BaseEntity<Membership> {
   @OneToMany({
     entity: () => Task,
     mappedBy: (task) => task.creator,
+    cascade: [Cascade.ALL],
   })
   tasks = new Collection<Task>(this);
 

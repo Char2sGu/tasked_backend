@@ -1,6 +1,7 @@
 import {
   BeforeCreate,
   BeforeUpdate,
+  Cascade,
   Collection,
   Entity,
   OneToMany,
@@ -45,6 +46,7 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Room,
     mappedBy: (room) => room.creator,
+    cascade: [Cascade.ALL],
   })
   rooms = new Collection<Room>(this);
 
@@ -52,6 +54,7 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Application,
     mappedBy: (application) => application.owner,
+    cascade: [Cascade.ALL],
   })
   applications = new Collection<Application>(this);
 
@@ -59,6 +62,7 @@ export class User extends BaseEntity<User> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (memberships) => memberships.owner,
+    cascade: [Cascade.ALL],
   })
   memberships = new Collection<Membership>(this);
 

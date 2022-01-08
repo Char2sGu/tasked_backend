@@ -1,4 +1,5 @@
 import {
+  Cascade,
   Collection,
   Entity,
   Filter,
@@ -50,6 +51,7 @@ export class Room extends BaseEntity<Room> {
   @OneToMany({
     entity: () => Application,
     mappedBy: (application) => application.room,
+    cascade: [Cascade.ALL],
   })
   applications = new Collection<Application>(this);
 
@@ -58,6 +60,7 @@ export class Room extends BaseEntity<Room> {
   @OneToMany({
     entity: () => Membership,
     mappedBy: (membership) => membership.room,
+    cascade: [Cascade.ALL],
   })
   memberships = new Collection<Membership>(this);
 }
