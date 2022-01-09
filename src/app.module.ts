@@ -7,7 +7,6 @@ import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
 import { ContextModule } from './context/context.module';
 import { CoreModule } from './core/core.module';
-import { THROTTLER_LIMIT, THROTTLER_TTL } from './env.constants';
 import { GraphqlModule } from './graphql/graphql.module';
 import { MembershipsModule } from './memberships/memberships.module';
 import { MikroModule } from './mikro/mikro.module';
@@ -23,7 +22,7 @@ import { ValidationModule } from './validation/validation.module';
     MikroFlusherModule,
     GraphqlModule.forRoot(),
     ValidationModule.forRoot(),
-    ThrottlerModule.forRoot(THROTTLER_TTL, THROTTLER_LIMIT),
+    ThrottlerModule.forRoot(),
     DataLoaderModule.forRoot(),
     CoreModule,
     AuthModule,
