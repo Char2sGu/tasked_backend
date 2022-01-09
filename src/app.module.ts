@@ -7,11 +7,7 @@ import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
 import { ContextModule } from './context/context.module';
 import { CoreModule } from './core/core.module';
-import {
-  MAX_COMPLEXITY,
-  THROTTLER_LIMIT,
-  THROTTLER_TTL,
-} from './env.constants';
+import { THROTTLER_LIMIT, THROTTLER_TTL } from './env.constants';
 import { GraphqlModule } from './graphql/graphql.module';
 import { MembershipsModule } from './memberships/memberships.module';
 import { MikroModule } from './mikro/mikro.module';
@@ -25,7 +21,7 @@ import { ValidationModule } from './validation/validation.module';
     ContextModule.forRoot(),
     MikroModule.forRoot(),
     MikroFlusherModule,
-    GraphqlModule.forRoot(MAX_COMPLEXITY),
+    GraphqlModule.forRoot(),
     ValidationModule.forRoot(),
     ThrottlerModule.forRoot(THROTTLER_TTL, THROTTLER_LIMIT),
     DataLoaderModule.forRoot(),
