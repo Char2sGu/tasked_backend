@@ -1,6 +1,6 @@
 import { BaseEntity as Base, PrimaryKey, Property } from '@mikro-orm/core';
 import { ID, ObjectType } from '@nestjs/graphql';
-import { SoftDeletable } from 'src/mikro/soft-deletable/soft-deletable.decorator';
+import { SoftDeletable } from 'mikro-orm-soft-delete';
 
 import { Field } from './field.decorator';
 

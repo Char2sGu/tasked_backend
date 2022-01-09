@@ -47,6 +47,7 @@
     "graphql-depth-limit": "^1.1.0",
     "graphql-query-complexity": "^0.11.0",
     "graphql-tools": "^8.2.0",
+    "mikro-orm-soft-delete": "^0.1.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
