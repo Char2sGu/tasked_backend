@@ -12,7 +12,6 @@ import { MembershipsModule } from './memberships/memberships.module';
 import { MikroModule } from './mikro/mikro.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { TasksModule } from './tasks/tasks.module';
-import { ThrottlerModule } from './throttler/throttler.module';
 import { UsersModule } from './users/users.module';
 import { ValidationModule } from './validation/validation.module';
 @Module({
@@ -22,7 +21,6 @@ import { ValidationModule } from './validation/validation.module';
     MikroFlusherModule,
     GraphqlModule.forRoot(),
     ValidationModule.forRoot(),
-    ThrottlerModule.forRoot(),
     DataLoaderModule.forRoot(),
     CoreModule,
     AuthModule,
