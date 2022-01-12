@@ -4,7 +4,6 @@ import { QueryAssignmentsArgs } from 'src/assignments/dto/query-assignments.args
 import { RoomRefLoader } from 'src/rooms/room-ref.loader';
 import { QueryTasksArgs } from 'src/tasks/dto/query-tasks.args.dto';
 import { TasksService } from 'src/tasks/tasks.service';
-import { User } from 'src/users/entities/user.entity';
 import { UserRefLoader } from 'src/users/user-ref.loader';
 
 import { Membership } from './entities/membership.entity';
@@ -37,7 +36,7 @@ export class MembershipsFieldsResolver {
   }
 
   @ResolveField()
-  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: User) {
-    return this.tasksService.queryMany(args, { creator: { owner: entity } });
+  async tasks(@Args() args: QueryTasksArgs, @Parent() entity: Membership) {
+    return this.tasksService.queryMany(args, { creator: entity });
   }
 }
