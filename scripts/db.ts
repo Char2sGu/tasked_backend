@@ -9,15 +9,15 @@ import { AppModule } from '../src/app.module';
 main();
 
 async function main() {
-  const action = process.argv[2] as 'reset' | 'populate';
+  const action = process.argv[2] as 'init' | 'populate';
   const args = process.argv.slice(3);
   const app = await NestFactory.create(AppModule, { logger: false });
-  if (action == 'reset') await reset(app, ...args);
+  if (action == 'init') await init(app, ...args);
   else if (action == 'populate') await populate(app, ...args);
   await app.close();
 }
 
-async function reset(app: INestApplication, ...[]: string[]) {
+async function init(app: INestApplication, ...[]: string[]) {
   const schemaGenerator = app.get(MikroORM).getSchemaGenerator();
   await schemaGenerator.execute(await schemaGenerator.generate());
 }
