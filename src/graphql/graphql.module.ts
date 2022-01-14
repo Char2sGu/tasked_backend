@@ -5,10 +5,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import depthLimit from 'graphql-depth-limit';
 import {
   DEBUG,
-  MAX_COMPLEXITY,
-  MAX_DEPTH,
-  THROTTLER_LIMIT,
-  THROTTLER_TTL,
+  GRAPHQL_COMPLEXITY,
+  GRAPHQL_DEPTH,
+  GRAPHQL_FREQUENCY_DURATION,
+  GRAPHQL_FREQUENCY_LIMIT,
 } from 'src/env.constants';
 
 import { GraphqlComplexityPlugin } from './graphql-complexity.plugin';
@@ -24,16 +24,16 @@ export class GraphqlModule {
         GraphQLModule.forRoot({
           autoSchemaFile: true,
           playground: DEBUG,
-          validationRules: [depthLimit(MAX_DEPTH)],
+          validationRules: [depthLimit(GRAPHQL_DEPTH)],
         }),
         ThrottlerModule.forRoot({
-          ttl: THROTTLER_TTL,
-          limit: THROTTLER_LIMIT,
+          limit: GRAPHQL_FREQUENCY_LIMIT,
+          ttl: GRAPHQL_FREQUENCY_DURATION,
         }),
       ],
       providers: [
         GraphqlComplexityPlugin,
-        { provide: GRAPHQL_COMPLEXITY_MAX, useValue: MAX_COMPLEXITY },
+        { provide: GRAPHQL_COMPLEXITY_MAX, useValue: GRAPHQL_COMPLEXITY },
         { provide: APP_GUARD, useClass: GraphqlThrottlerGuard },
       ],
     };

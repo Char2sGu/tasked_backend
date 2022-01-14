@@ -4,10 +4,10 @@ declare namespace NodeJS {
     PORT: string;
     DB_PATH: string;
     SECRET_KEY: string;
-    THROTTLER_TTL: string;
-    THROTTLER_LIMIT: string;
-    MAX_COMPLEXITY: string;
-    MAX_DEPTH: string;
+    GRAPHQL_FREQUENCY_LIMIT: string;
+    GRAPHQL_FREQUENCY_DURATION: string;
+    GRAPHQL_COMPLEXITY: string;
+    GRAPHQL_DEPTH: string;
     DEBUG: string;
   }
 }

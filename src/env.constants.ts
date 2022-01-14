@@ -8,13 +8,17 @@ export const DB_PATH = process.env.DB_PATH;
 
 export const SECRET_KEY = process.env.SECRET_KEY;
 
-export const THROTTLER_TTL = Number(process.env.THROTTLER_TTL);
+export const GRAPHQL_FREQUENCY_LIMIT = Number(
+  process.env.GRAPHQL_FREQUENCY_LIMIT,
+);
 
-export const THROTTLER_LIMIT = Number(process.env.THROTTLER_LIMIT);
+export const GRAPHQL_FREQUENCY_DURATION = Number(
+  process.env.GRAPHQL_FREQUENCY_DURATION,
+);
 
-export const MAX_COMPLEXITY = Number(process.env.MAX_COMPLEXITY);
+export const GRAPHQL_COMPLEXITY = Number(process.env.GRAPHQL_COMPLEXITY);
 
-export const MAX_DEPTH = Number(process.env.MAX_DEPTH);
+export const GRAPHQL_DEPTH = Number(process.env.GRAPHQL_DEPTH);
 
 export const DEBUG =
   process.env.DEBUG == 'true'
