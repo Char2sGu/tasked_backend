@@ -6,4 +6,4 @@ COPY ["package.json", "package-lock.json", "./"]
 RUN npm config set proxy=${proxy} && npm i --production
 COPY ["dist/", "dist/"]
 COPY [".env", "./"]
-CMD npm run start:prod
+CMD node dist/src/main
