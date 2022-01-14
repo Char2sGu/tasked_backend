@@ -7,5 +7,4 @@ RUN npm config set proxy=${proxy}
 RUN npm i --production
 COPY dist/ dist/
 COPY .env ./
-RUN node dist/scripts/db init
-CMD node dist/src/main
+CMD node dist/main
