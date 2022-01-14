@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage --config ./jest.config.unit.js",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --config ./jest.config.unit.js",
     "test:e2e": "jest --config ./jest.config.e2e.js",
-    "db": "ts-node -r tsconfig-paths/register ./scripts/db.ts"
+    "db": "ts-node -r tsconfig-paths/register ./scripts/db.ts",
+    "db:prod": "node dist/scripts/db"
   },
   "dependencies": {
     "@mikro-orm/core": "^5.0.0-dev.387",
