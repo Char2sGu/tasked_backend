@@ -1,8 +1,7 @@
 FROM node:16-alpine
-ARG proxy=
-ARG expose=3000
-EXPOSE ${expose}
 WORKDIR /app
+EXPOSE 3000
+ARG proxy=
 COPY package.json package-lock.json ./
 RUN npm config set proxy=${proxy}
 RUN npm i --production
