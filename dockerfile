@@ -3,7 +3,7 @@ ARG proxy=
 ARG expose=3000
 EXPOSE ${expose}
 COPY package.json package-lock.json ./
-RUN npm config set proxy=${proxy} 
+RUN npm config set proxy=${proxy}
 RUN npm i --production
 COPY dist/ dist/
 CMD node dist/main
