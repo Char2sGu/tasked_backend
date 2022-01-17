@@ -13,13 +13,13 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "start-db": "ts-node -r tsconfig-paths/register ./src/db.ts",
     "lint": "eslint \"{src,apps,libs,test,scripts}/**/*.ts\" --fix",
     "test": "jest --config ./jest.config.unit.js",
     "test:watch": "jest --watch --config ./jest.config.unit.js",
     "test:cov": "jest --coverage --config ./jest.config.unit.js",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --config ./jest.config.unit.js",
-    "test:e2e": "jest --config ./jest.config.e2e.js",
-    "db": "ts-node -r tsconfig-paths/register ./src/db.ts"
+    "test:e2e": "jest --config ./jest.config.e2e.js"
   },
   "dependencies": {
     "@mikro-orm/core": "^5.0.0-dev.387",
