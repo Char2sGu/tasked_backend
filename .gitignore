@@ -1,6 +1,5 @@
 /.env
 /data
-/docker-compose.*.yaml
 
 # compiled output
 /dist
