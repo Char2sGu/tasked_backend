@@ -2,11 +2,7 @@ version: '3.9'
 
 services:
   app:
-    build:
-      context: .
-      args:
-        HTTP_PROXY:
-        HTTPS_PROXY:
+    build: .
     env_file:
       - .env
     environment:
