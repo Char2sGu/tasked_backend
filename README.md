@@ -8,6 +8,6 @@ Backend implementation of [Tasked](https://github.com/TheNightmareX/tasked).
 1. ```bash
    npm i
    npm run build
-   npm run db reset
+   npm run start-db init
    npm run start:dev
    ```
