@@ -17,10 +17,10 @@ import { ValidationModule } from './validation/validation.module';
 
 @Module({
   imports: [
-    ContextModule.forRoot(),
+    ContextModule,
     MikroModule.forRoot(),
     MikroFlusherModule,
-    GraphqlModule.forRoot(),
+    GraphqlModule,
     ValidationModule.forRoot(),
     DataLoaderModule.forRoot(),
     CoreModule,

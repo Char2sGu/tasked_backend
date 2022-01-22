@@ -1,13 +1,10 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-import { ContextMiddlewareModule } from './context-middleware.module';
+import { ContextMiddleware } from './context.middleware';
 
 @Module({})
-export class ContextModule {
-  static forRoot(): DynamicModule {
-    return {
-      module: ContextModule,
-      imports: [ContextMiddlewareModule],
-    };
+export class ContextModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ContextMiddleware).forRoutes('*');
   }
 }

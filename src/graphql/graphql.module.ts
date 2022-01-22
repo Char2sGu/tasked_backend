@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -15,27 +15,22 @@ import { GraphqlComplexityPlugin } from './graphql-complexity.plugin';
 import { GRAPHQL_COMPLEXITY_MAX } from './graphql-complexity-max.token';
 import { GraphqlThrottlerGuard } from './graphql-throttler.guard';
 
-@Module({})
-export class GraphqlModule {
-  static forRoot(): DynamicModule {
-    return {
-      module: GraphqlModule,
-      imports: [
-        GraphQLModule.forRoot({
-          autoSchemaFile: true,
-          playground: DEBUG,
-          validationRules: [depthLimit(GRAPHQL_DEPTH)],
-        }),
-        ThrottlerModule.forRoot({
-          limit: GRAPHQL_FREQUENCY_LIMIT,
-          ttl: GRAPHQL_FREQUENCY_DURATION,
-        }),
-      ],
-      providers: [
-        GraphqlComplexityPlugin,
-        { provide: GRAPHQL_COMPLEXITY_MAX, useValue: GRAPHQL_COMPLEXITY },
-        { provide: APP_GUARD, useClass: GraphqlThrottlerGuard },
-      ],
-    };
-  }
-}
+@Module({
+  imports: [
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+      playground: DEBUG,
+      validationRules: [depthLimit(GRAPHQL_DEPTH)],
+    }),
+    ThrottlerModule.forRoot({
+      limit: GRAPHQL_FREQUENCY_LIMIT,
+      ttl: GRAPHQL_FREQUENCY_DURATION,
+    }),
+  ],
+  providers: [
+    GraphqlComplexityPlugin,
+    { provide: GRAPHQL_COMPLEXITY_MAX, useValue: GRAPHQL_COMPLEXITY },
+    { provide: APP_GUARD, useClass: GraphqlThrottlerGuard },
+  ],
+})
+export class GraphqlModule {}
