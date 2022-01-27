@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { useContainer } from 'class-validator';
 
 import { AppModule } from './app.module';
-import { PORT } from './env.constants';
+import { PORT } from './common/env.constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

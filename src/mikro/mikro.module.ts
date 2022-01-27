@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { DynamicModule, Module, NotFoundException } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { DB_PATH, DEBUG } from 'src/env.constants';
+import { DB_PATH, DEBUG } from 'src/common/env.constants';
 import { Repository } from 'src/mikro/repository.class';
 
 import { MikroMiddlewareModule } from './mikro-middleware.module';

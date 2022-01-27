@@ -9,7 +9,7 @@ import {
   GRAPHQL_DEPTH,
   GRAPHQL_FREQUENCY_DURATION,
   GRAPHQL_FREQUENCY_LIMIT,
-} from 'src/env.constants';
+} from 'src/common/env.constants';
 
 import { GraphqlComplexityPlugin } from './graphql-complexity.plugin';
 import { GRAPHQL_COMPLEXITY_MAX } from './graphql-complexity-max.token';

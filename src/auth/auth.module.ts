@@ -2,7 +2,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
-import { SECRET_KEY } from 'src/env.constants';
+import { SECRET_KEY } from 'src/common/env.constants';
 import { User } from 'src/users/entities/user.entity';
 
 import { AuthGuard } from './auth.guard';
