@@ -18,4 +18,4 @@ COPY package*.json ./
 COPY --from=build-pruned /app/node_modules/ node_modules/
 COPY --from=build-pruned /app/dist/ dist/
 COPY --from=build-pruned /app/data/ data/
-CMD npm run start:prod
+CMD PORT=3000 npm run start:prod
