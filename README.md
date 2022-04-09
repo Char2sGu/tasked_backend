@@ -1,5 +1,7 @@
 # Tasked - Backend
 
+DEPRECATION: This repo has been merged. See the host repo(↓) for further updates.
+
 Backend implementation of [Tasked](https://github.com/TheNightmareX/tasked).
 
 ## Development
